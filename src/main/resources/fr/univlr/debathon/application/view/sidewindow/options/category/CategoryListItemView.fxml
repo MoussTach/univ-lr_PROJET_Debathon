@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="50.0" minHeight="45.0" minWidth="50.0" prefHeight="50.0" prefWidth="210.0" stylesheets="@../../../../../../../../css/application.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.sidewindow.options.category.CategoryListItemView">
+   <left>
+      <ImageView fx:id="categoryImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" smooth="false" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets left="5.0" right="5.0" />
+         </BorderPane.margin></ImageView>
+   </left>
+   <center>
+      <Text fx:id="categoryTextName" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="149.0" BorderPane.alignment="CENTER">
+         <font>
+            <Font name="Calibri" size="14.0" />
+         </font>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </Text>
+   </center>
+   <padding>
+      <Insets bottom="2.0" left="5.0" right="10.0" top="2.0" />
+   </padding>
+</BorderPane>

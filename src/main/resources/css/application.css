@@ -1,0 +1,64 @@
+/*noinspection ALL*/
+
+/* Root changement*/
+/*noinspection ALL*/
+.root {
+    -fx-font-size: 14px;
+    -fx-font-family: Calibri;
+}
+
+.root .important-text {
+    -fx-font-size: 18px;
+}
+
+.root .title {
+    -fx-font-size: 20px;
+}
+
+/* TextField changement*/
+/*noinspection ALL*/
+.text-field {
+    -fx-alignment: center-left;
+}
+
+/*noinspection ALL*/
+.text-field:focused {
+    -fx-alignment: center;
+}
+
+.text-field > .center-text {
+    -fx-alignment: center;
+}
+
+
+/*noinspection ALL*/
+.date-picker > .text-field  {
+    -fx-alignment: center;
+}
+
+/*noinspection ALL*/
+.date-picker > .text-field:empty  {
+    -fx-alignment: center-left;
+}
+
+
+/*progress-bar changement*/
+.changeBar-color {
+    -fx-accent : Red;
+}
+
+
+/* maskerPane changement*/
+.invisible-square {
+    -fx-accent : rgba(0,0,0,0);
+}
+
+/*noinspection ALL*/
+.invisible-square .masker-text {
+    -fx-text-fill: none;
+}
+
+/*noinspection ALL*/
+.invisible-square .masker-center {
+    -fx-background-color: rgba(0,0,0,0);
+}

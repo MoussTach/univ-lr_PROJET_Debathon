@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" monitorInterval="120">
+
+    <Properties>
+        <property name="APP_NAME">Debathon</property>
+
+        <property name="APP_LOG_DIR">${sys:user.home}/.${APP_NAME}/log</property>
+        <property name="APP_LOG_ERROR_DIR">${APP_LOG_DIR}/error</property>
+        <property name="APP_LOG_FATAL_DIR">${APP_LOG_DIR}/fatal</property>
+        <property name="APP_LOG_DEBUG_DIR">${APP_LOG_DIR}/debug</property>
+        <property name="APP_LOG_RUNTIME_DIR">${APP_LOG_DIR}/runtime</property>
+
+        <property name="APP_PATTERN_DEFAULT">[%d{dd-MM-yyyy HH:mm:ss}][%-5level] [%tid][%t] %c{1}::%L - %msg%n</property>
+        <property name="APP_PATTERN_DEFAULT_COLOR">[%d{HH:mm:ss}]%highlight{[%-5level]}{FATAL=red blink Bright, ERROR=red, WARN=green Bright, INFO=Cyan Bright, DEBUG=green bold, TRACE=Magenta Bright, INPUT=Yellow Bright} [%tid][%t] %c{1}::%L - %highlight{%msg%n}{FATAL=red blink Bright, ERROR=red, WARN=green Bright, INFO=Cyan Bright, DEBUG=green bold, TRACE=Magenta Bright, INPUT=Yellow Bright}</property>
+    </Properties>
+
+    <CustomLevels>
+        <CustomLevel name="INPUT" intLevel="450" />
+    </CustomLevels>
+
+    <Appenders>
+        <!-- Console Appender -->
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${APP_PATTERN_DEFAULT_COLOR}" />
+        </Console>
+
+        <!-- File Appenders-->
+        <RollingRandomAccessFile name="errorLog" fileName="${APP_LOG_ERROR_DIR}/app-sav-error.log"
+                                 filePattern="${APP_LOG_ERROR_DIR}/app-sav-error-%d{dd-MM-yyyy}.log">
+            <levelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${APP_PATTERN_DEFAULT}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${APP_LOG_ERROR_DIR}" maxDepth="1">
+                    <IfFileName glob="app-sav-debug-??-??-????.log">
+                        <IfLastModified age="1d">
+                            <IfAny>
+                                <IfAccumulatedFileCount exceeds="10" />
+                            </IfAny>
+                        </IfLastModified>
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="fatalLog" fileName="${APP_LOG_FATAL_DIR}/app-sav-fatal.log"
+                                 filePattern="${APP_LOG_FATAL_DIR}/app-sav-fatal-%d{dd-MM-yyyy}.log">
+            <levelRangeFilter minLevel="FATAL" maxLevel="FATAL" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${APP_PATTERN_DEFAULT}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${APP_LOG_FATAL_DIR}" maxDepth="1">
+                    <IfFileName glob="app-sav-debug-??-??-????.log">
+                        <IfLastModified age="1d">
+                            <IfAny>
+                                <IfAccumulatedFileCount exceeds="10" />
+                            </IfAny>
+                        </IfLastModified>
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <!-- RunTime - Trace all interaction with the customer.
+
+        Create a log file at every instance of the program, to a max of 10 log file.
+        When 10 file are reach, deleted the less recent log file to create a newer to continue the execution -->
+        <RollingRandomAccessFile name="debugLog" fileName="${APP_LOG_DEBUG_DIR}/app-sav-debug.log"
+                                 filePattern="${APP_LOG_DEBUG_DIR}/app-sav-debug-%d{dd-MM-yyyy}.log">
+            <levelRangeFilter minLevel="FATAL" maxLevel="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${APP_PATTERN_DEFAULT}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${APP_LOG_DEBUG_DIR}" maxDepth="1">
+                    <IfFileName glob="app-sav-debug-??-??-????.log">
+                        <IfLastModified age="1d">
+                            <IfAny>
+                                <IfAccumulatedFileCount exceeds="10" />
+                            </IfAny>
+                        </IfLastModified>
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <!-- RunTime - Trace all interaction with the customer.
+
+        Create a log file at every instance of the program, to a max of 10 log file.
+        When 10 file are reach, deleted the less recent log file to create a newer to continue the execution -->
+        <RollingRandomAccessFile name="runtimeLog" fileName="${APP_LOG_RUNTIME_DIR}/app-sav-runtime.log"
+                                 filePattern="${APP_LOG_RUNTIME_DIR}/app-sav-runtime-%i.log">
+            <levelRangeFilter minLevel="FATAL" maxLevel="INPUT" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${APP_PATTERN_DEFAULT}"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingRandomAccessFile>
+
+    </Appenders>
+
+    <Loggers>
+
+        <Logger name="fr.bdd.dataconnection" additivity="true">
+            <AppenderRef ref="debugLog"/>
+        </Logger>
+
+        <Root level="all">
+            <AppenderRef ref="runtimeLog"/>
+            <AppenderRef ref="errorLog"/>
+            <AppenderRef ref="fatalLog"/>
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

@@ -98,6 +98,7 @@ public class MenuBarView extends FxmlView_SceneCycle<MenuBarViewModel> implement
 
     @Override
     public void onViewAdded_Cycle() {
+        // default implementation
     }
 
     @Override

@@ -26,6 +26,7 @@ public class CustomEditingCell_String<T> extends TableCell<T, String> {
      * @author Gaetan Brenckle
      */
     public CustomEditingCell_String() {
+        //default implementation
     }
 
     /**
@@ -56,7 +57,7 @@ public class CustomEditingCell_String<T> extends TableCell<T, String> {
     @Override
     public void cancelEdit() {
         super.cancelEdit();
-        setText((String) getItem());
+        setText(getItem());
         textField.setText(getString());
         setContentDisplay(ContentDisplay.TEXT_ONLY);
     }
@@ -116,7 +117,7 @@ public class CustomEditingCell_String<T> extends TableCell<T, String> {
         });
 
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField != null) {
+            if (Boolean.TRUE.equals(!newValue) && textField != null) {
                 commitEdit(textField.getText());
             }
         });

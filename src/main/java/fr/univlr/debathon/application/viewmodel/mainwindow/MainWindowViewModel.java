@@ -40,7 +40,6 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
     private final BooleanProperty taskWindow_isShowed_ = new SimpleBooleanProperty(false);
 
     private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_Window_ = null;
-    private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_Search_ = null;
 
     @InjectScope
     private MainScope mainScope;
@@ -150,6 +149,7 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
 
     @Override
     public void onViewAdded_Cycle() {
+        // default implementation
     }
 
     @Override

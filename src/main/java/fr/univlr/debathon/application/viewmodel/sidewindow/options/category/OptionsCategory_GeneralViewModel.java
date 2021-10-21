@@ -198,6 +198,7 @@ public class OptionsCategory_GeneralViewModel extends CategoryValidator {
 
     @Override
     public void onViewAdded_Cycle() {
+        // default implementation
     }
 
     @Override

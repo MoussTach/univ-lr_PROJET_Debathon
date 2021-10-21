@@ -19,9 +19,9 @@ import javafx.stage.StageStyle;
  *
  * @author Gaetan Brenckle
  */
-public class Preloader extends javafx.application.Preloader {
+public class PreloaderLaunch extends javafx.application.Preloader {
 
-    private static final CustomLogger LOGGER = CustomLogger.create(Preloader.class.getName());
+    private static final CustomLogger LOGGER = CustomLogger.create(PreloaderLaunch.class.getName());
     private Stage preloaderStage;
 
     @Override

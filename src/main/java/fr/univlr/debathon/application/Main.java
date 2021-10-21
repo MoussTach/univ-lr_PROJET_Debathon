@@ -35,9 +35,6 @@ public class Main {
             final Properties properties = new Properties();
             properties.load(Main.class.getResourceAsStream("/properties/default.properties"));
 
-            String path_system = String.format("%s/%s", System.getenv("WINDIR"), "System32");
-            String path_dll = String.format("%s/%s/%s", System.getProperty("user.dir"), properties.getProperty("name_connection_folder"), System.getProperty("sun.arch.data.model"));
-
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info(String.format("Build version : %s", properties.getProperty("build_version")));
             }
@@ -48,6 +45,6 @@ public class Main {
             }
         }
 
-        LauncherImpl.launchApplication(Launch.class, Preloader.class, args);
+        LauncherImpl.launchApplication(Launch.class, PreloaderLaunch.class, args);
     }
 }

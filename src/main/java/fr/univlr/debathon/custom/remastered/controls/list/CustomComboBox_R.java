@@ -6,8 +6,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
@@ -49,7 +47,7 @@ public class CustomComboBox_R<T> extends ComboBox<T> {
 
         //create a property to charge all needed information to filter the text
         this.editableProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
+            if (Boolean.TRUE.equals(newValue)) {
                 this.addEventFilter(KeyEvent.KEY_RELEASED, eventOnKeyReleased());
             } else {
                 this.addEventFilter(KeyEvent.KEY_RELEASED, null);
@@ -96,7 +94,6 @@ public class CustomComboBox_R<T> extends ComboBox<T> {
      * @author Gaetan Brenckle
      */
     private void converter_StringToClass() {
-        ComboBox<T> combobox = this;
 
         this.setConverter(new StringConverter<T>() {
 
@@ -176,10 +173,10 @@ public class CustomComboBox_R<T> extends ComboBox<T> {
             }
 
             int rangeSelection = this.getEditor().getText().length();
-            if (event.getCode().equals(KeyCode.BACK_SPACE)) {
-                if (rangeSelection > 0 && typedText.get().length() <= this.getEditor().getText().length()) {
-                    rangeSelection -= 1;
-                }
+            if (event.getCode().equals(KeyCode.BACK_SPACE)
+                    && rangeSelection > 0
+                    && typedText.get().length() <= this.getEditor().getText().length()) {
+                rangeSelection -= 1;
             }
             //Removing the last character if need. This double back_space is only to remove the last character after removing the current selection
             //by the real back_space

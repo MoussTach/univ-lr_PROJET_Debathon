@@ -24,7 +24,7 @@ public abstract class DbConnection {
     /**
      * Default contructor.
      */
-    public DbConnection() {
+    protected DbConnection() {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[public][constructor] Creation of the DbConnection() object.");
         }

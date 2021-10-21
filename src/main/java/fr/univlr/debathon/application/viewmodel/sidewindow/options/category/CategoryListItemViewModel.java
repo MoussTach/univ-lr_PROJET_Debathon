@@ -156,6 +156,7 @@ public class CategoryListItemViewModel<T extends FxmlView<? extends V>, V extend
 
     @Override
     public void onViewAdded_Cycle() {
+        // default implementation
     }
 
     @Override

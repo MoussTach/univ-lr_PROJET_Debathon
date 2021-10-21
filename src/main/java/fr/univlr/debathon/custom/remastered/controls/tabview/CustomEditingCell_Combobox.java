@@ -47,7 +47,7 @@ public class CustomEditingCell_Combobox<T, V> extends TableCell<T, V> {
             if (t.getCode() == KeyCode.CONTROL) {
                 comboBox.hide();
                 comboBox.show();
-            } if (t.getCode() == KeyCode.ENTER) {
+            } else if (t.getCode() == KeyCode.ENTER) {
                 commitEdit(currentObject.get());
             } else if (t.getCode() == KeyCode.TAB) {
                 commitEdit(currentObject.get());
@@ -57,7 +57,7 @@ public class CustomEditingCell_Combobox<T, V> extends TableCell<T, V> {
         });
 
         comboBox.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && comboBox != null) {
+            if (Boolean.TRUE.equals(!newValue) && comboBox != null) {
                 commitEdit(currentObject.get());
             }
         });

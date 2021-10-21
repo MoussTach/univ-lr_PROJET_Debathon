@@ -113,3 +113,4 @@ buildNumber.properties
 
 .idea/
 .scannerwork/
+sonar-project.properties

@@ -42,6 +42,7 @@ public class TaskManagerWindowView extends FxmlView_SceneCycle<TaskManagerWindow
 
     @Override
     public void onViewAdded_Cycle() {
+        // default implementation
     }
 
     @Override

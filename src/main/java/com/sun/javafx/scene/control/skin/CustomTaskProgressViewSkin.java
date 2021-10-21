@@ -24,10 +24,10 @@ public class CustomTaskProgressViewSkin<T extends Task_Custom<?>> extends SkinBa
         super(monitor);
         BorderPane borderPane = new BorderPane();
         borderPane.getStyleClass().add("box");
-        ListView<T> listView = new ListView();
+        ListView<T> listView = new ListView<>();
         listView.setPrefSize(500.0D, 400.0D);
         listView.setPlaceholder(new Label("No tasks running"));
-        listView.setCellFactory((param) -> new TaskCell());
+        listView.setCellFactory(param -> new TaskCell());
         listView.setFocusTraversable(false);
         Bindings.bindContent(listView.getItems(), monitor.getTasks());
         borderPane.setCenter(listView);
@@ -104,7 +104,7 @@ public class CustomTaskProgressViewSkin<T extends Task_Custom<?>> extends SkinBa
 
                     Callback<T, Node> factory = ((TaskProgressView) CustomTaskProgressViewSkin.this.getSkinnable()).getGraphicFactory();
                     if (factory != null) {
-                        Node graphic = (Node)factory.call(task);
+                        Node graphic = factory.call(task);
                         if (graphic != null) {
                             BorderPane.setAlignment(graphic, Pos.CENTER);
                             BorderPane.setMargin(graphic, new Insets(0.0D, 4.0D, 0.0D, 0.0D));

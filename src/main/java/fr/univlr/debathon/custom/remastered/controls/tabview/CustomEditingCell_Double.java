@@ -19,7 +19,7 @@ import javafx.util.Callback;
  */
 public class CustomEditingCell_Double<T> extends TableCell<T, Double> {
     private CustomTextField_R textField;
-    private final String regex = "^(\\d+(\\.\\d+)?)$";
+    private static final String REGEX = "^(\\d+(\\.\\d+)?)$";
 
     /**
      * Default constructor.
@@ -27,6 +27,7 @@ public class CustomEditingCell_Double<T> extends TableCell<T, Double> {
      * @author Gaetan Brenckle
      */
     public CustomEditingCell_Double() {
+        //Default implementation
     }
 
     /**
@@ -108,13 +109,13 @@ public class CustomEditingCell_Double<T> extends TableCell<T, Double> {
 
         textField.setOnKeyPressed(t -> {
                 if (t.getCode() == KeyCode.ENTER) {
-                    if (textField.getText().matches(regex)) {
+                    if (textField.getText().matches(REGEX)) {
                         commitEdit(Double.valueOf(textField.getText()));
                     } else {
                         cancelEdit();
                     }
                 } else if (t.getCode() == KeyCode.TAB) {
-                    if (textField.getText().matches(regex)) {
+                    if (textField.getText().matches(REGEX)) {
                         commitEdit(Double.valueOf(textField.getText()));
                     } else {
                         cancelEdit();
@@ -125,7 +126,7 @@ public class CustomEditingCell_Double<T> extends TableCell<T, Double> {
         });
 
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField != null && textField.getText().matches(regex)) {
+            if (Boolean.TRUE.equals(!newValue && textField != null) && textField.getText().matches(REGEX)) {
                 commitEdit(Double.valueOf(textField.getText()));
             }
         });

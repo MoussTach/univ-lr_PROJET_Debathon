@@ -301,6 +301,7 @@ public class OptionsWindowViewModel extends ViewModel_SceneCycle {
 
     @Override
     public void onViewAdded_Cycle() {
+        // default implementation
     }
 
     @Override

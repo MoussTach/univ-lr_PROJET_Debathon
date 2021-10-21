@@ -9,7 +9,7 @@ public abstract class CustomTableRow<T extends FxmlView<? extends V>, V extends 
 
     private final Node sceneClassNode_;
 
-    public CustomTableRow(Class<T> sceneClassView) {
+    protected CustomTableRow(Class<T> sceneClassView) {
 
         final ViewTuple<T, V> dynamicTuple = FluentViewLoader.fxmlView(sceneClassView)
                 .load();
@@ -19,19 +19,17 @@ public abstract class CustomTableRow<T extends FxmlView<? extends V>, V extends 
         this.sceneClassNode_ = dynamicTuple.getView();
 
         selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
-            if (conditionVisibility()) {
-                if (sceneClassNode_ != null) {
-                    Platform.runLater(() -> {
-                        if (isNowSelected) {
-                            if (!getChildren().contains(sceneClassNode_)) {
-                                getChildren().add(sceneClassNode_);
-                            }
-                        } else {
-                            getChildren().remove(sceneClassNode_);
+            if (conditionVisibility() && sceneClassNode_ != null) {
+                Platform.runLater(() -> {
+                    if (Boolean.TRUE.equals(isNowSelected)) {
+                        if (!getChildren().contains(sceneClassNode_)) {
+                            getChildren().add(sceneClassNode_);
                         }
-                        this.requestLayout();
-                    });
-                }
+                    } else {
+                        getChildren().remove(sceneClassNode_);
+                    }
+                    this.requestLayout();
+                });
             }
         });
     }

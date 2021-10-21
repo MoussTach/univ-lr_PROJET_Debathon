@@ -34,6 +34,7 @@ public class PreloaderWindowView extends FxmlView_SceneCycle<PreloaderWindowView
 
     @Override
     public void onViewAdded_Cycle() {
+        // default implementation
     }
 
     @Override

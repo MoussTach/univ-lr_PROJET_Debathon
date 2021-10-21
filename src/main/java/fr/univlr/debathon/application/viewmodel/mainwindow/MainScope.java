@@ -13,13 +13,11 @@ import javafx.scene.layout.BorderPane;
  */
 public class MainScope implements Scope {
 
-    private static final CustomLogger LOGGER = CustomLogger.create(MainScope.class.getName());
+    private final ObjectProperty<BorderPane> bPane_button_Property_ = new SimpleObjectProperty<>();
+    private final ObjectProperty<BorderPane> bPane_main_Property_ = new SimpleObjectProperty<>();
 
-    final private ObjectProperty<BorderPane> bPane_button_Property_ = new SimpleObjectProperty<>();
-    final private ObjectProperty<BorderPane> bPane_main_Property_ = new SimpleObjectProperty<>();
-
-    final private DoubleProperty progressProperty_ = new SimpleDoubleProperty();
-    final private StringProperty progress_label_ = new SimpleStringProperty();
+    private final DoubleProperty progressProperty_ = new SimpleDoubleProperty();
+    private final StringProperty progress_label_ = new SimpleStringProperty();
 
     /**
      * Default constructor.
@@ -28,6 +26,7 @@ public class MainScope implements Scope {
      * @author Gaetan Brenckle
      */
     public MainScope() {
+        // default implementation
     }
 
     /**

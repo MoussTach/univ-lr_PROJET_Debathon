@@ -66,6 +66,7 @@ public class OptionsCategory_GeneralView extends FxmlView_SceneCycle<OptionsCate
 
     @Override
     public void onViewAdded_Cycle() {
+        // default implementation
     }
 
     @Override

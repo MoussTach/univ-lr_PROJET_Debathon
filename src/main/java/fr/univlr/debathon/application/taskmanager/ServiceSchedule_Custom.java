@@ -39,7 +39,7 @@ public abstract class ServiceSchedule_Custom<T> extends ScheduledService<T> impl
      *
      * @param image - {@link Image} - a image than will be showed with a TaskProgressManagerView
      */
-    public ServiceSchedule_Custom(Image image) {
+    protected ServiceSchedule_Custom(Image image) {
         this.image_ = image;
     }
 
@@ -52,7 +52,7 @@ public abstract class ServiceSchedule_Custom<T> extends ScheduledService<T> impl
      * @param image - {@link Image} - a image than will be showed with a TaskProgressManagerView
      * @param untilWork - boolean - used to know if the task need to be restarted when it fail (for connection)
      */
-    public ServiceSchedule_Custom(Image image, boolean untilWork) {
+    protected ServiceSchedule_Custom(Image image, boolean untilWork) {
         this.image_ = image;
         this.untilWorks_ = untilWork;
     }
@@ -125,7 +125,7 @@ public abstract class ServiceSchedule_Custom<T> extends ScheduledService<T> impl
                 untilWorksField.set(this.currentTask, Boolean.TRUE);
 
             } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
+                e.fillInStackTrace();
             }
         }
 

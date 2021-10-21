@@ -39,7 +39,7 @@ public abstract class Service_Custom<T> extends Service<T> implements ThreadFunc
      *
      * @param image - {@link Image} - a image than will be showed with a TaskProgressManagerView
      */
-    public Service_Custom(Image image) {
+    protected Service_Custom(Image image) {
         this.image_ = image;
     }
 
@@ -52,7 +52,7 @@ public abstract class Service_Custom<T> extends Service<T> implements ThreadFunc
      * @param image - {@link Image} - a image than will be showed with a TaskProgressManagerView
      * @param untilWork - boolean - used to know if the task need to be restarted when it fail (for connection)
      */
-    public Service_Custom(Image image, boolean untilWork) {
+    protected Service_Custom(Image image, boolean untilWork) {
         this.image_ = image;
         this.untilWorks_ = untilWork;
     }
@@ -125,7 +125,7 @@ public abstract class Service_Custom<T> extends Service<T> implements ThreadFunc
                 untilWorksField.set(this.currentTask, Boolean.TRUE);
 
             } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
+                e.fillInStackTrace();
             }
         }
 

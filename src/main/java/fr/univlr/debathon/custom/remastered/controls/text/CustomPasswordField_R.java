@@ -21,7 +21,7 @@ public class CustomPasswordField_R extends PasswordField {
     private final Text txtMessage = new Text("text");
     private final Tooltip tool = new Tooltip();
 
-    final private StringProperty onChangeWhenRelease = new SimpleStringProperty();
+    private final StringProperty onChangeWhenRelease = new SimpleStringProperty();
 
     private ValidationStatus currentStatus = null;
     private String beforeEditing = "";
@@ -38,7 +38,7 @@ public class CustomPasswordField_R extends PasswordField {
         super();
 
         focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
+            if (Boolean.TRUE.equals(newValue)) {
                 beforeEditing = getText();
 
                 toolTipShow();
@@ -100,7 +100,7 @@ public class CustomPasswordField_R extends PasswordField {
 
         //show the tooltip when the validation is false only
         status.validProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
+            if (Boolean.TRUE.equals(newValue)) {
                 tool.hide();
             } else {
                 toolTipShow();

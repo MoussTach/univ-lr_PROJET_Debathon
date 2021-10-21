@@ -52,7 +52,7 @@ public abstract class Task_Custom<T> extends Task<T> implements ThreadFunctions<
      * @param image - {@link Image} - a image than will be showed with a TaskProgressManagerView
      * @param title - {@link String} - title of the task
      */
-    public Task_Custom(Image image, String title) {
+    protected Task_Custom(Image image, String title) {
         this.updateTitle(title);
         this.image_ = image;
     }
@@ -67,12 +67,12 @@ public abstract class Task_Custom<T> extends Task<T> implements ThreadFunctions<
      * @param untilWork - boolean - used to know if the task need to be restarted when it fail (for connection)
      * @param title - {@link String} - title of the task
      */
-    public Task_Custom(Image image, String title, boolean untilWork) {
+    protected Task_Custom(Image image, String title, boolean untilWork) {
         this(image, title);
         this.untilWorks_.set(untilWork);
     }
 
-    public Task_Custom() {
+    protected Task_Custom() {
 
     }
 
@@ -83,7 +83,7 @@ public abstract class Task_Custom<T> extends Task<T> implements ThreadFunctions<
      */
     public void retryExecution() {
         synchronized (untilWorks_) {
-            this.untilWorks_.notify();
+            this.untilWorks_.notifyAll();
         }
     }
 
@@ -149,8 +149,7 @@ public abstract class Task_Custom<T> extends Task<T> implements ThreadFunctions<
                     alwaysRunning = false;
 
                 } catch (Exception e) {
-                    System.out.println(String.format("[CUSTOM TASK][untilWorks=%b] EXCEPTION -> %s", untilWorks_.get(), e.getMessage()));
-                    e.printStackTrace();
+                    e.fillInStackTrace();
                     if (!untilWorks_.get()) {
                         throw e;
                     }

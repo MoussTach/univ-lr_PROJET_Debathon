@@ -87,6 +87,7 @@ public class LanguageBundle {
             return this.locale_;
         }
 
+        @Override
         public String toString() {
             return this.langName_;
         }
@@ -168,7 +169,7 @@ public class LanguageBundle {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(String.format("[public][method] usage of LanguageBundle.unbindRessourceBundle(%s).", propertyValue.toString()));
         }
-        this.mapRessourceBundle_.remove(((ResourceBundle) propertyValue.get()).getBaseBundleName(), propertyValue);
+        this.mapRessourceBundle_.remove((propertyValue.get()).getBaseBundleName(), propertyValue);
     }
 
     /**

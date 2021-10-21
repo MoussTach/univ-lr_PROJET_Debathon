@@ -90,7 +90,7 @@ public class Launch extends Application {
         final Properties properties = new Properties();
         properties.load(getClass().getResourceAsStream("/properties/default.properties"));
         String name_destination_folder = properties.getProperty("name_data_folder");
-        String path_destination_folder = String.format("%s/.%s/%s", System.getProperty("user.home"), properties.getProperty("name"), name_destination_folder).replaceAll("\\\\","/");
+        String path_destination_folder = String.format("%s/.%s/%s", System.getProperty("user.home"), properties.getProperty("name"), name_destination_folder).replace("\\\\","/");
 
         String path_DBProperties = String.format("%s/%s", path_destination_folder, "db.properties");
         Main.DB_CONNECTION = new DbProperties_postgres(path_DBProperties);

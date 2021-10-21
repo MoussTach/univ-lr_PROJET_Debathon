@@ -24,12 +24,12 @@ public class TaskManager {
     private static final CustomLogger LOGGER = CustomLogger.create(TaskManager.class.getName());
     private static final int MAX_THREADS = 10;
 
-    protected final ObjectProperty<ThreadArray> currentTask = new SimpleObjectProperty<>(null);
+    protected final ObjectProperty<ThreadArray<?>> currentTask = new SimpleObjectProperty<>(null);
     private final BooleanProperty isExecutedSomething_ = new SimpleBooleanProperty(false);
 
-    protected final ConcurrentLinkedQueue<ThreadArray> taskArrays = new ConcurrentLinkedQueue<>();
-    protected final ConcurrentLinkedQueue<TaskProgressView> listTaskManagerBinded_ = new ConcurrentLinkedQueue<>();
-    protected final ConcurrentLinkedQueue<Task> listTaskShowed_ = new ConcurrentLinkedQueue<>();
+    protected final ConcurrentLinkedQueue<ThreadArray<?>> taskArrays = new ConcurrentLinkedQueue<>();
+    protected final ConcurrentLinkedQueue<TaskProgressView<?>> listTaskManagerBinded_ = new ConcurrentLinkedQueue<>();
+    protected final ConcurrentLinkedQueue<Task<?>> listTaskShowed_ = new ConcurrentLinkedQueue<>();
     private Task<Void> task_executeTasks = null;
 
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(MAX_THREADS, runnable -> {
@@ -66,10 +66,10 @@ public class TaskManager {
                 @Override
                 protected Void call() throws Exception {
 
-                    while (true) {
+                    do {
                         synchronized (taskArrays) {
                             taskArrays.wait(30000);
-                            if (taskArrays.size() > 0) {
+                            if (!taskArrays.isEmpty()) {
 
                                 Task<Void> task_running = new Task<Void>() {
                                     @Override
@@ -127,7 +127,7 @@ public class TaskManager {
                                 t.start();
                             }
                         }
-                    }
+                    } while (true);
 
                 }
 

@@ -32,7 +32,6 @@ public class MenuBarViewModel extends ViewModel_SceneCycle {
     private static final CustomLogger LOGGER = CustomLogger.create(MenuBarViewModel.class.getName());
 
     private final ObjectProperty<ResourceBundle> resBundle_ = LanguageBundle.getInstance().bindResourceBundle("properties.language.mainwindow.lg_menubar");
-    private final ObjectProperty<ResourceBundle> resBundle_options_ = LanguageBundle.getInstance().bindResourceBundle("properties.language.sidewindow.connection.lg_connection");
     private final ObjectProperty<ResourceBundle> resBundleWindow_ = LanguageBundle.getInstance().bindResourceBundle("properties.language.lg_window");
 
     private final StringProperty menuBarFile_label_ = new SimpleStringProperty(this.resBundle_.get().getString("menuBarFile"));
@@ -43,8 +42,6 @@ public class MenuBarViewModel extends ViewModel_SceneCycle {
 
     private final StringProperty menuBarHelp_label_ = new SimpleStringProperty(this.resBundle_.get().getString("menuBarHelp"));
     private final StringProperty menuBarHelp_menuItemAbout_label_ = new SimpleStringProperty(this.resBundle_.get().getString("menuBarHelp_menuItemAbout"));
-
-    private double current_Key = 9.9;
 
     private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_ = null;
     private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_title_ = null;
@@ -189,6 +186,7 @@ public class MenuBarViewModel extends ViewModel_SceneCycle {
 
     @Override
     public void onViewAdded_Cycle() {
+        // Default implementation
     }
 
     @Override

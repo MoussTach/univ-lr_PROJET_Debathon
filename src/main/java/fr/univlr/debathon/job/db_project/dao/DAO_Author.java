@@ -9,7 +9,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -80,18 +80,20 @@ public class DAO_Author implements Dao<Author> {
         final String select_sql = String.format("%s %s %s",
                 String.format("SELECT %s, %s", "author_ID", "name"),
                 String.format("FROM %s ", "Author"),
-                String.format("WHERE author_ID = ?"));
+                "WHERE author_ID = ?"
+        );
 
-        final PreparedStatementAware prepSelect = new PreparedStatementAware(connectionHandle_.prepareStatement(select_sql));
-        prepSelect.setInt(id);
+        try (PreparedStatementAware prepSelect = new PreparedStatementAware(connectionHandle_.prepareStatement(select_sql))) {
+            prepSelect.setInt(id);
 
-        try(final ResultSet resultSelect = prepSelect.executeQuery()) {
-            if (resultSelect.next()) {
-                retAuthor =
-                        new Author()
-                                .setauthor_ID(resultSelect.getInt("author_ID"))
-                                .setname(resultSelect.getString("name"));
+            try (final ResultSet resultSelect = prepSelect.executeQuery()) {
+                if (resultSelect.next()) {
+                    retAuthor =
+                            new Author()
+                                    .setauthor_ID(resultSelect.getInt("author_ID"))
+                                    .setname(resultSelect.getString("name"));
 
+                }
             }
         }
         return retAuthor;
@@ -102,11 +104,11 @@ public class DAO_Author implements Dao<Author> {
      *
      * @author Gaetan Brenckle
      *
-     * @param map - {@link HashMap} - index of the associate job class. Can handle null.
+     * @param map - {@link Map} - index of the associate job class. Can handle null.
      * @return - {@link List} - the job class that can be found with the index
      * @throws SQLException - throw the exception to force a try catch when used.
-*/
-    public final List<Author> selectByMultiCondition(HashMap<String, String> map) throws SQLException {
+     */
+    public final List<Author> selectByMultiCondition(Map<String, String> map) throws SQLException {
         final List<Author> retAuthors = new ArrayList<>();
 
         if (map == null) {
@@ -120,7 +122,7 @@ public class DAO_Author implements Dao<Author> {
         StringBuilder select_sql = new StringBuilder(String.format("%s %s %s",
                 String.format("SELECT %s, %s", "author_ID", "name"),
                 String.format("FROM %s ", "Author"),
-                String.format("WHERE 1=1")
+                "WHERE 1=1"
         ));
 
         for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -128,18 +130,19 @@ public class DAO_Author implements Dao<Author> {
         }
 
 
-        final PreparedStatementAware prepSelect = new PreparedStatementAware(connectionHandle_.prepareStatement(select_sql.toString()));
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            prepSelect.setString(entry.getValue());
-        }
+        try (PreparedStatementAware prepSelect = new PreparedStatementAware(connectionHandle_.prepareStatement(select_sql.toString()))) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                prepSelect.setString(entry.getValue());
+            }
 
-        try(final ResultSet resultSelect = prepSelect.executeQuery()) {
-            while (resultSelect.next()) {
-                Author Author =
-                        new Author()
+            try (final ResultSet resultSelect = prepSelect.executeQuery()) {
+                while (resultSelect.next()) {
+                    Author Author =
+                            new Author()
                                     .setauthor_ID(resultSelect.getInt("author_ID"))
                                     .setname(resultSelect.getString("name"));
-                retAuthors.add(Author);
+                    retAuthors.add(Author);
+                }
             }
         }
         return retAuthors;
@@ -152,7 +155,7 @@ public class DAO_Author implements Dao<Author> {
      *
      * @return - {@link List} - a list that contain all occurance of {@link Author}, the job class associate.
      * @throws SQLException - throw the exception to force a try catch when used.
-    */
+     */
     @Override
     public List<Author> selectAll() throws SQLException {
         final List<Author> retAuthors = new ArrayList<>();
@@ -179,7 +182,7 @@ public class DAO_Author implements Dao<Author> {
 
     @Override
     public List<Author> selectAll(List<Author> excludeList) throws SQLException {
-        return null;
+        return Collections.emptyList();
     }
 
     /**
@@ -191,7 +194,7 @@ public class DAO_Author implements Dao<Author> {
      * @param obj - {@link Author} - insert the job class.
      * @return - boolean - the state of the sql insert.
      * @throws SQLException - throw the exception to force a try catch when used.
-*/
+     */
     @Override
     public boolean insert(Author obj) throws SQLException {
         boolean retBool = true;
@@ -225,17 +228,17 @@ public class DAO_Author implements Dao<Author> {
                 String.format("INSERT INTO %s (%s, %s)", "Author", "author_ID", "name"),
                 "VALUES (?, ?)");
 
-        final PreparedStatementAware prepInsert = new PreparedStatementAware(connectionHandle_.prepareStatement(insert_sql));
-        prepInsert.setInt(obj.getauthor_ID());
-        prepInsert.setString(obj.getname());
+        try (PreparedStatementAware prepInsert = new PreparedStatementAware(connectionHandle_.prepareStatement(insert_sql))) {
+            prepInsert.setInt(obj.getauthor_ID());
+            prepInsert.setString(obj.getname());
 
-        retBool = prepInsert.executeUpdate() > 0;
+            retBool = prepInsert.executeUpdate() > 0;
 
-        if (LOGGER.isInfoEnabled() && retBool) {
-            String printedSql = String.format("Insert a new %s : [%s]", "Author", prepInsert.printSqlStatement(insert_sql));
+            if (LOGGER.isInfoEnabled() && retBool) {
+                String printedSql = String.format("Insert a new %s : [%s]", "Author", prepInsert.printSqlStatement(insert_sql));
 
-            LOGGER.info(printedSql);
-            // DbLogger.getInstance().dbLog(Level.INFO, printedSql);
+                LOGGER.info(printedSql);
+            }
         }
         return retBool;
     }
@@ -249,7 +252,7 @@ public class DAO_Author implements Dao<Author> {
      * @param obj - {@link Author} - insert the job class.
      * @return - boolean - the state of the sql update.
      * @throws SQLException - throw the exception to force a try catch when used.
-*/
+     */
     @Override
     public boolean update(Author obj) throws SQLException {
         boolean retBool = true;
@@ -285,17 +288,17 @@ public class DAO_Author implements Dao<Author> {
                 String.format("SET %s = ?", "name"),
                 String.format("WHERE %s = ?", "author_ID"));
 
-        final PreparedStatementAware prepUpdate = new PreparedStatementAware(connectionHandle_.prepareStatement(update_sql));
-        prepUpdate.setInt(obj.getauthor_ID());
-        prepUpdate.setString(obj.getname());
+        try (PreparedStatementAware prepUpdate = new PreparedStatementAware(connectionHandle_.prepareStatement(update_sql))) {
+            prepUpdate.setInt(obj.getauthor_ID());
+            prepUpdate.setString(obj.getname());
 
-        retBool = prepUpdate.executeUpdate() > 0;
+            retBool = prepUpdate.executeUpdate() > 0;
 
-        if (LOGGER.isInfoEnabled() && retBool) {
-            String printedSql = String.format("Update a new %s : [%s]", "Author", prepUpdate.printSqlStatement(update_sql));
+            if (LOGGER.isInfoEnabled() && retBool) {
+                String printedSql = String.format("Update a new %s : [%s]", "Author", prepUpdate.printSqlStatement(update_sql));
 
-            LOGGER.info(printedSql);
-            // DbLogger.getInstance().dbLog(Level.INFO, printedSql);
+                LOGGER.info(printedSql);
+            }
         }
         return retBool;
     }
@@ -337,16 +340,16 @@ public class DAO_Author implements Dao<Author> {
                 String.format("DELETE FROM %s", "Author"),
                 String.format("WHERE %s = ?", "author_ID"));
 
-        final PreparedStatementAware prepDelete = new PreparedStatementAware(connectionHandle_.prepareStatement(delete_sql));
-        prepDelete.setInt(obj.getauthor_ID());
+        try (PreparedStatementAware prepDelete = new PreparedStatementAware(connectionHandle_.prepareStatement(delete_sql))) {
+            prepDelete.setInt(obj.getauthor_ID());
 
-        retBool = prepDelete.executeUpdate() > 0;
+            retBool = prepDelete.executeUpdate() > 0;
 
-        if (LOGGER.isInfoEnabled() && retBool) {
-            String printedSql = String.format("Delete a new %s : [%s]", "Author", prepDelete.printSqlStatement(delete_sql));
+            if (LOGGER.isInfoEnabled() && retBool) {
+                String printedSql = String.format("Delete a new %s : [%s]", "Author", prepDelete.printSqlStatement(delete_sql));
 
-            LOGGER.info(printedSql);
-            // DbLogger.getInstance().dbLog(Level.INFO, printedSql);
+                LOGGER.info(printedSql);
+            }
         }
 
         return retBool;

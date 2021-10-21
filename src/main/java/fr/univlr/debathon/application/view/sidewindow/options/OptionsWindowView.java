@@ -121,6 +121,7 @@ public class OptionsWindowView extends FxmlView_SceneCycle<OptionsWindowViewMode
 
     @Override
     public void onViewAdded_Cycle() {
+        // default implementation
     }
 
     @Override

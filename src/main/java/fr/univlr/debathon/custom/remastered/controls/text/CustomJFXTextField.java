@@ -40,7 +40,7 @@ public class CustomJFXTextField extends JFXTextField {
 
         TooltipDefaultFixer.setTooltipTimers(100, 99999999, 200);
         focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
+            if (Boolean.TRUE.equals(newValue)) {
                 beforeEditing = getText();
 
                 toolTipShow();
@@ -115,7 +115,7 @@ public class CustomJFXTextField extends JFXTextField {
 
         //show the tooltip when the validation is false only
         status.validProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
+            if (Boolean.TRUE.equals(newValue)) {
                 tool.hide();
             } else {
                 toolTipShow();

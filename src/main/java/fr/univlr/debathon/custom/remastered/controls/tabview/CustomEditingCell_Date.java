@@ -135,7 +135,7 @@ public class CustomEditingCell_Date<T> extends TableCell<T, LocalDate> {
         });
 
         datePicker.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && datePicker != null) {
+            if (Boolean.TRUE.equals(!newValue) && datePicker != null) {
                 commitEdit(currentObject.get());
             }
         });

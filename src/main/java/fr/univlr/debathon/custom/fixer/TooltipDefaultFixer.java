@@ -38,7 +38,7 @@ public class TooltipDefaultFixer {
                 }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            e.fillInStackTrace();
         }
     }
 }

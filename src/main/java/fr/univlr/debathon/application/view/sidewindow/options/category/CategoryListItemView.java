@@ -40,6 +40,7 @@ public class CategoryListItemView extends FxmlView_SceneCycle<CategoryListItemVi
 
     @Override
     public void onViewAdded_Cycle() {
+        // default implementation
     }
 
     @Override

@@ -149,7 +149,6 @@ public abstract class Task_Custom<T> extends Task<T> implements ThreadFunctions<
                     alwaysRunning = false;
 
                 } catch (Exception e) {
-                    e.fillInStackTrace();
                     if (!untilWorks_.get()) {
                         throw e;
                     }

@@ -142,7 +142,7 @@ public class Launch extends Application {
         final ViewTuple<MainWindowView, MainWindowViewModel> MainWindowViewTuple = FluentViewLoader.fxmlView(MainWindowView.class).load();
         final Scene scene = new Scene(MainWindowViewTuple.getView(), 800.0D, 600.0D);
 
-        primaryStage.setTitle("Project Database - application");
+        primaryStage.setTitle("Debathon - application");
         final Image ico = new Image(getClass().getResourceAsStream("/img/logo/Logo_univLR_64.png"));
         primaryStage.getIcons().add(ico);
 

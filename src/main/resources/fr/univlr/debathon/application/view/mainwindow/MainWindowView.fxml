@@ -17,6 +17,9 @@
     <top>
         <fx:include source="MenuBarView.fxml" />
     </top>
+    <center>
+        <fx:include source="HomePageView.fxml"/>
+    </center>
     <bottom>
         <StatusBar fx:id="statusBarMainView" BorderPane.alignment="CENTER">
             <rightItems>

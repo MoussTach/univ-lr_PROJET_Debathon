@@ -4,15 +4,20 @@ import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import fr.univlr.debathon.application.Launch;
+import fr.univlr.debathon.application.view.sidewindow.options.category.OptionsCategory_GeneralView;
 import fr.univlr.debathon.application.view.taskmanager.TaskManagerWindowView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
+import fr.univlr.debathon.application.viewmodel.sidewindow.options.category.CategoryListItemViewModel;
 import fr.univlr.debathon.application.viewmodel.taskmanager.TaskManagerWindowViewModel;
 import fr.univlr.debathon.language.LanguageBundle;
 import fr.univlr.debathon.log.generate.CustomLogger;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -26,7 +31,7 @@ import java.util.ResourceBundle;
  *
  * @author Gaetan Brenckle
  */
-@ScopeProvider(scopes= {MainScope.class})
+@ScopeProvider(scopes= {MainScope.class, MainViewScope.class})
 public class MainWindowViewModel extends ViewModel_SceneCycle {
 
     private final ObjectProperty<ResourceBundle> resBundleWindow_ = LanguageBundle.getInstance().bindResourceBundle("properties.language.lg_window");
@@ -39,10 +44,16 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
     //Value
     private final BooleanProperty taskWindow_isShowed_ = new SimpleBooleanProperty(false);
 
+    private final BooleanProperty isPrevCommandExecutable = new SimpleBooleanProperty(false);
+    private final BooleanProperty isHomeCommandExecutable = new SimpleBooleanProperty(false);
+
     private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_Window_ = null;
 
     @InjectScope
     private MainScope mainScope;
+
+    @InjectScope
+    private MainViewScope mainViewScope;
 
 
     /**
@@ -56,10 +67,13 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
         }
 
         //RessourceBundle Listener
-        if (this.listener_ChangedValue_bundleLanguage_Window_ == null) {
-            this.listener_ChangedValue_bundleLanguage_Window_ = this::listener_bundleLanguage_window;
-            this.resBundleWindow_.addListener(this.listener_ChangedValue_bundleLanguage_Window_);
-        }
+        this.listener_ChangedValue_bundleLanguage_Window_ = this::listener_bundleLanguage_window;
+        this.resBundleWindow_.addListener(this.listener_ChangedValue_bundleLanguage_Window_);
+    }
+
+    public void initialize() {
+        this.isHomeCommandExecutable.bind(this.mainViewScope.homeCommandProperty().isNull());
+        this.isPrevCommandExecutable.bind(this.mainViewScope.prevCommandProperty().isNull());
     }
 
     /**
@@ -67,7 +81,7 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
      *
      * @author Gaetan Brenckle
      */
-    public void act_openTaskExternal() {
+    public void actvm_openTaskExternal() {
 
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[public][method] Usage of the MainWindowViewModel.act_openTaskExternal()");
@@ -103,6 +117,36 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
         }
     }
 
+    /**
+     * action when the button to go to the previous view.
+     *
+     * @author Gaetan Brenckle
+     */
+    public void actvm_btnPrev() {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[private][method] usage of MainWindowViewModel.actvm_btnPrev().");
+        }
+
+        DelegateCommand command = this.mainViewScope.prevCommandProperty().get();
+        if (command != null && command.isExecutable())
+            command.execute();
+    }
+
+    /**
+     * action when the button to go to the home view.
+     *
+     * @author Gaetan Brenckle
+     */
+    public void actvm_btnHome() {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[private][method] usage of MainWindowViewModel.actvm_btnHome().");
+        }
+
+        DelegateCommand command = this.mainViewScope.homeCommandProperty().get();
+        if (command != null && command.isExecutable())
+            command.execute();
+    }
+
 
     /**
      * Setter for the scope property mainScope.bPaneNodeProperty().
@@ -111,7 +155,7 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
      * @param bPaneMain - borderPane to link
      */
     public void setbPaneMainProperty(BorderPane bPaneMain) {
-        mainScope.bPane_main_Property().set(bPaneMain);
+        mainViewScope.basePaneProperty().set(bPaneMain);
     }
 
     /**
@@ -132,6 +176,29 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
      */
     public void bindProgress_labelProperty(StringProperty labelProperty) {
         labelProperty.bind(mainScope.progress_labelProperty());
+    }
+
+
+    /**
+     * Property of the variable isPrevCommandExecutable.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link BooleanProperty} - return the property of the variable isPrevCommandExecutable.
+     */
+    public BooleanProperty isPrevCommandExecutableProperty() {
+        return isPrevCommandExecutable;
+    }
+
+    /**
+     * Property of the variable isHomeCommandExecutable.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link BooleanProperty} - return the property of the variable isHomeCommandExecutable.
+     */
+    public BooleanProperty isHomeCommandExecutableProperty() {
+        return isHomeCommandExecutable;
     }
 
 
@@ -158,6 +225,10 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
             this.resBundleWindow_.removeListener(this.listener_ChangedValue_bundleLanguage_Window_);
             this.listener_ChangedValue_bundleLanguage_Window_ = null;
         }
+
+        this.isHomeCommandExecutable.unbind();
+        this.isPrevCommandExecutable.unbind();
+
         LanguageBundle.getInstance().unbindRessourceBundle(this.resBundleWindow_);
     }
 }

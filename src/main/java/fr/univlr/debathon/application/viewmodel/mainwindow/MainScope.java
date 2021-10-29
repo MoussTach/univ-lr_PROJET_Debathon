@@ -13,9 +13,6 @@ import javafx.scene.layout.BorderPane;
  */
 public class MainScope implements Scope {
 
-    private final ObjectProperty<BorderPane> bPane_button_Property_ = new SimpleObjectProperty<>();
-    private final ObjectProperty<BorderPane> bPane_main_Property_ = new SimpleObjectProperty<>();
-
     private final DoubleProperty progressProperty_ = new SimpleDoubleProperty();
     private final StringProperty progress_label_ = new SimpleStringProperty();
 
@@ -29,27 +26,6 @@ public class MainScope implements Scope {
         // default implementation
     }
 
-    /**
-     * property for a borderPane.
-     * It's used to contain the button borderpane of the window.
-     *
-     * @author Gaetan Brenckle
-     * @return {@link ObjectProperty} - property to a borderpane
-     */
-    public ObjectProperty<BorderPane> bPane_button_Property() {
-        return bPane_button_Property_;
-    }
-
-    /**
-     * property for a borderPane.
-     * It's used to contain the main borderpane of the window.
-     *
-     * @author Gaetan Brenckle
-     * @return {@link ObjectProperty} - property to a borderpane
-     */
-    public ObjectProperty<BorderPane> bPane_main_Property() {
-        return bPane_main_Property_;
-    }
 
     /**
      * ProgressProprety to bind.

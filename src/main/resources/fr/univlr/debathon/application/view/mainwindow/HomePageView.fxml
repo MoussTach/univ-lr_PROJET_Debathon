@@ -4,87 +4,109 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import org.controlsfx.control.textfield.*?>
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.HomePageView">
    <top>
-      <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+      <TitledPane fx:id="tPaneParameters" animated="false" text="tPaneParameters" BorderPane.alignment="CENTER">
+         <content>
+            <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+               <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
+               <VBox prefHeight="86.0" prefWidth="364.0" spacing="5.0">
+                  <padding>
+                     <Insets bottom="5.0" />
+                  </padding>
+                  <StackPane>
+                     <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-border-color: RED; -fx-border-radius: 10;">
+                        <right>
+                           <Button fx:id="btnCreateNewDebate" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#act_btnCreateNewDebate" text="btnCreateNewDebate" BorderPane.alignment="CENTER">
+                              <padding>
+                                 <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                              </padding>
+                           </Button>
+                        </right>
+                        <padding>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </padding>
+                        <left>
+                           <CheckBox fx:id="chkShowCreatedDebate" maxHeight="1.7976931348623157E308" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="chkShowCreatedDebate" BorderPane.alignment="CENTER">
+                              <padding>
+                                 <Insets left="10.0" right="10.0" />
+                              </padding>
+                           </CheckBox>
+                        </left>
+                        <StackPane.margin>
+                           <Insets left="3.0" right="3.0" top="9.0" />
+                        </StackPane.margin>
+                     </BorderPane>
+                     <Label fx:id="lblOrganizer" style="-fx-background-color: #F4F4F4;" text="lblOrganizer" StackPane.alignment="TOP_LEFT">
+                        <StackPane.margin>
+                           <Insets left="12.0" />
+                        </StackPane.margin>
+                     </Label>
+                  </StackPane>
+                  <BorderPane>
+                     <right>
+                        <HBox spacing="5.0" BorderPane.alignment="CENTER">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <StackPane>
+                              <CustomTextField fx:id="tfSearch">
+                                 <right>
+                                    <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                       <Image url="@../../../../../../img/loupe_32x32.png" />
+                                    </ImageView>
+                                 </right>
+                              </CustomTextField>
+                           </StackPane>
+                        </HBox>
+                     </right>
+                     <center>
+                        <HBox maxWidth="1.7976931348623157E308" style="-fx-border-color: DARKBLUE; -fx-border-radius: 5;" BorderPane.alignment="CENTER">
+                           <FlowPane fx:id="flowTag" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                              <HBox.margin>
+                                 <Insets bottom="2.0" left="3.0" right="3.0" top="4.0" />
+                              </HBox.margin>
+                           </FlowPane>
+                           <Button fx:id="btnAddTag" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#act_btnAddTag" style="-fx-background-radius: 5;" text="btnAddTag">
+                              <HBox.margin>
+                                 <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                              </HBox.margin>
+                           </Button>
+                        </HBox>
+                     </center>
+                     <padding>
+                        <Insets left="5.0" right="5.0" />
+                     </padding>
+                  </BorderPane>
+               </VBox>
+               <padding>
+                  <Insets top="3.0" />
+               </padding>
+            </StackPane>
+         </content>
+         <font>
+            <Font name="Calibri" size="18.0" />
+         </font>
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
-         <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
-         <VBox prefHeight="86.0" prefWidth="364.0" spacing="5.0">
-            <padding>
-               <Insets bottom="5.0" />
-            </padding>
-            <StackPane>
-               <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-border-color: RED; -fx-border-radius: 10;">
-                  <right>
-                     <Button fx:id="btnCreateNewDebate" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#act_btnCreateNewDebate" text="btnCreateNewDebate" BorderPane.alignment="CENTER">
-                        <padding>
-                           <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                        </padding>
-                     </Button>
-                  </right>
-                  <padding>
-                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                  </padding>
-                  <left>
-                     <CheckBox fx:id="chkShowCreatedDebate" maxHeight="1.7976931348623157E308" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="chkShowCreatedDebate" BorderPane.alignment="CENTER">
-                        <padding>
-                           <Insets left="10.0" right="10.0" />
-                        </padding>
-                     </CheckBox>
-                  </left>
-                  <StackPane.margin>
-                     <Insets left="3.0" right="3.0" top="9.0" />
-                  </StackPane.margin>
-               </BorderPane>
-               <Label fx:id="lblOrganizer" style="-fx-background-color: #F4F4F4;" text="lblOrganizer" StackPane.alignment="TOP_LEFT">
-                  <StackPane.margin>
-                     <Insets left="12.0" />
-                  </StackPane.margin>
-               </Label>
-            </StackPane>
-            <BorderPane>
-               <right>
-                  <HBox spacing="5.0" BorderPane.alignment="CENTER">
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                     <StackPane>
-                        <CustomTextField fx:id="tfSearch">
-                           <right>
-                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                 <Image url="@../../../../../../img/loupe_32x32.png" />
-                              </ImageView>
-                           </right>
-                        </CustomTextField>
-                     </StackPane>
-                  </HBox>
-               </right>
-               <center>
-                  <HBox maxWidth="1.7976931348623157E308" style="-fx-border-color: DARKBLUE; -fx-border-radius: 5;" BorderPane.alignment="CENTER">
-                     <FlowPane fx:id="flowTag" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                        <HBox.margin>
-                           <Insets bottom="2.0" left="3.0" right="3.0" top="4.0" />
-                        </HBox.margin>
-                     </FlowPane>
-                     <Button fx:id="btnAddTag" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#act_btnAddTag" style="-fx-background-radius: 5;" text="btnAddTag">
-                        <HBox.margin>
-                           <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-                        </HBox.margin>
-                     </Button>
-                  </HBox>
-               </center>
-               <padding>
-                  <Insets left="5.0" right="5.0" />
-               </padding>
-            </BorderPane>
-         </VBox>
-      </StackPane>
+      </TitledPane>
    </top>
    <center>
-      <FlowPane fx:id="flowDebate" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+         <content>
+            <FlowPane fx:id="flowDebate" alignment="TOP_CENTER" columnHalignment="CENTER" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWrapLength="0.0" vgap="20.0">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </FlowPane>
+         </content>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </ScrollPane>
    </center>
 </BorderPane>

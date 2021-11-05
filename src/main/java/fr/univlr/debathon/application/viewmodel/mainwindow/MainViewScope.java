@@ -1,13 +1,9 @@
 package fr.univlr.debathon.application.viewmodel.mainwindow;
 
 import de.saxsys.mvvmfx.Scope;
-import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
-import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
-import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 
 /**

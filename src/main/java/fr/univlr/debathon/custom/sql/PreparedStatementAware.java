@@ -1027,9 +1027,9 @@ public class PreparedStatementAware implements PreparedStatement {
 
     public String printSqlStatement(String base_sql) {
         List<String> values = new ArrayList<>();
-        base_sql = base_sql.replaceAll("\\?", "%s");
+        base_sql = base_sql.replace("\\?", "%s");
 
-        StringBuilder sbuilder = null;
+        StringBuilder sbuilder;
         for (Map.Entry<Integer, AwareSqlValue> entry : parameterMap.entrySet()) {
             sbuilder = new StringBuilder("[");
             List<Pair<String, String>> currList = entry.getValue().getList();
@@ -1040,6 +1040,6 @@ public class PreparedStatementAware implements PreparedStatement {
             sbuilder.append("]");
             values.add(sbuilder.toString());
         }
-        return String.format(base_sql, values.toArray(new String[0]));
+        return String.format(base_sql, (Object) values.toArray(new String[0]));
     }
 }

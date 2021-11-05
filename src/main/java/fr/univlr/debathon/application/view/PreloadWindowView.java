@@ -2,7 +2,7 @@ package fr.univlr.debathon.application.view;
 
 import de.saxsys.mvvmfx.InjectViewModel;
 import fr.univlr.debathon.application.Launch;
-import fr.univlr.debathon.application.viewmodel.PreloaderWindowViewModel;
+import fr.univlr.debathon.application.viewmodel.PreloadWindowViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressBar;
@@ -11,22 +11,22 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * Preloader class
+ * Preload class
  *
  * @author Gaetan Brenckle
  */
-public class PreloaderWindowView extends FxmlView_SceneCycle<PreloaderWindowViewModel> implements Initializable {
+public class PreloadWindowView extends FxmlView_SceneCycle<PreloadWindowViewModel> implements Initializable {
 
     @FXML
     public ProgressBar progressBar_Preloader;
 
     @InjectViewModel
-    private PreloaderWindowViewModel preloaderWindowViewModel;
+    private PreloadWindowViewModel preloadWindowViewModel;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.setViewModel(preloaderWindowViewModel);
+        this.setViewModel(preloadWindowViewModel);
 
         progressBar_Preloader.progressProperty().bind(Launch.progressLaunching);
     }

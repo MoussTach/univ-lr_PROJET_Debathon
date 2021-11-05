@@ -23,23 +23,23 @@ public interface Dao<T> {
     void setConnection(Connection conn);
 
     /**
-     * SELECT of all occurance of the job class.
+     * SELECT of all occurrence of the job class.
      *
      * @author Gaetan Brenckle
      *
-     * @return - {@link List} - a list that contain all occurance of {@link T}, the job class associate.
+     * @return - {@link List} - a list that contain all occurrence of {@link T}, the job class associate.
      * @throws SQLException - throw the exception to force a try catch when used.
      */
     List<T> selectAll() throws SQLException;
 
     /**
-     * SELECT of all occurance of the job class.
+     * SELECT of all occurrence of the job class.
      * Use a list of key to exclude them from the select
      *
      * @author Gaetan Brenckle
      *
      * @param excludeList - {@link List} - list of key
-     * @return - {@link List} - a list that contain all occurance of {@link T}, the job class associate.
+     * @return - {@link List} - a list that contain all occurrence of {@link T}, the job class associate.
      * @throws SQLException - throw the exception to force a try catch when used.
      */
     List<T> selectAll(List<T> excludeList) throws SQLException;

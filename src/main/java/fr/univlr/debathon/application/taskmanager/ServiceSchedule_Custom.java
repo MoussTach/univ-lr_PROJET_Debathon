@@ -29,7 +29,7 @@ public abstract class ServiceSchedule_Custom<T> extends ScheduledService<T> impl
 
     private Boolean untilWorks_ = false;
     private Duration stepDurationOnFail_ = Duration.ofSeconds(5);
-    private Duration maximunDurationOnFail_ = Duration.ofMinutes(5);
+    private Duration maximumDurationOnFail_ = Duration.ofMinutes(5);
 
 
     /**
@@ -89,11 +89,11 @@ public abstract class ServiceSchedule_Custom<T> extends ScheduledService<T> impl
      *
      * Default to 5min.
      *
-     * @param maximunDurationOnFail_ - {@link Duration} - duration to set.
+     * @param maximumDurationOnFail_ - {@link Duration} - duration to set.
      * @return - {@link ServiceSchedule_Custom} - builder pattern.
      */
-    public ServiceSchedule_Custom setMaximunDurationOnFail(Duration maximunDurationOnFail_) {
-        this.maximunDurationOnFail_ = maximunDurationOnFail_;
+    public ServiceSchedule_Custom setMaximumDurationOnFail(Duration maximumDurationOnFail_) {
+        this.maximumDurationOnFail_ = maximumDurationOnFail_;
 
         return this;
     }
@@ -115,7 +115,7 @@ public abstract class ServiceSchedule_Custom<T> extends ScheduledService<T> impl
 
         this.currentTask.setLatch(latch);
         this.currentTask.setDelayUntilStart(this.delayUntilStart_);
-        this.currentTask.setMaximunDurationOnFail(this.maximunDurationOnFail_);
+        this.currentTask.setMaximumDurationOnFail(this.maximumDurationOnFail_);
         this.currentTask.setStepDurationOnFail(this.stepDurationOnFail_);
 
         if (untilWorks_) {

@@ -3,8 +3,6 @@ package fr.univlr.debathon.application.viewmodel.mainwindow;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewTuple;
-import de.saxsys.mvvmfx.utils.commands.Action;
-import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import fr.univlr.debathon.application.taskmanager.TaskArray;
@@ -25,16 +23,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.util.Pair;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import java.util.Random;
 import java.util.ResourceBundle;
 
 import static fr.univlr.debathon.application.Main.TASKMANAGER;
@@ -67,7 +62,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     private final ObservableRuleBasedValidator rule_changeFilter = new ObservableRuleBasedValidator();
 
     private ListChangeListener<ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> > listChangeListener_Debate;
-    private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_ = null;
+    private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_;
 
     @InjectScope
     private MainViewScope mainViewScope;
@@ -96,7 +91,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         };
         this.listDebate_value.addListener(this.listChangeListener_Debate);
 
-        //RessourceBundle Listener
+        //ResourceBundle Listener
         this.listener_ChangedValue_bundleLanguage_ = this::listener_bundleLanguage;
         this.resBundle_.addListener(this.listener_ChangedValue_bundleLanguage_);
 
@@ -120,7 +115,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
                         //Random name
                         char[] array = "1234567890qwertyuiopasdfghjklzxcvbnm".toCharArray();
-                        StringBuilder randomString = new StringBuilder("");
+                        StringBuilder randomString = new StringBuilder();
                         for (int x = 0; x < 10; x++) {
                             randomString.append(array[(int) (Math.random() * (10 + 1))]);
                         }
@@ -357,10 +352,10 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
 
     /**
-     * Listener for the ressource bundle.
+     * Listener for the resource bundle.
      *
      * @param observable - {@link ObservableValue} - the value observed
-     * @param oldValue - {@link ResourceBundle} - the old value that are remplaced
+     * @param oldValue - {@link ResourceBundle} - the old value that are replaced
      * @param newValue - {@link ResourceBundle} - the new value
      */
     private void listener_bundleLanguage(ObservableValue<? extends ResourceBundle> observable, ResourceBundle oldValue, ResourceBundle newValue) {
@@ -393,6 +388,6 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
             this.listChangeListener_Debate = null;
         }
 
-        LanguageBundle.getInstance().unbindRessourceBundle(this.resBundle_);
+        LanguageBundle.getInstance().unbindResourceBundle(this.resBundle_);
     }
 }

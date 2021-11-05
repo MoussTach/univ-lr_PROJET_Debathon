@@ -74,7 +74,7 @@ public class DAO_Author implements Dao<Author> {
             if (LOGGER.isWarnEnabled()) {
                 LOGGER.warn("Author select when the given id is null");
             }
-            return retAuthor;
+            return null;
         }
 
         final String select_sql = String.format("%s %s %s",

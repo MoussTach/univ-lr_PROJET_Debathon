@@ -26,12 +26,12 @@ import java.time.format.DateTimeFormatter;
 public class CustomEditingCell_Date<T> extends TableCell<T, LocalDate> {
 
     private final ObjectProperty<LocalDate> currentObject = new SimpleObjectProperty<>(null);
-    private DatePicker datePicker = null;
+    private final DatePicker datePicker;
 
     private DateTimeFormatter formatter = null;
 
     /**
-     * Defaut Constructor.
+     * Default Constructor.
      * Initialize the size of the combobox.
      * Implement a event when some key are pressed:
      *      - CONTROL : show the popover (Use Escape to continue, enter to valid)
@@ -61,7 +61,7 @@ public class CustomEditingCell_Date<T> extends TableCell<T, LocalDate> {
         if (pattern != null && !pattern.isEmpty()) {
             formatter = DateTimeFormatter.ofPattern(pattern);
 
-            datePicker.setConverter(new StringConverter<LocalDate>() {
+            datePicker.setConverter(new StringConverter<>() {
                 final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
 
                 {
@@ -135,7 +135,7 @@ public class CustomEditingCell_Date<T> extends TableCell<T, LocalDate> {
         });
 
         datePicker.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (Boolean.TRUE.equals(!newValue) && datePicker != null) {
+            if (Boolean.TRUE.equals(!newValue)) {
                 commitEdit(currentObject.get());
             }
         });

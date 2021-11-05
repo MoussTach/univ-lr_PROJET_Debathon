@@ -54,12 +54,12 @@ public class OptionsWindowViewModel extends ViewModel_SceneCycle {
     private final ObjectProperty<CompositeValidator> currentSceneValidator_ = new SimpleObjectProperty<>(new CompositeValidator());
     private final ObjectProperty<CompositeCommand_Remastered> currentScene_Command_ = new SimpleObjectProperty<>(new CompositeCommand_Remastered());
 
-    private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_ = null;
+    private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_;
     private ChangeListener<CategoryListItemViewModel> listener_ChangedValue_categoryItem_ = null;
 
     /**
      * Default Constructor.
-     * Create a RessourceBundle listener.
+     * Create a ResourceBundle listener.
      * Create a listener on the RIGHTS to perform a update of available category when the db_sav_log change.
      *
      * @author Gaetan Brenckle
@@ -69,18 +69,16 @@ public class OptionsWindowViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[public][constructor] Creation of the OptionsWindowsViewModel() object.");
         }
 
-        //RessourceBundle listener
-        if (this.listener_ChangedValue_bundleLanguage_ == null) {
-            this.listener_ChangedValue_bundleLanguage_ = this::listener_bundleLanguage;
-            this.resBundle_.addListener(this.listener_ChangedValue_bundleLanguage_);
-        }
+        //ResourceBundle listener
+        this.listener_ChangedValue_bundleLanguage_ = this::listener_bundleLanguage;
+        this.resBundle_.addListener(this.listener_ChangedValue_bundleLanguage_);
 
         if (this.listener_ChangedValue_categoryItem_ == null) {
             this.listener_ChangedValue_categoryItem_ = this::listener_selectCategory;
             this.selectedCategory_.addListener(this.listener_ChangedValue_categoryItem_);
         }
 
-        //Insert the first category and launch a fonction to add the other
+        //Insert the first category and launch a function to add the other
         this.olistCategoryItemViews_ = FXCollections.observableArrayList(
                 new CategoryListItemViewModel<>(
                         "generalCategory",
@@ -190,7 +188,7 @@ public class OptionsWindowViewModel extends ViewModel_SceneCycle {
     }
 
     /**
-     * Getter for the CompositeValidator of the current scene loaded dynamicly with the selection of the listView.
+     * Getter for the CompositeValidator of the current scene loaded dynamically with the selection of the listView.
      *
      * @author Gaetan Brenckle
      *
@@ -201,7 +199,7 @@ public class OptionsWindowViewModel extends ViewModel_SceneCycle {
     }
 
     /**
-     * Getter for the compositeCommand of the current scene loaded dynamicly with the selection of the listView.
+     * Getter for the compositeCommand of the current scene loaded dynamically with the selection of the listView.
      *
      * @author Gaetan Brenckle
      *
@@ -279,10 +277,10 @@ public class OptionsWindowViewModel extends ViewModel_SceneCycle {
 
 
     /**
-     * Listener for the ressource bundle.
+     * Listener for the resource bundle.
      *
      * @param observable - {@link ObservableValue} - the value observed
-     * @param oldValue - {@link ResourceBundle} - the old value that are remplaced
+     * @param oldValue - {@link ResourceBundle} - the old value that are replaced
      * @param newValue - {@link ResourceBundle} - the new value
      */
     private void listener_bundleLanguage(ObservableValue<? extends ResourceBundle> observable, ResourceBundle oldValue, ResourceBundle newValue) {
@@ -310,7 +308,7 @@ public class OptionsWindowViewModel extends ViewModel_SceneCycle {
             this.resBundle_.removeListener(this.listener_ChangedValue_bundleLanguage_);
             this.listener_ChangedValue_bundleLanguage_ = null;
         }
-        LanguageBundle.getInstance().unbindRessourceBundle(this.resBundle_);
+        LanguageBundle.getInstance().unbindResourceBundle(this.resBundle_);
 
         if (this.listener_ChangedValue_categoryItem_ != null) {
             this.selectedCategory_.removeListener(this.listener_ChangedValue_categoryItem_);

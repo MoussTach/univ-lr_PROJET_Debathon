@@ -30,7 +30,7 @@ public abstract class Task_Custom<T> extends Task<T> implements ThreadFunctions<
     private final BooleanProperty untilWorks_ = new SimpleBooleanProperty(false);
     private final BooleanProperty canRetry_ = new SimpleBooleanProperty(false);
     private Duration stepDurationOnFail_ = Duration.ofSeconds(5);
-    private Duration maximunDurationOnFail_ = Duration.ofMinutes(5);
+    private Duration maximumDurationOnFail_ = Duration.ofMinutes(5);
 
 
     /**
@@ -118,11 +118,11 @@ public abstract class Task_Custom<T> extends Task<T> implements ThreadFunctions<
      *
      * Default to 5min.
      *
-     * @param maximunDurationOnFail_ - {@link Duration} - duration to set.
+     * @param maximumDurationOnFail_ - {@link Duration} - duration to set.
      * @return - {@link Task_Custom} - builder pattern.
      */
-    public Task_Custom setMaximunDurationOnFail(Duration maximunDurationOnFail_) {
-        this.maximunDurationOnFail_ = maximunDurationOnFail_;
+    public Task_Custom setMaximumDurationOnFail(Duration maximumDurationOnFail_) {
+        this.maximumDurationOnFail_ = maximumDurationOnFail_;
         return this;
     }
 
@@ -158,7 +158,7 @@ public abstract class Task_Custom<T> extends Task<T> implements ThreadFunctions<
                         canRetry_.set(true);
                         untilWorks_.wait(durationStep.toMillis());
                         canRetry_.set(false);
-                        if (durationStep.compareTo(this.maximunDurationOnFail_) <= 0) {
+                        if (durationStep.compareTo(this.maximumDurationOnFail_) <= 0) {
                             durationStep = durationStep.plus(durationStep);
                         }
                     }

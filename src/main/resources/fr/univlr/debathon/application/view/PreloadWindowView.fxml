@@ -8,7 +8,7 @@
 <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: transparent;"
            stylesheets="@../../../../../css/application.css" BorderPane.alignment="CENTER"
            xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="fr.univlr.debathon.application.view.PreloaderWindowView">
+           fx:controller="fr.univlr.debathon.application.view.PreloadWindowView">
     <ImageView pickOnBounds="true" preserveRatio="true">
         <Image url="@../../../../../img/logo/Logo_univLR_256.png"/>
     </ImageView>

@@ -317,7 +317,7 @@
     </build>
 
     <properties>
-        <arg-java-config></arg-java-config>
+        <arg-java-config/>
         <dataCreated-directory>data_created</dataCreated-directory>
         <data-directory>data_ressources</data-directory>
         <dll-directory>webkit</dll-directory>

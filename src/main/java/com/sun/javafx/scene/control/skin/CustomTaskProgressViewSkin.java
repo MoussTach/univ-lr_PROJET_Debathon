@@ -85,7 +85,7 @@ public class CustomTaskProgressViewSkin<T extends Task_Custom<?>> extends SkinBa
         public void updateIndex(int index) {
             super.updateIndex(index);
             if (index == -1) {
-                this.setGraphic((Node)null);
+                this.setGraphic(null);
                 this.getStyleClass().setAll("task-list-cell-empty");
             }
 
@@ -95,32 +95,28 @@ public class CustomTaskProgressViewSkin<T extends Task_Custom<?>> extends SkinBa
             super.updateItem(task, empty);
             this.task = task;
             if (!empty && task != null) {
-                if (task != null) {
-                    this.getStyleClass().setAll("task-list-cell");
-                    this.progressBar.progressProperty().bind(task.progressProperty());
-                    this.titleText.textProperty().bind(task.titleProperty());
-                    this.messageText.textProperty().bind(task.messageProperty());
-                    this.retryButton.disableProperty().bind(task.canRetryProperty().not());
+                this.getStyleClass().setAll("task-list-cell");
+                this.progressBar.progressProperty().bind(task.progressProperty());
+                this.titleText.textProperty().bind(task.titleProperty());
+                this.messageText.textProperty().bind(task.messageProperty());
+                this.retryButton.disableProperty().bind(task.canRetryProperty().not());
 
-                    Callback<T, Node> factory = ((TaskProgressView) CustomTaskProgressViewSkin.this.getSkinnable()).getGraphicFactory();
-                    if (factory != null) {
-                        Node graphic = factory.call(task);
-                        if (graphic != null) {
-                            BorderPane.setAlignment(graphic, Pos.CENTER);
-                            BorderPane.setMargin(graphic, new Insets(0.0D, 4.0D, 0.0D, 0.0D));
-                            this.borderPane.setLeft(graphic);
-                        }
-                    } else {
-                        this.borderPane.setLeft((Node)null);
+                Callback<T, Node> factory = ((TaskProgressView) CustomTaskProgressViewSkin.this.getSkinnable()).getGraphicFactory();
+                if (factory != null) {
+                    Node graphic = factory.call(task);
+                    if (graphic != null) {
+                        BorderPane.setAlignment(graphic, Pos.CENTER);
+                        BorderPane.setMargin(graphic, new Insets(0.0D, 4.0D, 0.0D, 0.0D));
+                        this.borderPane.setLeft(graphic);
                     }
-
-                    this.setGraphic(this.borderPane);
                 } else {
-                    retryButton.setDisable(true);
+                    this.borderPane.setLeft(null);
                 }
+
+                this.setGraphic(this.borderPane);
             } else {
                 this.getStyleClass().setAll("task-list-cell-empty");
-                this.setGraphic((Node)null);
+                this.setGraphic(null);
             }
 
         }

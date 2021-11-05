@@ -21,7 +21,7 @@ public class CustomEditingCell_Boolean<T> extends TableCell<T, Boolean> {
     private boolean canBeChanged = true;
 
     /**
-     * Defaut Constructor.
+     * Default Constructor.
      * Initialize the size of the checkBox.
      * Implement a event when some key are pressed:
      *      - ENTER : reverse the current boolean and commit
@@ -63,7 +63,7 @@ public class CustomEditingCell_Boolean<T> extends TableCell<T, Boolean> {
     }
 
     /**
-     * Constructo with a indicator to unable or not the change when a action occurs.
+     * Constructor with a indicator to unable or not the change when a action occurs.
      *
      * @author Gaetan Brenckle
      *

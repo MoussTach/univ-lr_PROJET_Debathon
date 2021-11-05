@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 
 /**
  * View of the TaskManagerWindow
- * This view contain all task that are proceced by the application.
+ * This view contain all task that are preceded by the application.
  *
  * @author Gaetan Brenckle
  */

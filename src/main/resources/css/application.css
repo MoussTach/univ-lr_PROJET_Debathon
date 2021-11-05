@@ -1,6 +1,6 @@
 /*noinspection ALL*/
 
-/* Root changement*/
+/* Root changes*/
 /*noinspection ALL*/
 .root {
     -fx-font-size: 14px;
@@ -15,7 +15,7 @@
     -fx-font-size: 20px;
 }
 
-/* TextField changement*/
+/* TextField changes*/
 /*noinspection ALL*/
 .text-field {
     -fx-alignment: center-left;

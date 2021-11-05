@@ -19,7 +19,7 @@ public class CustomEditingCell_Basic<T, V> extends TableCell<T, V> {
     private final Label label = new Label();
 
     /**
-     * Defaut Constructor.
+     * Default Constructor.
      * Initialize the size of the label.
      *
      * @author Gaetan Brenckle

@@ -42,7 +42,7 @@ public interface ThreadArray<T extends ThreadFunctions> {
     List<Task> makeList();
 
     /**
-     * Execute the tree with a different approch depend of the type of execution ({@link ExecutionType}).
+     * Execute the tree with a different approach depend of the type of execution ({@link ExecutionType}).
      * This method use a latch on each case to contain each line of the tree.
      *
      * @author Gaetan Brenckle

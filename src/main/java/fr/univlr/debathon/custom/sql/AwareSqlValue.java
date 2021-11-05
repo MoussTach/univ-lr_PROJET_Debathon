@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Value of the {@link PreparedStatementAware}.
- * used to contain a inregular number of variable, with their designation.
+ * used to contain a irregular number of variable, with their designation.
  *
  * @author Gaetan Brenckle
  */

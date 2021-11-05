@@ -1,9 +1,7 @@
 package fr.univlr.debathon.application.viewmodel.mainwindow;
 
 import de.saxsys.mvvmfx.Scope;
-import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.beans.property.*;
-import javafx.scene.layout.BorderPane;
 
 /**
  * Main scope of the application, used to contain the loading information when the user want to access
@@ -28,7 +26,7 @@ public class MainScope implements Scope {
 
 
     /**
-     * ProgressProprety to bind.
+     * ProgressProperty to bind.
      *
      * @author Gaetan Brenckle
      * @return {@link DoubleProperty} - progress property to link

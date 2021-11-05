@@ -36,7 +36,7 @@ public class CustomComboBox_R<T> extends ComboBox<T> {
      * Default constructor
      * invoke default method
      *
-     * Create a listerner on editableProperty to set the key event when the property is invoked.
+     * Create a listener on editableProperty to set the key event when the property is invoked.
      *
      * @author Gaetan Brenckle
      */
@@ -95,7 +95,7 @@ public class CustomComboBox_R<T> extends ComboBox<T> {
      */
     private void converter_StringToClass() {
 
-        this.setConverter(new StringConverter<T>() {
+        this.setConverter(new StringConverter<>() {
 
             @Override
             public String toString(T data) {
@@ -120,13 +120,13 @@ public class CustomComboBox_R<T> extends ComboBox<T> {
     }
 
     /**
-     * Event on key realeased.
-     * This is the core of the editing customed part.
+     * Event on key released.
+     * This is the core of the editing customer part.
      * This will be throw after each input to change the item displayed.
      *
      * @author Gaetan Brenckle
      *
-     * @return - {@link EventHandler} - the event when the key are realeased
+     * @return - {@link EventHandler} - the event when the key are released
      */
     private EventHandler<KeyEvent> eventOnKeyReleased() {
         final BooleanProperty singleEvent = new SimpleBooleanProperty(false);

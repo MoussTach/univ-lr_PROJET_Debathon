@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * <pre>
  * Class used to have a dynamic reloading of ui text with the usage of property.
- * This class stock a list of {@literal ObjectProperty<ResourceBundle>} that the ressourceBundle associed will be update
+ * This class stock a list of {@literal ObjectProperty<ResourceBundle>} that the resourceBundle associated will be update
  * when the current language is changed.
  * This class is a singleton-class, use LanguageBundle#getInstance() to create and use a instance.
  *
@@ -97,7 +97,7 @@ public class LanguageBundle {
     private static LanguageBundle INSTANCE;
     private languages currLanguage_ = languages.FR;
     private final ObjectProperty<Locale> currentLocale_ = new SimpleObjectProperty<>(currLanguage_.getLocale());
-    private final Map<String, ObjectProperty<ResourceBundle>> mapRessourceBundle_ = new ConcurrentHashMap<>();
+    private final Map<String, ObjectProperty<ResourceBundle>> mapResourceBundle_ = new ConcurrentHashMap<>();
 
     /**
      * Getter of the current instance of the class {@link LanguageBundle}.
@@ -116,13 +116,13 @@ public class LanguageBundle {
 
     /**
      * Default constructor.
-     * Create a listener to update each RessourceBundle of the map when a new language is set.
+     * Create a listener to update each ResourceBundle of the map when a new language is set.
      *
      * @author Gaetan Brenckle
      */
     private LanguageBundle() {
         this.currentLocale_.addListener((observable, oldValue, newValue) -> {
-            for (Map.Entry<String, ObjectProperty<ResourceBundle>> entry : this.mapRessourceBundle_.entrySet()) {
+            for (Map.Entry<String, ObjectProperty<ResourceBundle>> entry : this.mapResourceBundle_.entrySet()) {
                 String nameBundle = entry.getKey();
                 ObjectProperty<ResourceBundle> forBundle = entry.getValue();
                 forBundle.set(ResourceBundle.getBundle(nameBundle, this.currentLocale_.get()));
@@ -134,14 +134,14 @@ public class LanguageBundle {
     }
 
     /**
-     * This function is used to create a new property of a RessourceBundle.
+     * This function is used to create a new property of a ResourceBundle.
      * If a bundle is already created with the given parameter, the method doesn't create a newer but return the property
      * stocked on the map with the same key as the parameter.
      *
      * @author Gaetan Brenckle
      *
      * @param baseName - {@link String} - base name of the properties file, same parameter as the {@link ResourceBundle#getBundle(String)} method.
-     * @return {@link ObjectProperty}{@literal <}{@link ResourceBundle}{@literal >}- Return a new property of the ressourceBundle.
+     * @return {@link ObjectProperty}{@literal <}{@link ResourceBundle}{@literal >}- Return a new property of the resourceBundle.
      */
     public ObjectProperty<ResourceBundle> bindResourceBundle(String baseName) {
         ObjectProperty<ResourceBundle> resBundle;
@@ -149,27 +149,27 @@ public class LanguageBundle {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace(String.format("[public][method] usage of LanguageBundle.bindResourceBundle(%s).", baseName));
         }
-        if (!this.mapRessourceBundle_.containsKey(baseName)) {
+        if (!this.mapResourceBundle_.containsKey(baseName)) {
             resBundle = new SimpleObjectProperty<>(ResourceBundle.getBundle(baseName, this.currentLocale_.get()));
-            this.mapRessourceBundle_.putIfAbsent(baseName, resBundle);
+            this.mapResourceBundle_.putIfAbsent(baseName, resBundle);
         } else {
-            resBundle = this.mapRessourceBundle_.get(baseName);
+            resBundle = this.mapResourceBundle_.get(baseName);
         }
         return resBundle;
     }
 
     /**
-     * Method used to unbind a ressourceBundle property.
+     * Method used to unbind a resourceBundle property.
      *
      * @author Gaetan Brenckle
      *
-     * @param propertyValue - the property ressourceBundle that you want to unbind.
+     * @param propertyValue - the property resourceBundle that you want to unbind.
      */
-    public void unbindRessourceBundle(ObjectProperty<ResourceBundle> propertyValue) {
+    public void unbindResourceBundle(ObjectProperty<ResourceBundle> propertyValue) {
         if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace(String.format("[public][method] usage of LanguageBundle.unbindRessourceBundle(%s).", propertyValue.toString()));
+            LOGGER.trace(String.format("[public][method] usage of LanguageBundle.unbindResourceBundle(%s).", propertyValue.toString()));
         }
-        this.mapRessourceBundle_.remove((propertyValue.get()).getBaseBundleName(), propertyValue);
+        this.mapResourceBundle_.remove((propertyValue.get()).getBaseBundleName(), propertyValue);
     }
 
     /**
@@ -207,7 +207,7 @@ public class LanguageBundle {
     }
 
     /**
-     * Return the size of the map of ressourceBundle updated when the language is changed.
+     * Return the size of the map of resourceBundle updated when the language is changed.
      * Mostly used on test.
      *
      * @author Gaetan Brenckle
@@ -215,6 +215,6 @@ public class LanguageBundle {
      * @return int - the size of the map
      */
     public int mapSize() {
-        return this.mapRessourceBundle_.size();
+        return this.mapResourceBundle_.size();
     }
 }

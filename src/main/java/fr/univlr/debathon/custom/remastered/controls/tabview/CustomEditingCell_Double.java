@@ -94,7 +94,7 @@ public class CustomEditingCell_Double<T> extends TableCell<T, Double> {
 
     /**
      * Initialize the TextField.
-     * Ajust his size and implement event when a key is pressed on the field.
+     * Adjust his size and implement event when a key is pressed on the field.
      *      ENTER : Commit if match the regex (if it is a number) or cancel the edit
      *      TAB : Commit if match the regex (if it is a number) or cancel the edit
      *      ESCAPE: cancel the commit

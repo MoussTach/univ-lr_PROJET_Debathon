@@ -17,7 +17,7 @@ public class DbProperties_postgres extends DbConnection {
     private static final CustomLogger LOGGER = CustomLogger.create(DbProperties_postgres.class.getName());
 
     /**
-     * Default Contructor.
+     * Default Constructor.
      * It will parse the properties file and stock some useful information to create a connection
      *
      * @author Gaetan Brenckle
@@ -92,7 +92,7 @@ public class DbProperties_postgres extends DbConnection {
      * @param name {@link String} - The name of the database than the program can use.
      * @param user {@link String} - The user of the database than the program can use.
      * @param password [{@link String} - The password of the database.
-     * @return boolean - return the state of the conenction, if it is true, the information given in parameter have update the information of the properties file.
+     * @return boolean - return the state of the connection, if it is true, the information given in parameter have update the information of the properties file.
      */
     public boolean createConnection(String server, String port, String name, String user, String password) {
 
@@ -130,14 +130,14 @@ public class DbProperties_postgres extends DbConnection {
 
         } catch (IOException e) {
             if (LOGGER.isErrorEnabled()) {
-                LOGGER.error(String.format("Error catched : %s", e.getMessage()), e);
+                LOGGER.error(String.format("Error catch : %s", e.getMessage()), e);
             }
         }
         return false;
     }
 
     /**
-     * Stock localy the information of the properties file to be able to stock them into the class if the connection is successful.
+     * Stock locally the information of the properties file to be able to stock them into the class if the connection is successful.
      *
      * @author Gaetan Brenckle
      *

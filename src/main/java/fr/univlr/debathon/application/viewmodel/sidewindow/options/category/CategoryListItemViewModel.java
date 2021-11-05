@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 
 /**
  * ViewModel of the view {@link fr.univlr.debathon.application.view.sidewindow.options.category.CategoryListItemView}.
- * This ViewModel is created dynamicly and to be available to return a view on a other pane when a item is selectionned.
+ * This ViewModel is created dynamically and to be available to return a view on a other pane when a item is sectioned.
  *
  * @author Gaetan Brenckle
  *
@@ -33,7 +33,7 @@ public class CategoryListItemViewModel<T extends FxmlView<? extends V>, V extend
     private final ObjectProperty<Image> categoryImage_ = new SimpleObjectProperty<>(new Image(this.getClass().getResourceAsStream("/img/imageNotFound.png")));
     private final StringProperty categoryName_ = new SimpleStringProperty();
 
-    private String categoryNamePassed_ = null;
+    private final String categoryNamePassed_;
 
     private final V sceneClassViewModel_;
     private final Node sceneClassNode_;
@@ -42,22 +42,22 @@ public class CategoryListItemViewModel<T extends FxmlView<? extends V>, V extend
 
     /**
      * Default constructor.
-     * Create a RessourceBundle listener.
+     * Create a ResourceBundle listener.
      * Load the node of the View given on parameter.
      *
      * @author Gaetan Brenckle
      *
      * @param categoryName - {@link String} - text field that indicate the category.
-     * @param image - {@link Image} - Image associed with the category.
-     * @param sceneClassView - {@link Class}{@literal <}{@link T}{@literal >} - class that can be loaded on a parent pane when this item is selectionned.
-     * @param scope - {@link Scope} - Scope that can be associed with the sceneClassView parameter.
+     * @param image - {@link Image} - Image associated with the category.
+     * @param sceneClassView - {@link Class}{@literal <}{@link T}{@literal >} - class that can be loaded on a parent pane when this item is selected.
+     * @param scope - {@link Scope} - Scope that can be associated with the sceneClassView parameter.
      */
     public CategoryListItemViewModel(String categoryName, Image image, Class<T> sceneClassView, Scope scope) {
         this.categoryNamePassed_ = categoryName;
         this.categoryName_.set(this.resBundle_.get().getString(categoryName));
         this.setCategoryImage(image);
 
-        //RessourceBundle listener
+        //ResourceBundle listener
         if (this.listener_ChangedValue_bundleLanguage_ == null) {
             this.listener_ChangedValue_bundleLanguage_ = this::listener_bundleLanguage;
             this.resBundle_.addListener(this.listener_ChangedValue_bundleLanguage_);
@@ -71,18 +71,18 @@ public class CategoryListItemViewModel<T extends FxmlView<? extends V>, V extend
     }
 
     /**
-     * Getter for the sceneNode associed with the item.
+     * Getter for the sceneNode associated with the item.
      *
      * @author Gaetan Brenckle
      *
-     * @return {@link Node} - return the Node associed with the Item.
+     * @return {@link Node} - return the Node associated with the Item.
      */
     public Node getSceneNode() {
         return this.sceneClassNode_;
     }
 
     /**
-     * Getter for the ViewModel of the associed SceneNode.
+     * Getter for the ViewModel of the associated SceneNode.
      *
      * @author Gaetan Brenckle
      *
@@ -93,7 +93,7 @@ public class CategoryListItemViewModel<T extends FxmlView<? extends V>, V extend
     }
 
     /**
-     * Getter for the category name passed on the constructor without the modification of the ressource bundle.
+     * Getter for the category name passed on the constructor without the modification of the resource bundle.
      *
      * @author Gaetan Brenckle
      *
@@ -143,10 +143,10 @@ public class CategoryListItemViewModel<T extends FxmlView<? extends V>, V extend
 
 
     /**
-     * Listener for the ressource bundle.
+     * Listener for the resource bundle.
      *
      * @param observable - {@link ObservableValue} - the value observed
-     * @param oldValue - {@link ResourceBundle} - the old value that are remplaced
+     * @param oldValue - {@link ResourceBundle} - the old value that are replaced
      * @param newValue - {@link ResourceBundle} - the new value
      */
     private void listener_bundleLanguage(ObservableValue<? extends ResourceBundle> observable, ResourceBundle oldValue, ResourceBundle newValue) {
@@ -165,6 +165,6 @@ public class CategoryListItemViewModel<T extends FxmlView<? extends V>, V extend
             this.resBundle_.removeListener(this.listener_ChangedValue_bundleLanguage_);
             this.listener_ChangedValue_bundleLanguage_ = null;
         }
-        LanguageBundle.getInstance().unbindRessourceBundle(this.resBundle_);
+        LanguageBundle.getInstance().unbindResourceBundle(this.resBundle_);
     }
 }

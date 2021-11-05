@@ -10,31 +10,30 @@
 <BorderPane fx:id="bPaneMainView" minHeight="400.0" minWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.MainWindowView">
     <top>
         <VBox BorderPane.alignment="CENTER">
-            <children>
-                <fx:include source="MenuBarView.fxml" />
+            <fx:include source="MenuBarView.fxml"/>
             <StackPane>
-               <children>
-                  <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                     <StackPane.margin>
-                        <Insets />
-                     </StackPane.margin></ToolBar>
-                  <BorderPane>
-                     <left>
-                        <Button fx:id="btnPrev" mnemonicParsing="false" onAction="#act_btnPrev" text="&lt;" BorderPane.alignment="CENTER" />
-                     </left>
-                     <right>
-                        <Button fx:id="btnHome" mnemonicParsing="false" onAction="#act_btnHome" text="Home" BorderPane.alignment="CENTER" />
-                     </right>
-                     <StackPane.margin>
-                        <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
-                     </StackPane.margin>
-                  </BorderPane>
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
+                <VBox.margin>
+                    <Insets/>
+                </VBox.margin>
+                <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                    <StackPane.margin>
+                        <Insets/>
+                    </StackPane.margin>
+                </ToolBar>
+                <BorderPane>
+                    <left>
+                        <Button fx:id="btnPrev" mnemonicParsing="false" onAction="#act_btnPrev" text="&lt;"
+                                BorderPane.alignment="CENTER"/>
+                    </left>
+                    <right>
+                        <Button fx:id="btnHome" mnemonicParsing="false" onAction="#act_btnHome" text="Home"
+                                BorderPane.alignment="CENTER"/>
+                    </right>
+                    <StackPane.margin>
+                        <Insets bottom="5.0" left="15.0" right="15.0" top="5.0"/>
+                    </StackPane.margin>
+                </BorderPane>
             </StackPane>
-            </children>
         </VBox>
     </top>
     <center>

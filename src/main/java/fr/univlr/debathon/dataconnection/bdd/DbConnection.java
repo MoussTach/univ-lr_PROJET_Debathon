@@ -22,7 +22,7 @@ public abstract class DbConnection {
     protected final BooleanProperty isConnected_ = new SimpleBooleanProperty(false);
 
     /**
-     * Default contructor.
+     * Default constructor.
      */
     protected DbConnection() {
         if (LOGGER.isTraceEnabled()) {
@@ -31,7 +31,7 @@ public abstract class DbConnection {
     }
 
     /**
-     * Stock localy the information of the properties file to be able to stock them into the class if the connection is successful.
+     * Stock locally the information of the properties file to be able to stock them into the class if the connection is successful.
      *
      * @author Gaetan Brenckle
      *

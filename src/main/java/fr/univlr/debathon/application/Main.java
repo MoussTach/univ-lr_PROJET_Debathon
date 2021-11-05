@@ -10,7 +10,7 @@ import java.util.Properties;
 
 /**
  * Main class.
- * Load the javaFX informations and the database information with a preloader before send the main to the controller of the main windows.
+ * Load the javaFX information and the database information with a preload before send the main to the controller of the main windows.
  *
  * @author Gaetan Brenckle
  */
@@ -45,6 +45,6 @@ public class Main {
             }
         }
 
-        LauncherImpl.launchApplication(Launch.class, PreloaderLaunch.class, args);
+        LauncherImpl.launchApplication(Launch.class, PreloadLaunch.class, args);
     }
 }

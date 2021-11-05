@@ -9,7 +9,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 /**
- * Create a custom tableview, that can navigate between the cell and pass on each other after a commite value.
+ * Create a custom tableview, that can navigate between the cell and pass on each other after a commit value.
  *
  * @author Gaetan Brenckle
  *
@@ -37,7 +37,7 @@ public class CustomTableView<T> extends TableView<T> {
      *
      * @author Gaetan Brenckle
      *
-     * @return {@link EventHandler} - return a event when a key is realease.
+     * @return {@link EventHandler} - return a event when a key is release.
      */
     private EventHandler<KeyEvent> eventOnKeyReleased() {
         return event -> {

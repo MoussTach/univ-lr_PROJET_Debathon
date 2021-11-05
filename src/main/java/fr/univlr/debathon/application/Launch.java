@@ -22,7 +22,7 @@ import java.util.Properties;
 
 /**
  * Launch class.
- * Load the javaFX informations and the database information.
+ * Load the javaFX information and the database information.
  *
  * @author Gaetan Brenckle
  */
@@ -40,7 +40,7 @@ public class Launch extends Application {
      *
      * @author Gaetan Brenckle
      *
-     * @throws IOException - {@link IOException} exception throwed when the file is not readeable
+     * @throws IOException - {@link IOException} exception throw when the file is not readable
      */
     private void createDefaultFile() throws IOException {
 
@@ -57,20 +57,20 @@ public class Launch extends Application {
 
         if (destination_directory_exist) {
 
-            File[] array_ressource_file = destination_directory.listFiles();
-            for (File ressource_file : array_ressource_file) {
-                if (ressource_file != null && ressource_file.exists()) {
+            File[] array_resource_file = destination_directory.listFiles();
+            for (File resource_file : array_resource_file) {
+                if (resource_file != null && resource_file.exists()) {
 
-                    String name_ressource_file = ressource_file.getName();
-                    String path_destination_file = String.format("%s/%s", path_destination_folder, name_ressource_file);
+                    String name_resource_file = resource_file.getName();
+                    String path_destination_file = String.format("%s/%s", path_destination_folder, name_resource_file);
                     File exist_destination_file = new File(path_destination_file);
 
                     if (!exist_destination_file.exists()) {
 
-                        if (ressource_file.isDirectory()) {
-                            FileUtils.copyDirectoryToDirectory(ressource_file, destination_directory);
+                        if (resource_file.isDirectory()) {
+                            FileUtils.copyDirectoryToDirectory(resource_file, destination_directory);
                         } else {
-                            FileUtils.copyFileToDirectory(ressource_file, destination_directory);
+                            FileUtils.copyFileToDirectory(resource_file, destination_directory);
                         }
                     }
                 }
@@ -79,11 +79,11 @@ public class Launch extends Application {
     }
 
     /**
-     * Create db connection, on a method to te called and processed after the preloader is showed.
+     * Create db connection, on a method to te called and processed after the preload is showed.
      *
      * @author Gaetan Brenckle
      *
-     * @throws IOException - {@link IOException} exception throwed when the file is not readeable
+     * @throws IOException - {@link IOException} exception throw when the file is not readable
      */
     private void createDbConnection() throws IOException {
 
@@ -99,7 +99,7 @@ public class Launch extends Application {
     /**
      * Main method.
      * Load every useful information before launch the main windows of the program.
-     * Use a preloader when the informations are collected.
+     * Use a preload when the information are collected.
      *
      * @author Gaetan Brenckle
      */
@@ -129,7 +129,7 @@ public class Launch extends Application {
     }
 
     /**
-     * Override method to define the neccesary to launch the windows of the program.
+     * Override method to define the necessary to launch the windows of the program.
      *
      * @author Gaetan Brenckle
      *

@@ -2,8 +2,8 @@ package fr.univlr.debathon.application;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
-import fr.univlr.debathon.application.view.PreloaderWindowView;
-import fr.univlr.debathon.application.viewmodel.PreloaderWindowViewModel;
+import fr.univlr.debathon.application.view.PreloadWindowView;
+import fr.univlr.debathon.application.viewmodel.PreloadWindowViewModel;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Preloader.StateChangeNotification.Type;
 import javafx.scene.Scene;
@@ -13,23 +13,23 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- * Preloader class.
+ * Preload class.
  *
- * Launch a preloader until all information are loaded.
+ * Launch a preload until all information are loaded.
  *
  * @author Gaetan Brenckle
  */
-public class PreloaderLaunch extends javafx.application.Preloader {
+public class PreloadLaunch extends javafx.application.Preloader {
 
-    private static final CustomLogger LOGGER = CustomLogger.create(PreloaderLaunch.class.getName());
-    private Stage preloaderStage;
+    private static final CustomLogger LOGGER = CustomLogger.create(PreloadLaunch.class.getName());
+    private Stage preloadStage;
 
     @Override
     public void start(Stage primaryStage) {
-        this.preloaderStage = primaryStage;
+        this.preloadStage = primaryStage;
 
-        final ViewTuple<PreloaderWindowView, PreloaderWindowViewModel> preloaderViewTuple = FluentViewLoader.fxmlView(PreloaderWindowView.class).load();
-        final Scene scene = new Scene(preloaderViewTuple.getView());
+        final ViewTuple<PreloadWindowView, PreloadWindowViewModel> preloadViewTuple = FluentViewLoader.fxmlView(PreloadWindowView.class).load();
+        final Scene scene = new Scene(preloadViewTuple.getView());
 
         final Image ico = new Image(getClass().getResourceAsStream("/img/logo/Logo_univLR_64.png"));
         primaryStage.getIcons().add(ico);
@@ -38,7 +38,7 @@ public class PreloaderLaunch extends javafx.application.Preloader {
         scene.setFill(Color.TRANSPARENT);
 
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Preloader loaded");
+            LOGGER.info("Preload loaded");
         }
 
         primaryStage.setScene(scene);
@@ -48,7 +48,7 @@ public class PreloaderLaunch extends javafx.application.Preloader {
     @Override
     public void handleStateChangeNotification(StateChangeNotification stateChangeNotification) {
         if (stateChangeNotification.getType() == Type.BEFORE_START) {
-            preloaderStage.hide();
+            preloadStage.hide();
         }
     }
 }

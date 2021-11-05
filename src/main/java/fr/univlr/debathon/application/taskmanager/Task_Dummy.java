@@ -62,12 +62,12 @@ public class Task_Dummy extends Task<Void> implements ThreadFunctions<Void> {
 
     @Override
     public Image getImage() {
-        return image_;
+        return null;
     }
 
     @Override
     public Task getTask() {
-        return this.currentTask;
+        return null;
     }
 
 

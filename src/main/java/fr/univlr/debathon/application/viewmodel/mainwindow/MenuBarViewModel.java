@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 
 /**
  * ViewModel of the view {@link fr.univlr.debathon.application.view.mainwindow.MenuBarView}.
- * This ViewModel process some fonction for the menubar
+ * This ViewModel process some function for the menubar
  *
  * @author Gaetan Brenckle
  */
@@ -43,7 +43,7 @@ public class MenuBarViewModel extends ViewModel_SceneCycle {
     private final StringProperty menuBarHelp_label_ = new SimpleStringProperty(this.resBundle_.get().getString("menuBarHelp"));
     private final StringProperty menuBarHelp_menuItemAbout_label_ = new SimpleStringProperty(this.resBundle_.get().getString("menuBarHelp_menuItemAbout"));
 
-    private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_ = null;
+    private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_;
     private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_title_ = null;
 
     @InjectScope
@@ -52,17 +52,15 @@ public class MenuBarViewModel extends ViewModel_SceneCycle {
 
     /**
      * Default Constructor.
-     * Create a RessourceBundle listener.
+     * Create a ResourceBundle listener.
      *
      * @author Gaetan Brenckle
      */
     public MenuBarViewModel() {
 
-        //RessourceBundle Listener
-        if (this.listener_ChangedValue_bundleLanguage_ == null) {
-            this.listener_ChangedValue_bundleLanguage_ = this::listener_bundleLanguage;
-            this.resBundle_.addListener(this.listener_ChangedValue_bundleLanguage_);
-        }
+        //ResourceBundle Listener
+        this.listener_ChangedValue_bundleLanguage_ = this::listener_bundleLanguage;
+        this.resBundle_.addListener(this.listener_ChangedValue_bundleLanguage_);
 
         if (this.listener_ChangedValue_bundleLanguage_title_ == null) {
             this.listener_ChangedValue_bundleLanguage_title_ = this::listener_bundleLanguage_title;
@@ -157,10 +155,10 @@ public class MenuBarViewModel extends ViewModel_SceneCycle {
 
 
     /**
-     * Listener for the ressource bundle.
+     * Listener for the resource bundle.
      *
      * @param observable - {@link ObservableValue} - the value observed
-     * @param oldValue - {@link ResourceBundle} - the old value that are remplaced
+     * @param oldValue - {@link ResourceBundle} - the old value that are replaced
      * @param newValue - {@link ResourceBundle} - the new value
      */
     private void listener_bundleLanguage(ObservableValue<? extends ResourceBundle> observable, ResourceBundle oldValue, ResourceBundle newValue) {
@@ -172,10 +170,10 @@ public class MenuBarViewModel extends ViewModel_SceneCycle {
     }
 
     /**
-     * Listener for the ressource bundle of title for window.
+     * Listener for the resource bundle of title for window.
      *
      * @param observable - {@link ObservableValue} - the value observed
-     * @param oldValue - {@link ResourceBundle} - the old value that are remplaced
+     * @param oldValue - {@link ResourceBundle} - the old value that are replaced
      * @param newValue - {@link ResourceBundle} - the new value
      */
     private void listener_bundleLanguage_title(ObservableValue<? extends ResourceBundle> observable, ResourceBundle oldValue, ResourceBundle newValue) {
@@ -195,13 +193,13 @@ public class MenuBarViewModel extends ViewModel_SceneCycle {
             this.resBundle_.removeListener(this.listener_ChangedValue_bundleLanguage_);
             this.listener_ChangedValue_bundleLanguage_ = null;
         }
-        LanguageBundle.getInstance().unbindRessourceBundle(this.resBundle_);
+        LanguageBundle.getInstance().unbindResourceBundle(this.resBundle_);
 
         if (this.listener_ChangedValue_bundleLanguage_title_ != null) {
             this.resBundleWindow_.removeListener(this.listener_ChangedValue_bundleLanguage_title_);
             this.listener_ChangedValue_bundleLanguage_title_ = null;
         }
-        LanguageBundle.getInstance().unbindRessourceBundle(this.resBundleWindow_);
+        LanguageBundle.getInstance().unbindResourceBundle(this.resBundleWindow_);
 
         mainScope.progress_labelProperty().unbind();
         mainScope.progressProperty().unbind();

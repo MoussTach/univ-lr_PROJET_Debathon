@@ -52,7 +52,7 @@ public class CustomTextField_R extends TextField {
                 if (beforeEditing != null && !beforeEditing.equals(afterEditing)) {
                     onChangeWhenRelease.set(afterEditing);
 
-                    //I dont know why, but the property need to be getted to fire the change event
+                    //I don't know why, but the property need to be get to fire the change event
                     onChangeWhenRelease.get();
                 }
             }
@@ -61,7 +61,7 @@ public class CustomTextField_R extends TextField {
 
     /**
      * Constructor to directly set a text.
-     * After that, is the same as the default contructor
+     * After that, is the same as the default constructor
      *
      * @param text - {@link String} - the string displayed
      *

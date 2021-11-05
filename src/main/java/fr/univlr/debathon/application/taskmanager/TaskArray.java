@@ -11,7 +11,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * Array created to follow a shema of thread application.
+ * Array created to follow a schema of thread application.
  * When you create a {@link TaskArray}, you have to specify the type of task this array take.
  *
  * {@link ThreadArray.ExecutionType} :
@@ -22,7 +22,7 @@ import java.util.concurrent.ScheduledExecutorService;
  *              Used when you want that each thread of this node execute only when the last thread is finished.
  *
  *          - {@link ThreadArray.ExecutionType#END}
- *              Used when you dont want to create a other node, only specify a new task for the current node.
+ *              Used when you don't want to create a other node, only specify a new task for the current node.
  *
  * It always the node the most deep that are executed in first.
  *
@@ -136,14 +136,9 @@ public class TaskArray<T extends ThreadFunctions> implements ThreadArray<T> {
         builder.append(String.format("⤷ [%s] [%d] [nb Task:%d]", type_, level_, task_linked_.size()));
         task_linked_.forEach(task_customTaskArrayPair -> {
             builder.append("\n");
-            for (int tab = 0; tab <= level_; tab++) {
-                builder.append("\t");
-            }
+            builder.append("\t".repeat(Math.max(0, level_ + 1)));
             builder.append(String.format("[%s]%s", task_customTaskArrayPair.getKey(), (numTask[0]++ >= task_linked_.size()) ? "": ", "));
-
-            for (int tab = 0; tab <= level_; tab++) {
-                builder.append("\t");
-            }
+            builder.append("\t".repeat(Math.max(0, level_ + 1)));
             builder.append(task_customTaskArrayPair.getValue());
         });
         return builder.toString();

@@ -6,18 +6,14 @@ import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import fr.univlr.debathon.application.Launch;
-import fr.univlr.debathon.application.view.sidewindow.options.category.OptionsCategory_GeneralView;
 import fr.univlr.debathon.application.view.taskmanager.TaskManagerWindowView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
-import fr.univlr.debathon.application.viewmodel.sidewindow.options.category.CategoryListItemViewModel;
 import fr.univlr.debathon.application.viewmodel.taskmanager.TaskManagerWindowViewModel;
 import fr.univlr.debathon.language.LanguageBundle;
 import fr.univlr.debathon.log.generate.CustomLogger;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -27,7 +23,7 @@ import java.util.ResourceBundle;
 
 /**
  * ViewModel of the view {@link fr.univlr.debathon.application.view.mainwindow.MainWindowView}.
- * This ViewModel process some fonction for the whole application.
+ * This ViewModel process some function for the whole application.
  *
  * @author Gaetan Brenckle
  */
@@ -47,7 +43,7 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
     private final BooleanProperty isPrevCommandExecutable = new SimpleBooleanProperty(false);
     private final BooleanProperty isHomeCommandExecutable = new SimpleBooleanProperty(false);
 
-    private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_Window_ = null;
+    private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_Window_;
 
     @InjectScope
     private MainScope mainScope;
@@ -66,7 +62,7 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[public][constructor] Creation of the MainWindowViewModel() object.");
         }
 
-        //RessourceBundle Listener
+        //ResourceBundle Listener
         this.listener_ChangedValue_bundleLanguage_Window_ = this::listener_bundleLanguage_window;
         this.resBundleWindow_.addListener(this.listener_ChangedValue_bundleLanguage_Window_);
     }
@@ -203,10 +199,10 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
 
 
     /**
-     * Listener for the ressource bundle.
+     * Listener for the resource bundle.
      *
      * @param observable - {@link ObservableValue} - the value observed
-     * @param oldValue - {@link ResourceBundle} - the old value that are remplaced
+     * @param oldValue - {@link ResourceBundle} - the old value that are replaced
      * @param newValue - {@link ResourceBundle} - the new value
      */
     private void listener_bundleLanguage_window(ObservableValue<? extends ResourceBundle> observable, ResourceBundle oldValue, ResourceBundle newValue) {
@@ -229,6 +225,6 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
         this.isHomeCommandExecutable.unbind();
         this.isPrevCommandExecutable.unbind();
 
-        LanguageBundle.getInstance().unbindRessourceBundle(this.resBundleWindow_);
+        LanguageBundle.getInstance().unbindResourceBundle(this.resBundleWindow_);
     }
 }

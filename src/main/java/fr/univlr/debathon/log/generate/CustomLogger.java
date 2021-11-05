@@ -134,7 +134,7 @@ public final class CustomLogger extends ExtendedLoggerWrapper {
      * @param msg the message string to be logged
      */
     public void input(final Marker marker, final Message msg) {
-        logger.logIfEnabled(FQCN, INPUT, marker, msg, (Throwable) null);
+        logger.logIfEnabled(FQCN, INPUT, marker, msg, null);
     }
 
     /**
@@ -155,7 +155,7 @@ public final class CustomLogger extends ExtendedLoggerWrapper {
      * @param message the message object to log.
      */
     public void input(final Marker marker, final Object message) {
-        logger.logIfEnabled(FQCN, INPUT, marker, message, (Throwable) null);
+        logger.logIfEnabled(FQCN, INPUT, marker, message, null);
     }
 
     /**
@@ -166,7 +166,7 @@ public final class CustomLogger extends ExtendedLoggerWrapper {
      * @since Log4j-2.6
      */
     public void input(final Marker marker, final CharSequence message) {
-        logger.logIfEnabled(FQCN, INPUT, marker, message, (Throwable) null);
+        logger.logIfEnabled(FQCN, INPUT, marker, message, null);
     }
 
     /**
@@ -419,7 +419,7 @@ public final class CustomLogger extends ExtendedLoggerWrapper {
      * @param msg the message string to be logged
      */
     public void input(final Message msg) {
-        logger.logIfEnabled(FQCN, INPUT, null, msg, (Throwable) null);
+        logger.logIfEnabled(FQCN, INPUT, null, msg, null);
     }
 
     /**
@@ -438,7 +438,7 @@ public final class CustomLogger extends ExtendedLoggerWrapper {
      * @param message the message object to log.
      */
     public void input(final Object message) {
-        logger.logIfEnabled(FQCN, INPUT, null, message, (Throwable) null);
+        logger.logIfEnabled(FQCN, INPUT, null, message, null);
     }
 
     /**
@@ -459,7 +459,7 @@ public final class CustomLogger extends ExtendedLoggerWrapper {
      * @since Log4j-2.6
      */
     public void input(final CharSequence message) {
-        logger.logIfEnabled(FQCN, INPUT, null, message, (Throwable) null);
+        logger.logIfEnabled(FQCN, INPUT, null, message, null);
     }
 
     /**
@@ -688,7 +688,7 @@ public final class CustomLogger extends ExtendedLoggerWrapper {
      * @since Log4j-2.4
      */
     public void input(final Supplier<?> msgSupplier) {
-        logger.logIfEnabled(FQCN, INPUT, null, msgSupplier, (Throwable) null);
+        logger.logIfEnabled(FQCN, INPUT, null, msgSupplier, null);
     }
 
     /**
@@ -714,7 +714,7 @@ public final class CustomLogger extends ExtendedLoggerWrapper {
      * @since Log4j-2.4
      */
     public void input(final Marker marker, final Supplier<?> msgSupplier) {
-        logger.logIfEnabled(FQCN, INPUT, marker, msgSupplier, (Throwable) null);
+        logger.logIfEnabled(FQCN, INPUT, marker, msgSupplier, null);
     }
 
     /**
@@ -767,7 +767,7 @@ public final class CustomLogger extends ExtendedLoggerWrapper {
      * @since Log4j-2.4
      */
     public void input(final Marker marker, final MessageSupplier msgSupplier) {
-        logger.logIfEnabled(FQCN, INPUT, marker, msgSupplier, (Throwable) null);
+        logger.logIfEnabled(FQCN, INPUT, marker, msgSupplier, null);
     }
 
     /**
@@ -794,7 +794,7 @@ public final class CustomLogger extends ExtendedLoggerWrapper {
      * @since Log4j-2.4
      */
     public void input(final MessageSupplier msgSupplier) {
-        logger.logIfEnabled(FQCN, INPUT, null, msgSupplier, (Throwable) null);
+        logger.logIfEnabled(FQCN, INPUT, null, msgSupplier, null);
     }
 
     /**

@@ -24,7 +24,7 @@ public class CustomEditingCell_Combobox<T, V> extends TableCell<T, V> {
     private final ObjectProperty<V> currentObject = new SimpleObjectProperty<>(null);
 
     /**
-     * Defaut Constructor.
+     * Default Constructor.
      * Initialize the size of the combobox.
      * Implement a event when some key are pressed:
      *      - ENTER : commit
@@ -57,7 +57,7 @@ public class CustomEditingCell_Combobox<T, V> extends TableCell<T, V> {
         });
 
         comboBox.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (Boolean.TRUE.equals(!newValue) && comboBox != null) {
+            if (Boolean.TRUE.equals(!newValue)) {
                 commitEdit(currentObject.get());
             }
         });
@@ -109,9 +109,7 @@ public class CustomEditingCell_Combobox<T, V> extends TableCell<T, V> {
             setGraphic(null);
         } else {
             if (isEditing()) {
-                if (comboBox != null) {
-                    comboBox.getSelectionModel().select(currentObject.get());
-                }
+                comboBox.getSelectionModel().select(currentObject.get());
                 setGraphic(comboBox);
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             } else {

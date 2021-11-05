@@ -58,7 +58,7 @@ public class OptionsCategory_GeneralViewModel extends CategoryValidator {
 
     /**
      * Default Constructor.
-     * Create a RessourceBundle listener.
+     * Create a ResourceBundle listener.
      * Regroup all command on a compositeCommand.
      *
      * @author Gaetan Brenckle
@@ -68,7 +68,7 @@ public class OptionsCategory_GeneralViewModel extends CategoryValidator {
             LOGGER.trace("[public][constructor] Creation of the OptionsCategory_GeneralViewModel() object.");
         }
 
-        //RessourceBundle listener
+        //ResourceBundle listener
         if (this.listener_ChangedValue_bundleLanguage_ == null) {
             this.listener_ChangedValue_bundleLanguage_ = this::listener_bundleLanguage;
             this.resBundle_.addListener(this.listener_ChangedValue_bundleLanguage_);
@@ -76,7 +76,7 @@ public class OptionsCategory_GeneralViewModel extends CategoryValidator {
     }
 
     /**
-     * action that will change the current language of the application with the language currently selectionned.
+     * action that will change the current language of the application with the language currently selected.
      *
      * @author Gaetan Brenckle
      */
@@ -156,7 +156,7 @@ public class OptionsCategory_GeneralViewModel extends CategoryValidator {
     }
 
     /**
-     * Getter overrided for the CompositeValidator of the class.
+     * Getter override for the CompositeValidator of the class.
      *
      * @author Gaetan Brenckle
      *
@@ -168,7 +168,7 @@ public class OptionsCategory_GeneralViewModel extends CategoryValidator {
     }
 
     /**
-     * Getter overrided for the compositeCommand of the class.
+     * Getter override for the compositeCommand of the class.
      *
      * @author Gaetan Brenckle
      *
@@ -181,10 +181,10 @@ public class OptionsCategory_GeneralViewModel extends CategoryValidator {
 
 
     /**
-     * Listener for the ressource bundle.
+     * Listener for the resource bundle.
      *
      * @param observable - {@link ObservableValue} - the value observed
-     * @param oldValue - {@link ResourceBundle} - the old value that are remplaced
+     * @param oldValue - {@link ResourceBundle} - the old value that are replaced
      * @param newValue - {@link ResourceBundle} - the new value
      */
     private void listener_bundleLanguage(ObservableValue<? extends ResourceBundle> observable, ResourceBundle oldValue, ResourceBundle newValue) {
@@ -207,6 +207,6 @@ public class OptionsCategory_GeneralViewModel extends CategoryValidator {
             this.resBundle_.removeListener(this.listener_ChangedValue_bundleLanguage_);
             this.listener_ChangedValue_bundleLanguage_ = null;
         }
-        LanguageBundle.getInstance().unbindRessourceBundle(this.resBundle_);
+        LanguageBundle.getInstance().unbindResourceBundle(this.resBundle_);
     }
 }

@@ -52,7 +52,7 @@ public class CustomJFXTextArea extends JFXTextArea {
                 if (!beforeEditing.equals(afterEditing)) {
                     onChangeWhenRelease.set(afterEditing);
 
-                    //I dont know why, but the property need to be getted to fire the change event
+                    //I don't know why, but the property need to be get to fire the change event
                     onChangeWhenRelease.get();
                 }
             }

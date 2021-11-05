@@ -40,7 +40,7 @@ public class TaskManager {
 
     /**
      * Default Constructor
-     * Dont forget to call the method {@link TaskManager#setup()}
+     * Don't forget to call the method {@link TaskManager#setup()}
      *
      * @see TaskManager#setup()
      *
@@ -52,7 +52,7 @@ public class TaskManager {
 
     /**
      * Setup need to be called to start the usage of the taskManager.
-     * It will create a task that check each 30seconds and when he is notified, if a task need to be proceded on the queue.
+     * It will create a task that check each 30seconds and when he is notified, if a task need to be preceded on the queue.
      * After the node of the task is traited, it will clean and update the list of thread showed by the taskManager view.
      *
      * @author Gaetan Brenckle
@@ -61,7 +61,7 @@ public class TaskManager {
     public void setup() {
         //Use real thread here to avoid a lock when a lot of root of thread are executed.
         if (task_executeTasks == null) {
-            this.task_executeTasks = new Task<Void>() {
+            this.task_executeTasks = new Task<>() {
                 @SuppressWarnings("InfiniteLoopStatement")
                 @Override
                 protected Void call() throws Exception {
@@ -71,7 +71,7 @@ public class TaskManager {
                             taskArrays.wait(30000);
                             if (!taskArrays.isEmpty()) {
 
-                                Task<Void> task_running = new Task<Void>() {
+                                Task<Void> task_running = new Task<>() {
                                     @Override
                                     protected Void call() {
 
@@ -150,7 +150,7 @@ public class TaskManager {
 
     /**
      * Add a Array of task to be traited.
-     * Also decompose the array with a list of task to add them all on both a list of task showed and all the viewManager registred.
+     * Also decompose the array with a list of task to add them all on both a list of task showed and all the viewManager registered.
      *
      * @author Gaetan Brenckle
      *
@@ -159,7 +159,7 @@ public class TaskManager {
      */
     public TaskManager addArray(ThreadArray array) {
 
-        //Platform runlater used to avoid exception throwed by the TaskManagerView when modified.
+        //Platform runlater used to avoid exception throw by the TaskManagerView when modified.
         Platform.runLater(() -> {
             synchronized (taskArrays) {
                 this.taskArrays.add(array);

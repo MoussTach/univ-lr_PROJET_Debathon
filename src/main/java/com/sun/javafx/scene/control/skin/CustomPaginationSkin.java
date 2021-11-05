@@ -18,7 +18,7 @@ public class CustomPaginationSkin extends PaginationSkin {
      * Constructor changed.
      * Create this constructor to override the {@link PaginationSkin} DURATION field with reflection.
      * The target is to remove the animation of the transition between two pagination, but you can only change the duration,
-     * and it doesn't work with the changement before printing.
+     * and it doesn't work with the changes before printing.
      *
      * @author Gaetan Brenckle
      *

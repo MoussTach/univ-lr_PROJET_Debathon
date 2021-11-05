@@ -105,7 +105,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     }
 
     //TODO define a call to the data base
-    private void loadDebate() {
+    public void loadDebate() {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[private][method] usage of HomePageViewModel.loadDebate().");
         }
@@ -114,34 +114,41 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
             @Override
             protected Void call_Task() {
-                for (int i = 0; i < 10; i++) {
-                    DebateThumbnailViewModel debateThumbnailViewModel = new DebateThumbnailViewModel();
+                try {
+                    for (int i = 0; i < 10; i++) {
+                        DebateThumbnailViewModel debateThumbnailViewModel = new DebateThumbnailViewModel();
 
-                    //Random name
-                    byte[] array = new byte[7]; // length is bounded by 7
-                    new Random().nextBytes(array);
-                    String generatedString = new String(array, StandardCharsets.UTF_8);
+                        //Random name
+                        char[] array = "1234567890qwertyuiopasdfghjklzxcvbnm".toCharArray();
+                        StringBuilder randomString = new StringBuilder("");
+                        for (int x = 0; x < 10; x++) {
+                            randomString.append(array[(int) (Math.random() * (10 + 1))]);
+                        }
 
-                    debateThumbnailViewModel.lblTitle_valueProperty().set(generatedString);
-                    debateThumbnailViewModel.lblNbPeople_valueProperty().set("3");
+                        debateThumbnailViewModel.lblTitle_valueProperty().set(randomString.toString());
+                        debateThumbnailViewModel.lblNbPeople_valueProperty().set("3");
 
-                    if (i % 2 == 0) {
-                        TagViewModel tagViewModel = new TagViewModel();
-                        tagViewModel.lblTag_labelProperty().set("test");
+                        if (i % 2 == 0) {
+                            TagViewModel tagViewModel = new TagViewModel();
+                            tagViewModel.lblTag_labelProperty().set("test");
 
 
-                        final ViewTuple<TagView, TagViewModel> tagViewTuple = FluentViewLoader.fxmlView(TagView.class)
+                            final ViewTuple<TagView, TagViewModel> tagViewTuple = FluentViewLoader.fxmlView(TagView.class)
+                                    .viewModel(tagViewModel)
+                                    .load();
+
+                            debateThumbnailViewModel.listTag_selected_valueProperty().add(tagViewTuple);
+                        }
+
+                        final ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> debateViewTuple = FluentViewLoader.fxmlView(DebateThumbnailView.class)
                                 .providedScopes(mainViewScope)
-                                .viewModel(tagViewModel)
+                                .viewModel(debateThumbnailViewModel)
                                 .load();
 
-                        debateThumbnailViewModel.listTag_selected_valueProperty().add(tagViewTuple);
+                        Platform.runLater(() -> listDebate_value.add(debateViewTuple));
                     }
-
-                    final ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> debateViewTuple = FluentViewLoader.fxmlView(DebateThumbnailView.class)
-                            .viewModel(debateThumbnailViewModel)
-                            .load();
-                    listDebate_value.add(debateViewTuple);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 return null;
             }
@@ -197,7 +204,18 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
                         if (optionalDebate.isPresent()) {
                             if (!listTag_selected_value.isEmpty()) {
-                                filterKeep = optionalDebate.get().getViewModel().listTag_selected_valueProperty().containsAll(listTag_selected_value);
+                                filterKeep = false;
+
+                                for (ViewTuple<TagView, TagViewModel> itemView : optionalDebate.get().getViewModel().listTag_selected_valueProperty()) {
+                                    for (ViewTuple<TagView, TagViewModel> itemActual : this.listTag_selected_value) {
+                                        filterKeep = itemView.getViewModel().lblTag_labelProperty().get().equals(itemActual.getViewModel().lblTag_labelProperty().get());
+                                        if (filterKeep)
+                                            break;
+                                    }
+
+                                    if (!filterKeep)
+                                        break;
+                                }
                             }
 
                             //Select search
@@ -210,7 +228,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
                         return filterKeep;
                     });
             return null;
-        }, this.tfSearch_value, this.listTag_selected_value);
+        }, this.tfSearch_value, this.listTag_selected_value, this.listDebate_value);
     }
 
 

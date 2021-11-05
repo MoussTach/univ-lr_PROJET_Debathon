@@ -44,6 +44,7 @@ public class DebateThumbnailView extends FxmlView_SceneCycle<DebateThumbnailView
 
         //Value
         this.lblTitle.textProperty().bind(this.debateThumbnailViewModel.lblTitle_valueProperty());
+        this.debateThumbnailViewModel.listTag_selected_valueProperty().forEach(item -> flowTag.getChildren().add(item.getView()));
         Platform.runLater(() ->
                 this.debateThumbnailViewModel.listTag_selected_valueProperty().addListener(new WeakListChangeListener<>(change -> {
                     while (change.next()) {

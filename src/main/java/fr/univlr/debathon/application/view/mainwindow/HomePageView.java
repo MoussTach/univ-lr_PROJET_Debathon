@@ -6,9 +6,11 @@ import fr.univlr.debathon.application.viewmodel.mainwindow.HomePageViewModel;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.collections.ListChangeListener;
 import javafx.collections.WeakListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import org.controlsfx.control.textfield.CustomTextField;
@@ -67,6 +69,7 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
         btnAddTag.textProperty().bind(this.homePageViewModel.btnAddTag_labelProperty());
 
         //Value
+        this.homePageViewModel.listTag_selected_valueProperty().forEach(item -> flowTag.getChildren().add(item.getView()));
         chkShowCreatedDebate.selectedProperty().bindBidirectional(this.homePageViewModel.chkShowCreatedDebate_valueProperty());
         Platform.runLater(() ->
                 this.homePageViewModel.listTag_selected_valueProperty().addListener(new WeakListChangeListener<>(change -> {
@@ -85,8 +88,10 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
 
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
+
+        this.homePageViewModel.listDebate_node_valueProperty().forEach(item -> flowTag.getChildren().add(item));
         Platform.runLater(() ->
-                this.homePageViewModel.listDebate_node_valueProperty().addListener(new WeakListChangeListener<>(change -> {
+                this.homePageViewModel.listDebate_node_valueProperty().addListener((ListChangeListener<Node>) change -> {
                     while (change.next()) {
                         if (change.wasAdded()) {
                             change.getAddedSubList().forEach(item -> Platform.runLater(() -> {
@@ -97,7 +102,7 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
                             change.getRemoved().forEach(item -> Platform.runLater(() -> flowDebate.getChildren().remove(item)));
                         }
                     }
-                })));
+                }));
 
         Bindings.bindContent(flowDebate.getChildren(), this.homePageViewModel.getFilteredData());
     }

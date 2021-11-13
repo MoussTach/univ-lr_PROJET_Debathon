@@ -33,7 +33,7 @@ public class DebateThumbnailView extends FxmlView_SceneCycle<DebateThumbnailView
     public void act_btnOpenDebate() {
         LOGGER.input(String.format("Press the button %s", btnOpenDebate.getId()));
 
-        System.out.println(String.format("Open debate [%s]", lblTitle.getText()));
+        this.debateThumbnailViewModel.actvm_btnOpenDebate();
     }
 
     @Override

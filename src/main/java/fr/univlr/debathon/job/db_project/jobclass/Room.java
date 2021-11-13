@@ -1,4 +1,4 @@
-package job.db_project.jobclass;
+package fr.univlr.debathon.job.db_project.jobclass;
 
 import java.util.Date;
 import java.util.List;

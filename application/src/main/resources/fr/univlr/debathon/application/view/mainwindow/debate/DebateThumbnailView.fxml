@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.debate.DebateThumbnailView">
+   <BorderPane prefHeight="200.0" prefWidth="250.0" style="-fx-border-color: RED; -fx-border-width: 2;">
+      <top>
+         <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0"
+                    BorderPane.alignment="CENTER">
+            <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"/>
+            <Label fx:id="lblTitle" text="lblTitle">
+               <font>
+                  <Font name="Calibri Bold" size="15.0"/>
+               </font>
+            </Label>
+         </StackPane>
+      </top>
+      <center>
+         <FlowPane fx:id="flowTag" BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </BorderPane.margin>
+         </FlowPane>
+      </center>
+      <bottom>
+         <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="30.0"
+                    BorderPane.alignment="CENTER">
+            <Separator prefWidth="200.0" StackPane.alignment="TOP_CENTER"/>
+            <Label fx:id="lblNbPeople"
+                   style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-background-color: LIGHTGREY;"
+                   text="lblNbPeople" StackPane.alignment="CENTER_RIGHT">
+               <font>
+                  <Font name="Calibri Bold" size="18.0"/>
+               </font>
+               <padding>
+                  <Insets bottom="1.0" left="3.0" right="3.0" top="1.0"/>
+               </padding>
+               <StackPane.margin>
+                  <Insets right="15.0"/>
+               </StackPane.margin>
+            </Label>
+         </StackPane>
+      </bottom>
+   </BorderPane>
+   <Button fx:id="btnOpenDebate" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#act_btnOpenDebate" style="-fx-background-color: TRANSPARENT;" />
+</StackPane>

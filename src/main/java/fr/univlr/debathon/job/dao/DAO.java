@@ -1,4 +1,4 @@
-package job.dao;
+package fr.univlr.debathon.job.dao;
 
 
 import java.sql.Connection;

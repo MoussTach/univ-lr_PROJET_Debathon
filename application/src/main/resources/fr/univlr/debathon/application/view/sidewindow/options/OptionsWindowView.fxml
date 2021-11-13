@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="bPaneOptionRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="900.0" prefHeight="600.0" prefWidth="900.0" stylesheets="@../../../../../../../css/application.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.sidewindow.options.OptionsWindowView">
+   <bottom>
+       <HBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER">
+           <padding>
+               <Insets bottom="5.0" right="20.0" top="5.0" />
+           </padding>
+           <Button fx:id="btnOptions_ok" minHeight="25.0" minWidth="70.0" mnemonicParsing="false" onAction="#act_Ok" text="btnOptions_ok" />
+           <Button fx:id="btnOptions_cancel" cancelButton="true" minHeight="25.0" minWidth="70.0" mnemonicParsing="false" onAction="#act_Cancel" text="btnOptions_cancel" />
+           <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="1.0" />
+           <Button fx:id="btnOptions_apply" defaultButton="true" disable="true" minHeight="25.0" minWidth="90.0" mnemonicParsing="false" onAction="#act_Apply" text="btnOptions_apply" />
+       </HBox>
+   </bottom>
+   <padding>
+      <Insets left="5.0" right="5.0" top="5.0" />
+   </padding>
+   <center>
+       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+           <ListView fx:id="listOptions_category" layoutY="7.0" minHeight="360.0" minWidth="230.0" onMouseClicked="#actMouseClicked_listCategory" prefHeight="360.0" prefWidth="230.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+           <VBox layoutX="239.0" prefHeight="556.0" prefWidth="554.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="235.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <ScrollPane fx:id="sPaneOptions_detail" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" minHeight="360.0" minWidth="365.0" prefHeight="560.0" prefWidth="555.0" VBox.vgrow="ALWAYS">
+                   <BorderPane fx:id="bPaneOptions_detail_content" prefHeight="200.0" prefWidth="200.0" />
+               </ScrollPane>
+           </VBox>
+       </AnchorPane>
+   </center>
+</BorderPane>

@@ -1,7 +1,7 @@
-package job.db_project.dao;
+package fr.univlr.debathon.job.db_project.dao;
 
-import job.dao.DAO;
-import job.db_project.jobclass.Room;
+import fr.univlr.debathon.job.dao.DAO;
+import fr.univlr.debathon.job.db_project.jobclass.Room;
 
 import java.sql.Connection;
 import java.sql.Date;

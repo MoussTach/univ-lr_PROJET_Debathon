@@ -1,7 +1,7 @@
-package job.db_project.dao;
+package fr.univlr.debathon.job.db_project.dao;
 
-import job.dao.DAO;
-import job.db_project.jobclass.Tag;
+import fr.univlr.debathon.job.dao.DAO;
+import fr.univlr.debathon.job.db_project.jobclass.Tag;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,7 +33,7 @@ public class TagDAO implements DAO<Tag> {
     /**
      * SELECT of all occurance of the class.
      *
-     * @return - {@link List} - a list that contain all occurance of {@link T}, the class associate.
+     * @return - {@link List} - a list that contain all occurance of {@link Tag}, the class associate.
      * @throws SQLException - throw the exception to force a try catch when used.
      */
     public List<Tag> selectAll() throws SQLException {
@@ -60,7 +60,7 @@ public class TagDAO implements DAO<Tag> {
     /**
      * INSERT the class.
      *
-     * @param obj - {@link T} - insert the class.
+     * @param tag - {@link Tag} - insert the class.
      * @return - boolean - the state of the sql insert.
      * @throws SQLException - throw the exception to force a try catch when used.
      */
@@ -85,7 +85,7 @@ public class TagDAO implements DAO<Tag> {
     /**
      * UPDATE the class.
      *
-     * @param obj - {@link T} - update the class.
+     * @param tag - {@link Tag} - update the class.
      * @return - boolean - the state of the sql update.
      * @throws SQLException - throw the exception to force a try catch when used.
      */
@@ -110,7 +110,7 @@ public class TagDAO implements DAO<Tag> {
     /**
      * DELETE the class.
      *
-     * @param obj - {@link T} - delete the class.
+     * @param tag - {@link Tag} - delete the class.
      * @return - boolean - the state of the sql delete.
      * @throws SQLException - throw the exception to force a try catch when used.
      */
@@ -198,7 +198,7 @@ public class TagDAO implements DAO<Tag> {
      * SELECT with the index of the associate class.
      *
      * @param id - {@link int} - index of the associate class. Can handle null.
-     * @return - {@link T} - the class that can be found with the index
+     * @return - {@link Tag} - the class that can be found with the index
      * @throws SQLException - throw the exception to force a try catch when used.
      */
     public Tag select (int id) throws SQLException {

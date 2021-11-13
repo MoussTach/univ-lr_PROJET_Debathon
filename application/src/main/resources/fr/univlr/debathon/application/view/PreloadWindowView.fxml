@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: transparent;"
+           stylesheets="@../../../../../css/application.css" BorderPane.alignment="CENTER"
+           xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="fr.univlr.debathon.application.view.PreloadWindowView">
+    <ImageView pickOnBounds="true" preserveRatio="true">
+        <Image url="@../../../../../img/logo/Logo_univLR_256.png"/>
+    </ImageView>
+    <ProgressBar fx:id="progressBar_Preloader" maxWidth="1.7976931348623157E308" styleClass="changeBar-color">
+        <padding>
+            <Insets top="150.0"/>
+        </padding>
+        <StackPane.margin>
+            <Insets left="50.0" right="50.0"/>
+        </StackPane.margin>
+    </ProgressBar>
+</StackPane>

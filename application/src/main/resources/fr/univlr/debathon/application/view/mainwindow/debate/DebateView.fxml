@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.debate.DebateView">
+   <top>
+      <StackPane BorderPane.alignment="CENTER">
+         <children>
+            <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+            <Label fx:id="lblTitle" text="lblTitle" StackPane.alignment="CENTER">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <font>
+                  <Font name="Calibri Bold" size="25.0" />
+               </font>
+            </Label>
+         </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </StackPane>
+   </top>
+   <center>
+      <SplitPane dividerPositions="0.2" orientation="VERTICAL" BorderPane.alignment="CENTER">
+        <items>
+            <BorderPane />
+            <ScrollPane prefHeight="200.0" prefWidth="200.0">
+               <content>
+                 <FlowPane fx:id="flowQuestion" alignment="TOP_CENTER" columnHalignment="CENTER" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="20.0">
+                    <fx:include source="question/QuestionView.fxml" />
+                    <fx:include source="question/QuestionView.fxml" />
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                 </FlowPane>
+               </content>
+            </ScrollPane>
+        </items>
+      </SplitPane>
+   </center>
+</BorderPane>

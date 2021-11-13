@@ -1,8 +1,8 @@
-package job.db_project.dao;
+package fr.univlr.debathon.job.db_project.dao;
 
-import job.dao.DAO;
-import job.db_project.jobclass.Comment;
-import job.db_project.jobclass.Question;
+import fr.univlr.debathon.job.dao.DAO;
+import fr.univlr.debathon.job.db_project.jobclass.Comment;
+import fr.univlr.debathon.job.db_project.jobclass.Question;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -1,7 +1,7 @@
-package job.db_project.dao;
+package fr.univlr.debathon.job.db_project.dao;
 
-import job.dao.DAO;
-import job.db_project.jobclass.Category;
+import fr.univlr.debathon.job.dao.DAO;
+import fr.univlr.debathon.job.db_project.jobclass.Category;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,7 +34,7 @@ public class CategoryDAO implements DAO<Category> {
     /**
      * SELECT of all occurance of the class.
      *
-     * @return - {@link List} - a list that contain all occurance of {@link T}, the class associate.
+     * @return - {@link List} - a list that contain all occurance of {@link Category}, the class associate.
      * @throws SQLException - throw the exception to force a try catch when used.
      */
     public List<Category> selectAll() throws SQLException {
@@ -61,7 +61,7 @@ public class CategoryDAO implements DAO<Category> {
     /**
      * INSERT the class.
      *
-     * @param obj - {@link T} - insert the class.
+     * @param category - {@link Category} - insert the class.
      * @return - boolean - the state of the sql insert.
      * @throws SQLException - throw the exception to force a try catch when used.
      */
@@ -85,7 +85,7 @@ public class CategoryDAO implements DAO<Category> {
     /**
      * UPDATE the class.
      *
-     * @param obj - {@link T} - update the class.
+     * @param category - {@link Category} - update the class.
      * @return - boolean - the state of the sql update.
      * @throws SQLException - throw the exception to force a try catch when used.
      */
@@ -108,7 +108,7 @@ public class CategoryDAO implements DAO<Category> {
     /**
      * DELETE the class.
      *
-     * @param obj - {@link T} - delete the class.
+     * @param category - {@link Category} - delete the class.
      * @return - boolean - the state of the sql delete.
      * @throws SQLException - throw the exception to force a try catch when used.
      */
@@ -144,7 +144,7 @@ public class CategoryDAO implements DAO<Category> {
      * SELECT with the index of the associate class.
      *
      * @param id - {@link int} - index of the associate class. Can handle null.
-     * @return - {@link T} - the class that can be found with the index
+     * @return - {@link Category} - the class that can be found with the index
      * @throws SQLException - throw the exception to force a try catch when used.
      */
     public Category select (int id) throws SQLException {

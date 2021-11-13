@@ -1,4 +1,8 @@
-package fr.univlr.debathon.job.db_project.dao;
+package job.db_project.dao;
+
+import job.dao.DAO;
+import job.db_project.jobclass.Comment;
+import job.db_project.jobclass.Question;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,10 +11,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import fr.univlr.debathon.job.dao.DAO;
-import fr.univlr.debathon.job.db_project.jobclass.Comment;
-import fr.univlr.debathon.job.db_project.jobclass.Question;
 
 public class CommentDAO implements DAO<Comment> {
 
@@ -30,7 +30,7 @@ public class CommentDAO implements DAO<Comment> {
 		
 		List<Comment> commentList = new ArrayList<>();
 		
-		String sql = "SELECT * from Comment";
+		String sql = "SELECT * FROM Comment";
 		
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -78,7 +78,7 @@ public class CommentDAO implements DAO<Comment> {
 		
 		List<Comment> commentList = new ArrayList<>();
 		
-		String sql = "SELECT * from Comment WHERE id_question = ?";
+		String sql = "SELECT * FROM Comment WHERE id_question = ?";
 		
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -184,7 +184,7 @@ public class CommentDAO implements DAO<Comment> {
 	@Override
 	public boolean delete(Comment comment) throws SQLException {
 
-		String sql = "DETELE Comment WHERE idComment = ?";
+		String sql = "DELETE Comment WHERE idComment = ?";
 		
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);

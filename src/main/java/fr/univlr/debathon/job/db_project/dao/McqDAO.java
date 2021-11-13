@@ -1,4 +1,7 @@
-package fr.univlr.debathon.job.db_project.dao;
+package job.db_project.dao;
+
+import job.dao.DAO;
+import job.db_project.jobclass.Mcq;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,9 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import fr.univlr.debathon.job.dao.DAO;
-import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 
 public class McqDAO implements DAO<Mcq> {
 
@@ -177,7 +177,7 @@ public class McqDAO implements DAO<Mcq> {
             
             while (rs.next()) {
             	
-               qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("id_votes"), questionDAO.select(rs.getInt("id_question")), roomDAO.select(rs.getInt("id_room"))));
+               qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), questionDAO.select(rs.getInt("id_question")), roomDAO.select(rs.getInt("id_room"))));
             }
 
         } catch (SQLException e) {

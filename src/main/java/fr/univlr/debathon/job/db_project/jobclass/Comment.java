@@ -1,4 +1,4 @@
-package fr.univlr.debathon.job.db_project.jobclass;
+package job.db_project.jobclass;
 
 public class Comment {
 

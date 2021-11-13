@@ -1,4 +1,7 @@
-package fr.univlr.debathon.job.db_project.dao;
+package job.db_project.dao;
+
+import job.dao.DAO;
+import job.db_project.jobclass.Tag;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,10 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import fr.univlr.debathon.job.dao.DAO;
-import fr.univlr.debathon.job.db_project.jobclass.Tag;
-
 
 public class TagDAO implements DAO<Tag> {
 
@@ -151,14 +150,14 @@ public class TagDAO implements DAO<Tag> {
     public List<Tag> selectByIdRoom(int id) throws SQLException {
         
         String sqlIdTag = "SELECT id_tag FROM Relation_room_tag WHERE id_room = ?";
-        
+
         List<Integer> listIdTag = new ArrayList<>();
         try {
             PreparedStatement pstmt  = connection.prepareStatement(sqlIdTag);
             pstmt.setInt(1, id);
 
             ResultSet rs  = pstmt.executeQuery();
-            
+
             while (rs.next()) {
                 listIdTag.add(rs.getInt("id_tag"));
             }
@@ -176,13 +175,13 @@ public class TagDAO implements DAO<Tag> {
             builder.append(listIdTag.get(i) + ",");
         }
 
-        String sql = "SELECT idTag, label, color WHERE idTag in ("  +builder.deleteCharAt( builder.length() -1).toString()+ ") FROM Tag";
+        String sql = "SELECT idTag, label, color FROM Tag WHERE idTag in ("  +builder.deleteCharAt( builder.length() -1).toString()+ ")";
 
         try {
             PreparedStatement pstmt  = connection.prepareStatement(sql);
-                        
+
             ResultSet rs  = pstmt.executeQuery();
-            
+
             while (rs.next()) {
                 tagList.add(new Tag(rs.getInt("idTag"), rs.getString("label"), rs.getString("color")));
             }

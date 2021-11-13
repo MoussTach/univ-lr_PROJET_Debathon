@@ -1,4 +1,7 @@
-package fr.univlr.debathon.job.db_project.dao;
+package job.db_project.dao;
+
+import job.dao.DAO;
+import job.db_project.jobclass.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,10 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import fr.univlr.debathon.job.dao.DAO;
-import fr.univlr.debathon.job.db_project.jobclass.User;
-
-public class UserDAO implements DAO<User>{
+public class UserDAO implements DAO<User> {
 
 	private Connection connection;
 	
@@ -71,8 +71,8 @@ public class UserDAO implements DAO<User>{
 	public boolean update(User user) throws SQLException {
 
 		String sql = "UPDATE User"
-					+ "SET label = ?"
-					+ "WHERE idUser = ?";
+					+ " SET label = ?"
+					+ " WHERE idUser = ?";
 		
 		try {
 			PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -92,8 +92,8 @@ public class UserDAO implements DAO<User>{
 	@Override
 	public boolean delete(User user) throws SQLException {
 
-		String sql = "DETELE User"
-					+ "WHERE idUser = ?";
+		String sql = "DELETE User "
+					+ " WHERE idUser = ?";
 		
 		try {
 			PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -120,8 +120,8 @@ public class UserDAO implements DAO<User>{
 
 		User user = null;
 		
-		String sql = "SELECT idUser, label"
-					+ "FROM User"
+		String sql = "SELECT idUser, label "
+					+ "FROM User "
 					+ "WHERE idUser = ?";
 		
 		try {

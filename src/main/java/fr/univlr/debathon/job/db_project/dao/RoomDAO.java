@@ -1,4 +1,7 @@
-package fr.univlr.debathon.job.db_project.dao;
+package job.db_project.dao;
+
+import job.dao.DAO;
+import job.db_project.jobclass.Room;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -8,9 +11,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import fr.univlr.debathon.job.dao.DAO;
-import fr.univlr.debathon.job.db_project.jobclass.Room;
 
 public class RoomDAO implements DAO<Room> {
 

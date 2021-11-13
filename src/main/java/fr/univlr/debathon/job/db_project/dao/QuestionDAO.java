@@ -1,4 +1,7 @@
-package fr.univlr.debathon.job.db_project.dao;
+package job.db_project.dao;
+
+import job.dao.DAO;
+import job.db_project.jobclass.Question;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,10 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import fr.univlr.debathon.job.dao.DAO;
-import fr.univlr.debathon.job.db_project.jobclass.Question;
-import fr.univlr.debathon.job.db_project.jobclass.User;
 
 public class QuestionDAO implements DAO<Question> {
 
@@ -174,7 +173,7 @@ public class QuestionDAO implements DAO<Question> {
 
 		List<Question> listQuestion = new ArrayList<>();
 		
-		String sql = "SELECT * FROM Question WHERE id_salon = ?";
+		String sql = "SELECT * FROM Question WHERE id_room = ?";
 		
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);

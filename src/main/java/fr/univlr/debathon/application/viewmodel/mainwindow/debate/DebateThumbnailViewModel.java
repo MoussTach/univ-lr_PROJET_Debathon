@@ -1,7 +1,10 @@
 package fr.univlr.debathon.application.viewmodel.mainwindow.debate;
 
+import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewTuple;
+import fr.univlr.debathon.application.view.mainwindow.debate.DebateThumbnailView;
+import fr.univlr.debathon.application.view.mainwindow.debate.DebateView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.MainViewScope;
@@ -12,6 +15,7 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.scene.layout.BorderPane;
 
 public class DebateThumbnailViewModel extends ViewModel_SceneCycle {
 
@@ -42,8 +46,17 @@ public class DebateThumbnailViewModel extends ViewModel_SceneCycle {
         //TODO link Model with data
     }
 
-    public void initialize() {
-        System.out.println(String.format("Scope init %s", mainViewScope));
+    public void actvm_btnOpenDebate() {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the DebateThumbnailViewModel.actvm_btnOpenDebate()");
+        }
+
+        final ViewTuple<DebateView, DebateViewModel> debateViewTuple = FluentViewLoader.fxmlView(DebateView.class)
+                .providedScopes(mainViewScope)
+                .load();
+
+        BorderPane mainBorder = this.mainViewScope.basePaneProperty().get();
+        mainBorder.setCenter(debateViewTuple.getView());
     }
 
 

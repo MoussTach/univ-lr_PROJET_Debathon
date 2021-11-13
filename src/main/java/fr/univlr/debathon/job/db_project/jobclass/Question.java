@@ -17,7 +17,9 @@ public class Question {
     private List<Comment> listComment;
     private User user;
 
+    public Question(){
 
+    }
     public Question(int id, String label, String context, String type, boolean is_active, Room room, List<Comment> listComment, User user) {
         this.id = id;
         this.label = label;

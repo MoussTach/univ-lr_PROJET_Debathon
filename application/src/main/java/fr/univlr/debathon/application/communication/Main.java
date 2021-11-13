@@ -8,8 +8,10 @@ public class Main {
         AppCommunication comm = new AppCommunication();
         Thread t = new Thread(comm);
         t.start();
-        comm.requestHome();
-        comm.requestRoom(1);
+
+        comm.requestHome(); //TEST TO GET ALL ROOMS INFOS
+
+        //comm.requestRoom(1); //TEST TO GET ROOM INFO WITH ID : 1
 
         while (true) {
 

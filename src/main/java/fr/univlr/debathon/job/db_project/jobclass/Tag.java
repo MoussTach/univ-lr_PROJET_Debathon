@@ -6,7 +6,9 @@ public class Tag {
     private String label;
     private String color;
 
+    public Tag(){
 
+    }
     public Tag(int id, String label, String color) {
         this.id = id;
         this.label = label;

@@ -35,7 +35,7 @@ public class AppCommunication implements Runnable {
 
 
     public void requestHome () throws JsonProcessingException {
-
+        System.out.println("TEST ALL ROOMS IN DB");
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode root = objectMapper.createObjectNode();
         all_rooms.clear();
@@ -49,6 +49,7 @@ public class AppCommunication implements Runnable {
 
     //Fonction avec id en parametre pour recuperer info d'une room
     public void requestRoom(int id) throws  JsonProcessingException{
+        System.out.println("TEST GET ROOM INFOS IN DB WITH ID = 1");
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode root = mapper.createObjectNode();
 

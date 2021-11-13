@@ -5,7 +5,9 @@ public class User {
     private int id;
     private String label;
 
+    public User(){
 
+    }
     public User(int id, String label) {
         this.id = id;
         this.label = label;

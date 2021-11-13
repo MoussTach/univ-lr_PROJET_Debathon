@@ -13,6 +13,9 @@ public class Comment {
     private Room room;
     private User user;
 
+    public Comment(){
+
+    }
     public Comment(String comment, int nb_likes, int nb_dislikes, Comment parent, Question question, Room room, User user) {
         this.comment = comment;
         this.nb_likes = nb_likes;

@@ -22,7 +22,9 @@ public class Room {
     private List<Tag> listTag;
     private List<User> listUtilisateurs;
 
+    public Room(){
 
+    }
     public Room(int id, String label, String description, String key, String mail, boolean is_open, Date date_start, Date date_end, Category category, List<Tag> listTag) {
         this.id = id;
         this.label = label;

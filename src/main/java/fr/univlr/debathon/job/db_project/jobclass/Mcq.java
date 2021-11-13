@@ -10,7 +10,9 @@ public class Mcq {
     private Room room;
 
 
+    public Mcq(){
 
+    }
     public Mcq(int id, String label, int nb_votes, Question question, Room room) {
         this.id = id;
         this.label = label;

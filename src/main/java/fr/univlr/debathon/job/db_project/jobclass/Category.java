@@ -4,7 +4,9 @@ public class Category {
     private int id;
     private String label;
 
+    public Category(){
 
+    }
     public Category(int id, String label) {
         this.id = id;
         this.label = label;

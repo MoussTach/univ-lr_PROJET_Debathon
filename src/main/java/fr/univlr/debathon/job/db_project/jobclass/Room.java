@@ -1,137 +1,146 @@
 package fr.univlr.debathon.job.db_project.jobclass;
 
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+
 import java.util.Date;
 import java.util.List;
 
 public class Room {
     
-    private int id;
+    private IntegerProperty id = new SimpleIntegerProperty(-1);
 
-    private String label;
-    private String description;
-    private String key;
-    private String mail;
+    private StringProperty label = new SimpleStringProperty("/");
+    private StringProperty description = new SimpleStringProperty("/");
+    private StringProperty key = new SimpleStringProperty("/");
+    private StringProperty mail = new SimpleStringProperty("/");
 
-    private boolean is_open;
+    private BooleanProperty is_open = new SimpleBooleanProperty(false);
 
-    private Date date_start;
-    private Date date_end;
+    private ObjectProperty<Date> date_start = new SimpleObjectProperty<>();
+    private ObjectProperty<Date> date_end = new SimpleObjectProperty<>();
 
-    private Category category;
+    private ObjectProperty<Category> category = new SimpleObjectProperty<>();
 
-    private List<Tag> listTag;
-    private List<User> listUtilisateurs;
+    private ListProperty<Tag> listTag = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private ListProperty<User> listUtilisateurs = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public Room(){
 
     }
     public Room(int id, String label, String description, String key, String mail, boolean is_open, Date date_start, Date date_end, Category category, List<Tag> listTag) {
-        this.id = id;
-        this.label = label;
-        this.description = description;
-        this.key = key;
-        this.mail = mail;
-        this.is_open = is_open;
-        this.date_start = date_start;
-        this.date_end = date_end;
-        this.category = category;
-        this.listTag = listTag;
+        this.id.set(id);
+        this.label.set(label);
+        this.description.set(description);
+        this.key.set(key);
+        this.mail.set(mail);
+        this.is_open.set(is_open);
+        this.date_start.set(date_start);
+        this.date_end.set(date_end);
+        this.category.set(category);
+        this.listTag.addAll(listTag);
     }
 
 
     public Room(Room clone) {
-        this.id = clone.getId ();
-        this.label = clone.getLabel ();
-        this.description = clone.getDescription ();
-        this.key = clone.getKey ();
-        this.mail = clone.getMail ();
-        this.is_open = clone.getIs_open ();
-        this.date_start = clone.getDate_start ();
-        this.date_end = clone.getDate_end ();
-        this.category = clone.getCategory ();
-        this.listTag = clone.getListTag ();
+        this.id.set(clone.getId());
+        this.label.set(clone.getLabel());
+        this.description.set(clone.getDescription());
+        this.key.set(clone.getKey());
+        this.mail.set(clone.getMail());
+        this.is_open.set(clone.getIs_open());
+        this.date_start.set(clone.getDate_start());
+        this.date_end.set(clone.getDate_end());
+        this.category.set(clone.getCategory());
+        this.listTag.addAll(clone.getListTag());
     }
 
 
+    //Getter
     public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        return this.id.get();
     }
 
     public String getLabel() {
-        return this.label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
+        return this.label.get();
     }
 
     public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+        return this.description.get();
     }
 
     public String getKey() {
-        return this.key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
+        return this.key.get();
     }
 
     public String getMail() {
-        return this.mail;
+        return this.mail.get();
     }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
 
     public boolean getIs_open() {
-        return this.is_open;
-    }
-
-    public void setIs_open(boolean is_open) {
-        this.is_open = is_open;
+        return this.is_open.get();
     }
 
     public Date getDate_start() {
-        return this.date_start;
-    }
-
-    public void setDate_start(Date date_start) {
-        this.date_start = date_start;
+        return this.date_start.get();
     }
 
     public Date getDate_end() {
-        return this.date_end;
-    }
-
-    public void setDate_end(Date date_end) {
-        this.date_end = date_end;
+        return this.date_end.get();
     }
 
     public Category getCategory() {
-        return this.category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
+        return this.category.get();
     }
 
     public List<Tag> getListTag() {
-        return this.listTag;
+        return this.listTag.get();
+    }
+
+    public List<User> getListUtilisateurs() {
+        return this.listUtilisateurs.get();
+    }
+
+
+    //Setter
+    public void setId(int id) {
+        this.id.set(id);
+    }
+
+    public void setLabel(String label) {
+        this.label.set(label);
+    }
+
+    public void setDescription(String description) {
+        this.description.set(description);
+    }
+
+    public void setKey(String key) {
+        this.key.set(key);
+    }
+
+    public void setMail(String mail) {
+        this.mail.set(mail);
+    }
+
+    public void setIs_open(boolean is_open) {
+        this.is_open.set(is_open);
+    }
+
+    public void setDate_start(Date date_start) {
+        this.date_start.set(date_start);
+    }
+
+    public void setDate_end(Date date_end) {
+        this.date_end.set(date_end);
+    }
+
+    public void setCategory(Category category) {
+        this.category.set(category);
     }
 
     public void setListTag(List<Tag> listTag) {
-        this.listTag = listTag;
+        this.listTag.setAll(listTag);
     }
 
     public void addTag (Tag tag) {
@@ -152,12 +161,8 @@ public class Room {
             this.listTag.remove(tag);
     }
 
-    public List<User> getListUtilisateurs() {
-        return this.listUtilisateurs;
-    }
-
     public void setListUtilisateurs(List<User> listUtilisateurs) {
-        this.listUtilisateurs = listUtilisateurs;
+        this.listUtilisateurs.setAll(listUtilisateurs);
     }
 
     public void addUtilisateur (User utilisateur) {
@@ -178,4 +183,54 @@ public class Room {
             listUtilisateurs.remove(utilisateur);
     }
 
+
+
+    //Property
+    public IntegerProperty idProperty() {
+        return id;
+    }
+
+    public StringProperty labelProperty() {
+        return label;
+    }
+
+    public StringProperty descriptionProperty() {
+        return description;
+    }
+
+    public StringProperty keyProperty() {
+        return key;
+    }
+
+    public StringProperty mailProperty() {
+        return mail;
+    }
+
+    public boolean isIs_open() {
+        return is_open.get();
+    }
+
+    public BooleanProperty is_openProperty() {
+        return is_open;
+    }
+
+    public ObjectProperty<Date> date_startProperty() {
+        return date_start;
+    }
+
+    public ObjectProperty<Date> date_endProperty() {
+        return date_end;
+    }
+
+    public ObjectProperty<Category> categoryProperty() {
+        return category;
+    }
+
+    public ListProperty<Tag> listTagProperty() {
+        return listTag;
+    }
+
+    public ListProperty<User> listUtilisateursProperty() {
+        return listUtilisateurs;
+    }
 }

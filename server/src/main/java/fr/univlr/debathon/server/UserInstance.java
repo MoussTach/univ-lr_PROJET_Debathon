@@ -36,6 +36,15 @@ public class UserInstance implements Runnable {
         out = new PrintWriter(userSocket.getOutputStream());
     }
 
+
+
+    private void sendData (ObjectMapper objectMapper, ObjectNode root) throws JsonProcessingException {
+        out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
+        out.flush();
+    }
+
+
+
     public void analyseData (String data) throws JsonProcessingException, SQLException {
         ObjectMapper objectMapper = new ObjectMapper();
         System.out.println(data);
@@ -45,55 +54,84 @@ public class UserInstance implements Runnable {
             case "GET":
                 methodsGET(dataJson, objectMapper);
                 break;
+            case "UPDATE":
+                methodsUPDATE (dataJson, objectMapper);
+                break;
+
         }
 
     }
+
+    private void methodsUPDATE(Map dataJson, ObjectMapper objectMapper) throws SQLException, JsonProcessingException {
+
+        Map data = null;
+        switch ((String) data.get("request")) {
+            case "HOME":
+                this.caseHOME(data, objectMapper);
+                break;
+            case "ROOM": //Cas ROOM souhaite
+                this.caseROOM (data, objectMapper);
+                break;
+        }
+
+    }
+
 
     public void methodsGET(Map data, ObjectMapper objectMapper) throws SQLException, JsonProcessingException {
         switch ((String) data.get("request")) {
             case "HOME":
-                RoomDAO roomDAO = new RoomDAO(Server.c);
-                List<Room> list = roomDAO.selectAll();
-                ObjectNode root = objectMapper.createObjectNode();
-                root.put("methods", "RESPONSE");
-                ArrayNode rooms = root.putArray("rooms");
-                for (Room room : list) {
-                    rooms.addPOJO(room);
-                }
-                out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
-                out.flush();
+                this.caseHOME(data, objectMapper);
                 break;
             case "ROOM": //Cas ROOM souhaite
-                ObjectNode rootRoom = objectMapper.createObjectNode();
-                //utilisation methode RESPONSEDETAILS cote client
-                rootRoom.put("methods","RESPONSEDETAILS");
-                //ajout de la room selectionne
-                ArrayNode room = rootRoom.putArray("room_selected");
-                //ajout des question de cette room
-                ArrayNode questions = rootRoom.putArray("questions_room");
-                ArrayNode mcq = rootRoom.putArray("mcq_room");
-                RoomDAO roomDAOid = new RoomDAO(Server.c);
-                //Selection de la room avec son id
-                Room roomSelected = roomDAOid.select((int) data.get("id"));
-                room.addPOJO(roomSelected);
-                QuestionDAO questionDAO = new QuestionDAO(Server.c);
-                McqDAO mcqDAO = new McqDAO(Server.c);
-
-                //Selection des questions lie a la room
-                List<Question> questionsDB = questionDAO.selectByIdSalon((int) data.get("id"));
-                //Boucle pour ajout des question dans node
-                for(Question q : questionsDB){
-                    questions.addPOJO(q);
-                    for (Mcq m : mcqDAO.selectMcqByIdQuestion(q.getId())) {
-                        mcq.addPOJO(m);
-                    }
-
-                }
-                out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootRoom));
-                out.flush();
+                this.caseROOM (data, objectMapper);
                 break;
         }
     }
+
+    private void caseROOM (Map data, ObjectMapper objectMapper) throws SQLException, JsonProcessingException {
+        ObjectNode rootRoom = objectMapper.createObjectNode();
+        //utilisation methode RESPONSEDETAILS cote client
+        rootRoom.put("methods","RESPONSEDETAILS");
+        //ajout de la room selectionne
+        ArrayNode room = rootRoom.putArray("room_selected");
+        //ajout des question de cette room
+        ArrayNode questions = rootRoom.putArray("questions_room");
+        ArrayNode mcq = rootRoom.putArray("mcq_room");
+        RoomDAO roomDAOid = new RoomDAO(Server.c);
+        //Selection de la room avec son id
+        Room roomSelected = roomDAOid.select((int) data.get("id"));
+        room.addPOJO(roomSelected);
+        QuestionDAO questionDAO = new QuestionDAO(Server.c);
+        McqDAO mcqDAO = new McqDAO(Server.c);
+
+        //Selection des questions lie a la room
+        List<Question> questionsDB = questionDAO.selectByIdSalon((int) data.get("id"));
+        //Boucle pour ajout des question dans node
+        for(Question q : questionsDB){
+            questions.addPOJO(q);
+            for (Mcq m : mcqDAO.selectMcqByIdQuestion(q.getId())) {
+                mcq.addPOJO(m);
+            }
+
+        }
+        this.sendData(objectMapper, rootRoom);
+    }
+
+    private void caseHOME (Map data, ObjectMapper objectMapper) throws SQLException, JsonProcessingException {
+        RoomDAO roomDAO = new RoomDAO(Server.c);
+        List<Room> list = roomDAO.selectAll();
+        ObjectNode root = objectMapper.createObjectNode();
+        root.put("methods", "RESPONSE");
+        ArrayNode rooms = root.putArray("rooms");
+        for (Room room : list) {
+            rooms.addPOJO(room);
+        }
+        this.sendData(objectMapper, root);
+    }
+
+
+
+
 
     @Override
     public void run() {

@@ -1,19 +1,19 @@
 package fr.univlr.debathon.application.communication;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.JsonDeserializer;
 import fr.univlr.debathon.job.db_project.jobclass.Comment;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
+import org.hildan.fxgson.FxGson;
 
 
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.time.LocalDate;
 import java.util.*;
 
 public class AppCommunication implements Runnable {
@@ -33,17 +33,70 @@ public class AppCommunication implements Runnable {
 
     }
 
+    private <T> T getUnserialisation(String objects, Class<T> classT) {
+        return FxGson.coreBuilder().registerTypeAdapter(
+                        LocalDate.class,
+                        (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext) ->
+                                LocalDate.parse(json.getAsJsonPrimitive().getAsString()))
+                .enableComplexMapKeySerialization().create()
+                .fromJson(objects, classT);
+    }
+
+    private void sendData (ObjectMapper objectMapper, ObjectNode root) throws JsonProcessingException {
+        out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
+        out.flush();
+    }
+
+
+
+    private void analyseData(String data) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode dataJson = objectMapper.readTree(data);
+        switch (dataJson.get("methods").asText()) {
+            case "RESPONSE":
+                methodsRESPONSE(dataJson, objectMapper);
+                break;
+            case "RESPONSEDETAILS":
+                methodsRESPONSEDETAILS(dataJson,objectMapper);
+                break;
+        }
+    }
+
+
+
+    //Fonction call pour avoir les details des rooms de l'accueil
+    private void methodsRESPONSE(JsonNode dataJson, ObjectMapper objectMapper) throws IOException {
+
+        //Boucle affetant chaque salon dans la list de salon
+        for(int i = 0;i<dataJson.get("rooms").size();i++){
+
+
+            Room room = this.getUnserialisation(dataJson.get("rooms").get(i).toString(), Room.class);
+
+            Debathon.getInstance().getDebates().add(room);
+        }
+    }
+
+    //Fonction call pour avoir les details d'une room
+    private void methodsRESPONSEDETAILS(JsonNode dataJson, ObjectMapper objectMapper) throws IOException{
+
+        selected_room = this.getUnserialisation(dataJson.get("room_selected").get(0).toString(), Room.class);
+
+        System.out.println(selected_room.getListQuestions().get(0).getListComment().get(0));
+
+    }
+
+
 
     public void requestHome () throws JsonProcessingException {
         System.out.println("TEST ALL ROOMS IN DB");
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode root = objectMapper.createObjectNode();
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
         all_rooms.clear();
         root.put("methods", "GET");
         root.put("request", "HOME");
 
-        out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
-        out.flush();
+        this.sendData(mapper, root);
     }
 
 
@@ -59,15 +112,43 @@ public class AppCommunication implements Runnable {
         root.put("request","ROOM");
         //id pour preciser l'id de la room
         root.put("id",id);
-        out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
-        out.flush();
+        this.sendData(mapper, root);
 
     }
 
 
-    public void useHome () {
 
+
+
+
+
+    private void ShowRoomsDetails(){ //Fonction test pour afficher les details de chaque salon
+        for(Room room : all_rooms){
+            System.out.println("=================");
+            System.out.println(room.getLabel());
+            System.out.println(room.getDescription());
+            System.out.println("=================");
+        }
     }
+
+    private void ShowQuestionsAndComments(){ //Fonction test pour afficher les questions et commentaires d'une room
+        for(Question q : questions_select_room){
+            System.out.println("===== "+q.getId()+" - "+q.getLabel()+" =====");
+            for(Comment com : q.getListComment()){
+                ShowCommentDetails(com);
+            }
+        }
+    }
+
+    private void ShowCommentDetails(Comment c){ //Fonction test pour afficher les details d'un commentaire
+        System.out.println("--- "+c.getId()+" ---");
+        System.out.println(c.getComment());
+        System.out.println("------");
+    }
+
+
+
+
 
     @Override
     public void run() {
@@ -97,64 +178,4 @@ public class AppCommunication implements Runnable {
         }
     }
 
-
-    private void analyseData(String data) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode dataJson = objectMapper.readTree(data);
-        switch (dataJson.get("methods").asText()) {
-            case "RESPONSE":
-                methodsRESPONSE(dataJson, objectMapper);
-                break;
-            case "RESPONSEDETAILS":
-                methodsRESPONSEDETAILS(dataJson,objectMapper);
-                break;
-        }
-    }
-
-    //Fonction call pour avoir les details des rooms de l'accueil
-    private void methodsRESPONSE(JsonNode dataJson, ObjectMapper objectMapper) throws IOException {
-
-        //Boucle affetant chaque salon dans la list de salon
-        for(int i = 0;i<dataJson.get("rooms").size();i++){
-            Room room = objectMapper.readValue(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(dataJson.get("rooms").get(i)), Room.class);
-            all_rooms.add(room);
-        }
-        ShowRoomsDetails();
-    }
-
-    //Fonction call pour avoir les details d'une room
-    private void methodsRESPONSEDETAILS(JsonNode dataJson, ObjectMapper objectMapper) throws IOException{
-        //Affecte la room select
-        selected_room = objectMapper.readValue(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(dataJson.get("room_selected").get(0)),Room.class);
-        //Boucle affectant chaque question de la room
-        for(int i = 0;i<dataJson.get("questions_room").size();i++){
-            questions_select_room.add(objectMapper.readValue(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(dataJson.get("questions_room").get(i)),Question.class));
-        }
-        //Affichage test des elements de la room
-        ShowQuestionsAndComments();
-    }
-
-    private void ShowRoomsDetails(){ //Fonction test pour afficher les details de chaque salon
-        for(Room room : all_rooms){
-            System.out.println("=================");
-            System.out.println(room.getLabel());
-            System.out.println(room.getDescription());
-            System.out.println("=================");
-        }
-    }
-
-    private void ShowQuestionsAndComments(){ //Fonction test pour afficher les questions et commentaires d'une room
-        for(Question q : questions_select_room){
-            System.out.println("===== "+q.getId()+" - "+q.getLabel()+" =====");
-            for(Comment com : q.getListComment()){
-                ShowCommentDetails(com);
-            }
-        }
-    }
-
-    private void ShowCommentDetails(Comment c){ //Fonction test pour afficher les details d'un commentaire
-        System.out.println("--- "+c.getId()+" ---");
-        System.out.println(c.getComment());
-        System.out.println("------");
-    }
 }

@@ -1,6 +1,7 @@
 package fr.univlr.debathon.job.db_project.dao;
 
 import fr.univlr.debathon.job.dao.DAO;
+import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
 
 import java.sql.Connection;
@@ -8,6 +9,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,13 +41,14 @@ public class RoomDAO implements DAO<Room> {
 			
 			CategoryDAO categoryDAO = new CategoryDAO(this.connection);
 			TagDAO tagDAO = new TagDAO(this.connection);
+			QuestionDAO questionDAO = new QuestionDAO(this.connection);
 			
 			while (rs.next()) {				
 				
 				listRoom.add(new Room(rs.getInt("idRoom"), rs.getString("label"), rs.getString("description"), 
 										rs.getString("key"), rs.getString("mail"), rs.getBoolean("is_open"), 
-										rs.getDate("date_start"), rs.getDate("date_end"), categoryDAO.select(rs.getInt("id_category")), 
-										tagDAO.selectByIdRoom(rs.getInt("idRoom"))));
+										null, null, categoryDAO.select(rs.getInt("id_category")),
+										tagDAO.selectByIdRoom(rs.getInt("idRoom")), questionDAO.selectByIdSalon(rs.getInt("idRoom"))));
 			}
 			
 		} catch (Exception e) {
@@ -54,6 +57,8 @@ public class RoomDAO implements DAO<Room> {
 
 		return listRoom;
 	}
+
+
 
 	@Override
 	public boolean insert(Room room) throws SQLException {
@@ -68,7 +73,7 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setString(3, room.getKey());
 			pstmt.setString(4, room.getMail());
 			pstmt.setBoolean(5, room.getIs_open());
-			pstmt.setDate(6, (Date) room.getDate_end());
+			pstmt.setDate(6, Date.valueOf(room.getDate_end()));
 			pstmt.setInt(7, room.getCategory().getId());
 			
 			pstmt.executeUpdate();
@@ -94,8 +99,8 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setString(3, room.getKey());
 			pstmt.setString(4, room.getMail());
 			pstmt.setBoolean(5, room.getIs_open());
-			pstmt.setDate(6, (Date) room.getDate_start());
-			pstmt.setDate(7, (Date) room.getDate_end());
+			pstmt.setDate(6, Date.valueOf(room.getDate_start()));
+			pstmt.setDate(7, Date.valueOf(room.getDate_end()));
 			pstmt.setInt(8, room.getCategory().getId());
 			pstmt.setInt(9, room.getId());
 			
@@ -152,16 +157,19 @@ public class RoomDAO implements DAO<Room> {
 			
 			CategoryDAO categoryDAO = new CategoryDAO(this.connection);
 			TagDAO tagDAO = new TagDAO(this.connection);
-			
+			QuestionDAO questionDAO = new QuestionDAO(this.connection);
+			System.out.println("test");
 			if (rs.next()) {
+				room = new Room();
+				room.setId(rs.getInt("idRoom"));
 				room = new Room(rs.getInt("idRoom"), rs.getString("label"), rs.getString("description"), 
 						rs.getString("key"), rs.getString("mail"), rs.getBoolean("is_open"), 
-						rs.getDate("date_start"), rs.getDate("date_end"), categoryDAO.select(rs.getInt("id_category")), 
-						tagDAO.selectByIdRoom(rs.getInt("idRoom")));
+						null, null, categoryDAO.select(rs.getInt("id_category")),
+						tagDAO.selectByIdRoom(rs.getInt("idRoom")), questionDAO.selectBySalon(room));
 			}
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return room;
 	}

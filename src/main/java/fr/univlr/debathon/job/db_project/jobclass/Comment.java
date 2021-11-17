@@ -150,4 +150,18 @@ public class Comment {
     public ObjectProperty<User> userProperty() {
         return user;
     }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", comment=" + comment +
+                ", nb_likes=" + nb_likes +
+                ", nb_dislikes=" + nb_dislikes +
+                ", parent=" + parent +
+                ", question=" + question +
+                ", room=" + room +
+                ", user=" + user +
+                '}';
+    }
 }

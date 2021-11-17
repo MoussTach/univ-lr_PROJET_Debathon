@@ -53,4 +53,12 @@ public class User {
     public StringProperty labelProperty() {
         return label;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", label=" + label +
+                '}';
+    }
 }

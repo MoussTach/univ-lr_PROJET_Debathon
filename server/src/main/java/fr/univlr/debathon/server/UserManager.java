@@ -7,22 +7,21 @@ import java.util.Map;
 
 public class UserManager {
 
-    public Map<Integer, List<UserInstance>> mapUser;
+    private static UserManager instance;
+    private Map<Integer, List<UserInstance>> mapUser;
 
 
-    public UserManager () {
-        this.initMapUser();
+    public static UserManager getInstance () {
+        if (instance == null)
+            instance = new UserManager();
+        return instance;
     }
 
-    public UserManager(List<Integer> listUi) {
-        this.initMapUser();
-        this.addRooms(listUi);
-    }
-
-    private void initMapUser () {
+    private UserManager () {
         this.mapUser = new HashMap<>();
-        this.mapUser.put(-1, new ArrayList<>());
+        this.mapUser.put(-1, new ArrayList<>()); // -1 est "l'id" de l'accueil
     }
+
 
     public void addRooms (List<Integer> listId) {
         for (Integer id : listId) {

@@ -3,6 +3,7 @@ package fr.univlr.debathon.job.db_project.dao;
 import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.Comment;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
+import fr.univlr.debathon.job.db_project.jobclass.Room;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -123,6 +124,63 @@ public class CommentDAO implements DAO<Comment> {
 		return commentList;
 		
 	}
+
+
+
+
+	public List<Comment> selectCommentByIdQuestion(int id, Room room) throws SQLException {
+
+		List<Comment> commentList = new ArrayList<>();
+
+		String sql = "SELECT * FROM Comment WHERE id_question = ?";
+
+		try {
+			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+
+			pstmt.setInt(1, id);
+
+			ResultSet rs = pstmt.executeQuery();
+
+			QuestionDAO questionDAO = new QuestionDAO(this.connection);
+			RoomDAO roomDAO = new RoomDAO(this.connection);
+			UserDAO userDAO = new UserDAO(this.connection);
+
+			Comment comment = null;
+			Question question = null;
+
+
+			while (rs.next()) {
+
+				if ("" + rs.getInt("id_parent") != "") {
+					comment = this.select(rs.getInt("id_parent"));
+				}
+
+				if ("" + rs.getInt("id_question") != "") {
+					question = questionDAO.select(rs.getInt("id_parent"));
+				}
+
+				commentList.add(
+						new Comment(
+								rs.getInt("idComment"), rs.getString("comment"),
+								rs.getInt("nb_likes"), rs.getInt("nb_dislikes"),
+								comment, question, room,
+								userDAO.select(rs.getInt("id_user"))
+						)
+				);
+			}
+
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return commentList;
+
+	}
+
+
+
+
 
 	@Override
 	public boolean insert(Comment comment) throws SQLException {

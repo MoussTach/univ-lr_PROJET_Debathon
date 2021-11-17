@@ -2,6 +2,7 @@ package fr.univlr.debathon.job.db_project.dao;
 
 import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
+import fr.univlr.debathon.job.db_project.jobclass.Room;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -190,7 +191,7 @@ public class QuestionDAO implements DAO<Question> {
 				
 				
 				listQuestion.add(new Question(rs.getInt("idQuestion"), rs.getString("label"), rs.getString("context"), 
-						rs.getString("type"), rs.getBoolean("is_active"), roomDAO.select(rs.getInt("id_room")), 
+						rs.getString("type"), rs.getBoolean("is_active"), roomDAO.select(rs.getInt("id_room")),
 						commentDAO.selectCommentByIdQuestion(rs.getInt("idQuestion")), userDAO.select(rs.getInt("id_user"))));
 				
 			}
@@ -201,8 +202,39 @@ public class QuestionDAO implements DAO<Question> {
 		}
 		
 		return listQuestion;
+	}
+
+	public List<Question> selectBySalon(Room room) throws SQLException {
+
+		List<Question> listQuestion = new ArrayList<>();
+
+		String sql = "SELECT * FROM Question WHERE id_room = ?";
+
+		try {
+			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+
+			pstmt.setInt(1, room.getId());
+
+			ResultSet rs = pstmt.executeQuery();
+
+			CommentDAO commentDAO = new CommentDAO(this.connection);
+			UserDAO userDAO = new UserDAO(this.connection);
+
+			while (rs.next()) {
 
 
+				listQuestion.add(new Question(rs.getInt("idQuestion"), rs.getString("label"), rs.getString("context"),
+						rs.getString("type"), rs.getBoolean("is_active"), null,
+						commentDAO.selectCommentByIdQuestion(rs.getInt("idQuestion"), null), userDAO.select(rs.getInt("id_user"))));
+
+			}
+
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return listQuestion;
 	}
 	
 }

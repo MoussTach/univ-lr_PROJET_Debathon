@@ -152,4 +152,18 @@ public class Question {
     public ObjectProperty<User> userProperty() {
         return user;
     }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "id=" + id +
+                ", label=" + label +
+                ", context=" + context +
+                ", type=" + type +
+                ", is_active=" + is_active +
+                ", room=" + room +
+                ", listComment=" + listComment +
+                ", user=" + user +
+                '}';
+    }
 }

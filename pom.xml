@@ -85,6 +85,13 @@
             <artifactId>jackson-core</artifactId>
             <version>2.13.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.hildan.fxgson</groupId>
+            <artifactId>fx-gson</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+
     </dependencies>
 
     <properties>

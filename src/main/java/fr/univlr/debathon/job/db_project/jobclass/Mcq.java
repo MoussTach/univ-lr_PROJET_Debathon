@@ -100,4 +100,15 @@ public class Mcq {
     public ObjectProperty<Room> roomProperty() {
         return room;
     }
+
+    @Override
+    public String toString() {
+        return "Mcq{" +
+                "id=" + id +
+                ", label=" + label +
+                ", nb_votes=" + nb_votes +
+                ", question=" + question +
+                ", room=" + room +
+                '}';
+    }
 }

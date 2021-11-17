@@ -90,7 +90,7 @@
     <properties>
         <arg-java-config/>
         <dataCreated-directory>data_created</dataCreated-directory>
-        <data-directory>data_ressources</data-directory>
+        <data-directory>data_resources</data-directory>
         <dll-directory>webkit</dll-directory>
 
         <maven.compiler.source>11</maven.compiler.source>

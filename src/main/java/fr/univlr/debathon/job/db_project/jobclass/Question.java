@@ -1,121 +1,155 @@
 package fr.univlr.debathon.job.db_project.jobclass;
 
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.List;
 
 public class Question {
     
-    private int id;
+    private IntegerProperty id = new SimpleIntegerProperty(-1);
 
-    private String label;
-    private String context;
-    private String type;
+    private StringProperty label = new SimpleStringProperty("/");
+    private StringProperty context = new SimpleStringProperty("/");
+    private StringProperty type = new SimpleStringProperty("/");
 
-    private boolean is_active;
+    private BooleanProperty is_active = new SimpleBooleanProperty(false);
 
-    private Room room;
+    private ObjectProperty<Room> room = new SimpleObjectProperty<>();
 
-    private List<Comment> listComment;
-    private User user;
+    private ListProperty<Comment> listComment = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private ObjectProperty<User> user = new SimpleObjectProperty<>();
 
     public Question(){
 
     }
+
     public Question(int id, String label, String context, String type, boolean is_active, Room room, List<Comment> listComment, User user) {
-        this.id = id;
-        this.label = label;
-        this.context = context;
-        this.type = type;
-        this.is_active = is_active;
-        this.room = room;
-        this.listComment = listComment;
-        this.user = user;
+        this.id.set(id);
+        this.label.set(label);
+        this.context.set(context);
+        this.type.set(type);
+        this.is_active.set(is_active);
+        this.room.set(room);
+        this.listComment.addAll(listComment);
+        this.user.set(user);
     }
 
     public Question(Question clone) {
-        this.id = clone.getId();
-        this.label = clone.getLabel();
-        this.context = clone.getContext();
-        this.type = clone.getType();
-        this.is_active = clone.getIs_active();
-        this.room = clone.getRoom();
-        this.listComment = clone.getListComment();
-        this.user = clone.getUser();
+        this.id.set(clone.getId());
+        this.label.set(clone.getLabel());
+        this.context.set(clone.getContext());
+        this.type.set(clone.getType());
+        this.is_active.set(clone.is_active());
+        this.room.set(clone.getRoom());
+        this.listComment.addAll(clone.getListComment());
+        this.user.set(clone.getUser());
     }
 
 
-
+    //Getter
     public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getLabel() {
-        return this.label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
+        return this.id.get();
     }
 
     public String getContext() {
-        return this.context;
-    }
-
-    public void setContext(String context) {
-        this.context = context;
+        return this.context.get();
     }
 
     public String getType () {
-    	return this.type;
-    }
-    
-    public void setType (String type) {
-    	this.type = type;
-    }
-    
-    public boolean isIs_active() {
-        return this.is_active;
+        return this.type.get();
     }
 
-    public boolean getIs_active() {
-        return this.is_active;
-    }
-
-    public void setIs_active(boolean is_active) {
-        this.is_active = is_active;
+    public boolean is_active() {
+        return this.is_active.get();
     }
 
     public Room getRoom() {
-        return this.room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
+        return this.room.get();
     }
 
     public List<Comment> getListComment() {
         return this.listComment;
     }
 
-    public void setListComment(List<Comment> listComment) {
-        this.listComment = listComment;
-    }
-
-    public void addCommentaire (Comment commentaire) {
-        this.listComment.add(commentaire);
-    }
-
     public User getUser() {
-        return this.user;
+        return this.user.get();
+    }
+
+    public String getLabel() {
+        return this.label.get();
+    }
+
+
+    //Setter
+    public void setId(int id) {
+        this.id.set(id);
+    }
+
+    public void setLabel(String label) {
+        this.label.set(label);
+    }
+
+    public void setContext(String context) {
+        this.context.set(context);
+    }
+
+    public void setType (String type) {
+        this.type.set(type);
+    }
+
+    public void setIs_active(boolean is_active) {
+        this.is_active.set(is_active);
+    }
+
+    public void setRoom(Room room) {
+        this.room.set(room);
+    }
+
+    public void setListComment(ObservableList<Comment> listComment) {
+        this.listComment.set(listComment);
     }
 
     public void setUser(User user) {
-        this.user = user;
+        this.user.set(user);
     }
 
 
+    //Property
+    public IntegerProperty idProperty() {
+        return id;
+    }
 
+    public StringProperty labelProperty() {
+        return label;
+    }
+
+    public StringProperty contextProperty() {
+        return context;
+    }
+
+    public StringProperty typeProperty() {
+        return type;
+    }
+
+    public boolean isIs_active() {
+        return is_active.get();
+    }
+
+    public BooleanProperty is_activeProperty() {
+        return is_active;
+    }
+
+    public ObjectProperty<Room> roomProperty() {
+        return room;
+    }
+
+    public ListProperty<Comment> listCommentProperty() {
+        return listComment;
+    }
+
+    public ObjectProperty<User> userProperty() {
+        return user;
+    }
 }

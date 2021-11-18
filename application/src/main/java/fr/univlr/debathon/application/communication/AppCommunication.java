@@ -49,6 +49,8 @@ public class AppCommunication implements Runnable {
 
 
 
+
+
     private void analyseData(String data) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
@@ -57,10 +59,21 @@ public class AppCommunication implements Runnable {
                 methodsRESPONSE(dataJson, objectMapper);
                 break;
             case "RESPONSEDETAILS":
-                methodsRESPONSEDETAILS(dataJson,objectMapper);
+                methodsRESPONSEDETAILS(dataJson);
+                break;
+            case "NEWCOMMENT":
+                methodsNEWCOMMENT (dataJson);
+                break;
+            case "NEWQUESTION":
+                methodsNEWQUESTION (dataJson);
+                break;
+            case "NEWROOM":
+                methodsNEWROOM (dataJson);
                 break;
         }
     }
+
+
 
 
 
@@ -78,13 +91,35 @@ public class AppCommunication implements Runnable {
     }
 
     //Fonction call pour avoir les details d'une room
-    private void methodsRESPONSEDETAILS(JsonNode dataJson, ObjectMapper objectMapper) throws IOException{
+    private void methodsRESPONSEDETAILS(JsonNode dataJson) throws IOException{
 
         selected_room = this.getUnserialisation(dataJson.get("room_selected").get(0).toString(), Room.class);
 
-        System.out.println(selected_room.getListQuestions().get(0).getListComment().get(0));
-
     }
+
+    private void methodsNEWCOMMENT(JsonNode dataJson) {
+        Comment comment = this.getUnserialisation(dataJson.get("new_comment").get(0).toString(), Comment.class);
+        System.out.println(comment);
+    }
+
+    private void methodsNEWQUESTION (JsonNode dataJson) {
+        Question question = this.getUnserialisation(dataJson.get("new_question").get(0).toString(), Question.class);
+        System.out.println(question);
+    }
+
+    private void methodsNEWROOM (JsonNode dataJson) {
+        Room room = this.getUnserialisation(dataJson.get("new_room").get(0).toString(), Room.class);
+        System.out.println(room);
+    }
+
+
+
+
+
+
+
+
+
 
 
 

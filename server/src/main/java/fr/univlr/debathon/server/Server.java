@@ -39,11 +39,8 @@ public class Server {
                 userInstanceList.add(userInstance);
                 Thread t = new Thread(userInstance);
                 t.start();
+                System.out.println("======> Un nouveau thread de lancé : " + t.getName() + "  <=======");
 
-                for (UserInstance ui : userInstanceList) {
-                    System.out.println("----");
-                    System.out.println("----");
-                }
             }
 
 

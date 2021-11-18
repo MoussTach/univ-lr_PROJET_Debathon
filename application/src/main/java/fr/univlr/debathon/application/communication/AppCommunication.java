@@ -3,11 +3,10 @@ package fr.univlr.debathon.application.communication;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonDeserializer;
-import fr.univlr.debathon.job.db_project.jobclass.Comment;
-import fr.univlr.debathon.job.db_project.jobclass.Question;
-import fr.univlr.debathon.job.db_project.jobclass.Room;
+import fr.univlr.debathon.job.db_project.jobclass.*;
 import org.hildan.fxgson.FxGson;
 
 
@@ -30,6 +29,10 @@ public class AppCommunication implements Runnable {
         userSocket = new Socket("127.0.0.1",9878);
         out = new PrintWriter(userSocket.getOutputStream());
         in = new BufferedReader(new InputStreamReader(userSocket.getInputStream()));
+
+        this.testRequestInsertNewRoom();
+        this.testRequestInsertNewQuestion();
+        this.testRequestInsertNewComment();
 
     }
 
@@ -82,10 +85,8 @@ public class AppCommunication implements Runnable {
 
         //Boucle affetant chaque salon dans la list de salon
         for(int i = 0;i<dataJson.get("rooms").size();i++){
-
-
             Room room = this.getUnserialisation(dataJson.get("rooms").get(i).toString(), Room.class);
-
+            System.out.println("---" + room);
             Debathon.getInstance().getDebates().add(room);
         }
     }
@@ -150,6 +151,79 @@ public class AppCommunication implements Runnable {
         this.sendData(mapper, root);
 
     }
+
+    public void requestInsertNewRoom (Room room) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+
+
+        root.put("methods","INSERT");
+
+        root.put("request","ROOM");
+
+        ArrayNode c = root.putArray("new_room");
+        c.addPOJO(room);
+        this.sendData(mapper, root);
+
+    }
+    private void testRequestInsertNewRoom () throws JsonProcessingException {
+        String key = AlphaNumericStringGenerator.getRandomString(6);
+        Category category = new Category(1, "Catégorie");
+        List<Tag> listTag = new ArrayList<>();
+        listTag.add(new Tag(1, "Oui", "couleur"));
+        listTag.add(new Tag(2, "Tag", "couelurur"));
+        Room room = new Room("Nouveau salon", "Ceci est un nouveau salon", key,
+                "mail@mail.mail", category, listTag);
+
+        this.requestInsertNewRoom(room);
+    }
+
+    public void requestInsertNewQuestion (Question question) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+
+        root.put("methods","INSERT");
+        root.put("request","QUESTION");
+
+        ArrayNode c = root.putArray("new_question");
+        c.addPOJO(question);
+        this.sendData(mapper, root);
+
+    }
+    private void testRequestInsertNewQuestion () throws JsonProcessingException {
+        User user = new User(1, "User");
+        Room room = new Room();
+        room.setId(2);
+        Question question = new Question("Comment ça va ?", "Il est 3h du mat et ca te casse les couilles",
+                "unique", room, user);
+        this.requestInsertNewQuestion(question);
+    }
+
+    public void requestInsertNewComment (Comment comment) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+
+        root.put("methods","INSERT");
+        root.put("request","COMMENT");
+
+        ArrayNode c = root.putArray("new_comment");
+        c.addPOJO(comment);
+        this.sendData(mapper, root);
+    }
+    private void testRequestInsertNewComment () throws JsonProcessingException {
+        Room room = new Room();
+        room.setId(2);
+        Question question = new Question();
+        question.setId(6);
+
+        Comment comment = new Comment("Ok m'en fous", null, question, room, new User(1, "Nom"));
+
+        this.requestInsertNewComment(comment);
+    }
+
+
+
+
 
 
 

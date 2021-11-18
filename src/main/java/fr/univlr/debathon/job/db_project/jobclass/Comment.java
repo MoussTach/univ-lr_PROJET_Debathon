@@ -34,8 +34,8 @@ public class Comment {
         this(id, comment, 0, 0, null, question, room, user);
     }
 
-    public Comment(String comment, int nb_likes, int nb_dislikes, Comment parent, Question question, Room room, User user) {
-        this(-1, comment, nb_likes, nb_dislikes, parent, question, room, user);
+    public Comment(String comment, Comment parent, Question question, Room room, User user) {
+        this(-1, comment, 0, 0, parent, question, room, user);
     }
 
     public Comment(Comment clone) {

@@ -26,7 +26,7 @@ public class Server {
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:" + db_name); //Creation connection on db
-            c.setAutoCommit(false);
+            c.setAutoCommit(true);
             System.out.println("Opened database successfully");
 
             serverSocket = new ServerSocket(9878);

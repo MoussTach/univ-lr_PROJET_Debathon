@@ -49,17 +49,16 @@ public class Room {
         this.listQuestions.addAll(questionList);
     }
 
-    public Room(int id, String label, String description, String key, String mail,
-                boolean is_open, LocalDate date_start, LocalDate date_end,
+    public Room(String label, String description, String key, String mail,
                 Category category, List<Tag> listTag) {
-        this.id.set(id);
+        this.id.set(1);
         this.label.set(label);
         this.description.set(description);
         this.key.set(key);
         this.mail.set(mail);
-        this.is_open.set(is_open);
-        this.date_start.set(date_start);
-        this.date_end.set(date_end);
+        this.is_open.set(true);
+        this.date_start.set(null);
+        this.date_end.set(null);
         this.category.set(category);
         this.listTag.addAll(listTag);
     }

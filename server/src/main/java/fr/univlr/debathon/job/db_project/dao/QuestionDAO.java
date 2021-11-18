@@ -83,6 +83,30 @@ public class QuestionDAO implements DAO<Question> {
 		return true;
 	}
 
+	public int insertAndGetId(Question question) throws SQLException {
+
+		String sql = "INSERT INTO Question (label, context, type, id_room, id_user) values (?,?,?,?,?)";
+
+		try {
+
+			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+
+			pstmt.setString(1, question.getLabel());
+			pstmt.setString(2, question.getContext());
+			pstmt.setString(3, question.getType());
+			pstmt.setInt(4, question.getRoom().getId());
+			pstmt.setInt(5, question.getUser().getId());
+
+			pstmt.executeUpdate();
+
+			return this.selectByContextAndLabel(question.getLabel(), question.getContext());
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return -2;
+		}
+	}
+
 	@Override
 	public boolean update(Question question) throws SQLException {
 
@@ -168,6 +192,33 @@ public class QuestionDAO implements DAO<Question> {
 		}
 		
 		return question;
+	}
+
+
+	public int selectByContextAndLabel(String label, String context) throws SQLException {
+		Question question = null;
+
+		String sql = "SELECT * FROM Question WHERE label = ? AND context = ?";
+
+		try {
+			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+
+			pstmt.setString(1, label);
+			pstmt.setString(2, context);
+
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				return rs.getInt("idQuestion");
+			}
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+
+		return -1;
 	}
 
 	public List<Question> selectByIdSalon(int id) throws SQLException {

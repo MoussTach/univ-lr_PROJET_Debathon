@@ -209,6 +209,39 @@ public class CommentDAO implements DAO<Comment> {
 		return true;
 	}
 
+	public int insertAndGetId(Comment comment) throws SQLException {
+
+		String sql = "INSERT INTO Comment (comment, id_parent, id_question, id_room, id_user) values (?,?,?,?,?)";
+
+		try {
+			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+
+			pstmt.setString(1, comment.getComment());
+			if (comment.getParent() != null) {
+				pstmt.setInt(2, comment.getParent().getId());
+			} else {
+				pstmt.setObject(2, null);
+			}
+
+			if (comment.getQuestion() != null) {
+				pstmt.setInt(3, comment.getQuestion().getId());
+			} else {
+				pstmt.setObject(3, null);
+			}
+			pstmt.setInt(4, comment.getRoom().getId());
+			pstmt.setInt(5, comment.getUser().getId());
+
+			pstmt.executeUpdate();
+
+			return this.selectByCommentAndUser(comment.getComment(), comment.getUser().getId());
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return -1;
+		}
+
+	}
+
 	@Override
 	public boolean update(Comment comment) throws SQLException {
 		
@@ -286,12 +319,12 @@ public class CommentDAO implements DAO<Comment> {
 
 
 			    Comment com = null;
-			    if ("" + rs.getInt("id_parent") != null) {
+			    if ("" + rs.getInt("id_parent") != "") {
 			    	comment = this.select(rs.getInt("id_parent"));
 			    }
 			    
 			    Question question = null;
-			    if ("" + rs.getInt("id_question") != null) {
+			    if ("" + rs.getInt("id_question") != "") {
 			    	question = questionDAO.select(rs.getInt("id_parent"));
 			    }
 		    	
@@ -310,5 +343,34 @@ public class CommentDAO implements DAO<Comment> {
 		
 		return comment;
 	}
+
+	public int selectByCommentAndUser(String c, int id_user) throws SQLException {
+
+		String sql = "SELECT * from Comment WHERE comment = ? and id_user = ?";
+
+		try {
+			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+
+			pstmt.setString(1, c);
+			pstmt.setInt(2, id_user);
+
+
+			ResultSet rs = pstmt.executeQuery();
+
+
+			if (rs.next()) {
+
+				return rs.getInt("idComment");
+			}
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+
+		return -1;
+	}
+
 
 }

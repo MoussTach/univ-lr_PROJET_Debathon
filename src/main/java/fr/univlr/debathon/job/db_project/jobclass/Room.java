@@ -123,6 +123,9 @@ public class Room {
         return this.listUtilisateurs.get();
     }
 
+    public List<Question> getListQuestion () {
+        return new ArrayList<>(this.listQuestions);
+    }
 
     //Setter
     public void setId(int id) {
@@ -185,6 +188,14 @@ public class Room {
 
     public void setListUtilisateurs(List<User> listUtilisateurs) {
         this.listUtilisateurs.setAll(listUtilisateurs);
+    }
+
+    public void setListQuestions(ObservableList<Question> listQuestions) {
+        this.listQuestions.set(listQuestions);
+    }
+
+    public void setListQuestions(List<Question> listQuestions) {
+        this.listQuestions.addAll(listQuestions);
     }
 
     public void addUtilisateur (User utilisateur) {
@@ -256,32 +267,10 @@ public class Room {
         return listUtilisateurs;
     }
 
-
-
-
-    public ObservableList<Question> getListQuestions() {
-        return listQuestions.get();
-    }
-
     public ListProperty<Question> listQuestionsProperty() {
         return listQuestions;
     }
 
-    public void setListQuestions(ObservableList<Question> listQuestions) {
-        this.listQuestions.set(listQuestions);
-    }
-
-    public void setListQuestions(List<Question> listQuestions) {
-        this.listQuestions.addAll(listQuestions);
-    }
-
-    public List<Question> getListQuestion () {
-        List<Question> questionList = new ArrayList<>();
-        for (Question q: this.listQuestions) {
-            questionList.add(q);
-        }
-        return questionList;
-    }
 
     public void addQuestion (Question question) {
         this.listQuestions.add(question);

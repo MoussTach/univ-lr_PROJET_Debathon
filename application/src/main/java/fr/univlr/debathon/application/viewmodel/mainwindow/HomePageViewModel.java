@@ -151,9 +151,11 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
                 } else if (change.wasRemoved()) {
                     change.getRemoved().forEach(item ->
                             Platform.runLater(() -> {
-                                //TODO
-                                listDebate_node_value.removeIf(debate -> listDebate_value.contains(item));
-                                listDebate_value.removeIf(debate -> debate.getViewModel().getDebate().equals(item));
+                                Optional<ViewTuple<DebateThumbnailView, DebateThumbnailViewModel>> optional = listDebate_value.stream().filter(debate -> debate.getViewModel().getDebate().equals(item)).findAny();
+                                if (optional.isPresent()) {
+                                    listDebate_node_value.remove(optional.get().getView());
+                                    listDebate_value.remove(optional.get());
+                                }
                             })
                     );
                 }

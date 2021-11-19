@@ -113,7 +113,17 @@ public class DebateViewModel extends ViewModel_SceneCycle {
             };
             this.debate.listTagProperty().addListener(this.listChangeListener_tag);
 
-            //TODO Question
+            this.debate.getListQuestion().forEach(question ->
+                    Platform.runLater(() -> {
+                        if (question != null) {
+                            QuestionViewModel questionViewModel = new QuestionViewModel(question);
+                            final ViewTuple<QuestionView, QuestionViewModel> questionViewTuple = FluentViewLoader.fxmlView(QuestionView.class)
+                                    .viewModel(questionViewModel)
+                                    .load();
+
+                            listQuestion_value.add(questionViewTuple);
+                        }
+                    }));
             this.listChangeListener_question = change -> {
                 while (change.next()) {
                     if (change.wasAdded()) {
@@ -134,8 +144,7 @@ public class DebateViewModel extends ViewModel_SceneCycle {
                     }
                 }
             };
-            //TODO Question
-            //this.debate.listQuestion().addListener(this.listQuestion_valueProperty());
+            this.debate.listQuestionsProperty().addListener(this.listChangeListener_question);
         }
     }
 
@@ -153,11 +162,10 @@ public class DebateViewModel extends ViewModel_SceneCycle {
                 this.listChangeListener_tag = null;
             }
 
-            /* TODO Question
             if (this.listChangeListener_question != null) {
-                this.debate.listQuestion().removeListener(this.listChangeListener_question);
+                this.debate.listQuestionsProperty().removeListener(this.listChangeListener_question);
                 this.listChangeListener_question = null;
-            }*/
+            }
         }
     }
 

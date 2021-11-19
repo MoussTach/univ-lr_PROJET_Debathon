@@ -1,9 +1,11 @@
 package fr.univlr.debathon.application.communication;
 
+import fr.univlr.debathon.application.viewmodel.mainwindow.HomePageViewModel;
 import fr.univlr.debathon.job.db_project.jobclass.Category;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
 import fr.univlr.debathon.job.db_project.jobclass.Tag;
+import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -12,6 +14,8 @@ import javafx.collections.ObservableList;
 import java.io.IOException;
 
 public class Debathon {
+
+    private static final CustomLogger LOGGER = CustomLogger.create(Debathon.class.getName());
 
     private static Debathon debathon = null;
 
@@ -29,20 +33,26 @@ public class Debathon {
 
     private AppCommunication appCommunication = null;
 
-    private Debathon() throws IOException {
+    private Debathon() {
 
-        this.appCommunication = new AppCommunication();
+        try {
+            //TODO suppr
+            Room debate = new Room();
+            debate.setLabel("Name");
 
-        //TODO suppr
-        Room debate = new Room();
-        debate.setLabel("Name");
+            Tag tag = new Tag();
+            tag.setLabel("tag");
+            debate.addTag(tag);
 
-        Tag tag = new Tag();
-        tag.setLabel("tag");
-        debate.addTag(tag);
+            tags.add(tag);
+            debates.add(debate);
 
-        tags.add(tag);
-        debates.add(debate);
+            this.appCommunication = new AppCommunication();
+        } catch (Exception e) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error when trying to run Debathon: %s", e.getMessage()), e);
+            }
+        }
     }
 
 
@@ -53,7 +63,7 @@ public class Debathon {
      *
      * @return {@link Debathon} - return class
      */
-    public static Debathon getInstance() throws IOException {
+    public static Debathon getInstance() {
         if (debathon == null)
             debathon = new Debathon();
         return debathon;

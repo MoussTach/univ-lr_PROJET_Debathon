@@ -3,6 +3,7 @@ package fr.univlr.debathon.application.viewmodel.mainwindow.debate.items;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.job.db_project.jobclass.Tag;
 import fr.univlr.debathon.log.generate.CustomLogger;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -36,7 +37,11 @@ public class TagViewModel extends ViewModel_SceneCycle implements Comparable<Tag
 
         if (tag != null) {
             lblTag_label.bind(this.tag.labelProperty());
-            color.bind(this.tag.colorProperty());
+
+            Platform.runLater(() -> {
+                color.set(this.tag.getColor());
+                color.bind(this.tag.colorProperty());
+            });
         }
     }
 

@@ -27,8 +27,16 @@ public class TagView extends FxmlView_SceneCycle<TagViewModel> implements Initia
         //Text
         lblTag.textProperty().bind(this.tagViewModel.lblTag_labelProperty());
 
-        this.tagViewModel.colorProperty().addListener((observableValue, oldValue, newValue) ->
-                bPaneTag.setStyle(String.format("-fx-background-color:%s;", newValue)));
+        this.tagViewModel.colorProperty().addListener((observableValue, oldValue, newValue) -> {
+            bPaneTag.setStyle(
+                    String.format("-fx-background-color:%s;-fx-border-radius:%s;-fx-background-radius:%s;-fx-border-width:%s;-fx-border-color:%s;",
+                            newValue,
+                            "10",
+                            "10",
+                            "2",
+                            "LIGHTGRAY"
+                    ));
+        });
     }
 
 

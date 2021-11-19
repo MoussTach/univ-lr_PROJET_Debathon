@@ -139,6 +139,7 @@ public class AppCommunication extends Thread implements Runnable {
 
 
 
+
     public void requestHome () throws JsonProcessingException {
         System.out.println("TEST ALL ROOMS IN DB");
         ObjectMapper mapper = new ObjectMapper();
@@ -260,6 +261,32 @@ public class AppCommunication extends Thread implements Runnable {
 
     }
 
+    public void methodsUPDATE_VOTE_MCQ (int id_mcq) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+
+        root.put("methods", "UPDATE");
+        root.put("request", "MCQ");
+        root.put("type", "VOTE");
+        root.put("id", id_mcq);
+
+        this.sendData(mapper, root);
+
+    }
+
+    public void methodsUPDATE_LIKE_COMMENT (int id_mcq, boolean positif) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+
+        root.put("methods", "UPDATE");
+        root.put("request", "MCQ");
+        root.put("type", "VOTE");
+        root.put("id", id_mcq);
+        root.put("positif", positif);
+
+        this.sendData(mapper, root);
+
+    }
 
 
 

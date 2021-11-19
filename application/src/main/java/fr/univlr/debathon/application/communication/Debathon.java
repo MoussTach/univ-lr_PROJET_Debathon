@@ -48,6 +48,9 @@ public class Debathon {
             debates.add(debate);
 
             this.appCommunication = new AppCommunication();
+            this.appCommunication.start();
+            this.appCommunication.requestHome();
+            System.out.println(this.debates.size());
         } catch (Exception e) {
             if (LOGGER.isErrorEnabled()) {
                 LOGGER.error(String.format("Error when trying to run Debathon: %s", e.getMessage()), e);
@@ -157,5 +160,9 @@ public class Debathon {
 
     public void setMcq(ObservableList<Mcq> mcq) {
         this.mcq.set(mcq);
+    }
+
+    public AppCommunication getAppCommunication () {
+        return this.appCommunication;
     }
 }

@@ -129,6 +129,28 @@ public class McqDAO implements DAO<Mcq> {
 		
 	}
 
+	public boolean updateNewLike(int id) throws SQLException {
+
+		String sql = "UPDATE MCQ SET nb_votes = nb_votes + 1 WHERE idMcq = ?";
+
+		try {
+
+			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+
+			pstmt.setInt(1, id);
+
+			pstmt.executeUpdate();
+
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+
+		return true;
+
+	}
+
 	@Override
 	public boolean delete(Mcq mcq) throws SQLException {
 

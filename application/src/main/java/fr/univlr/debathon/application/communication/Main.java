@@ -8,22 +8,10 @@ public class Main {
         AppCommunication comm = new AppCommunication();
         comm.start();
 
-        // comm.requestHome(); //TEST TO GET ALL ROOMS INFOS
+        comm.requestHome(); //TEST TO GET ALL ROOMS INFOS
 
         //comm.requestRoom(1); //TEST TO GET ROOM INFO WITH ID : 1
-        comm.testRequestInsertNewRoom();
-        /*comm.testRequestInsertNewQuestion();
-        comm.testRequestInsertNewComment();
-        comm.testRequestInsertNewMcq();*/
-        int seconde = 2000;
-        for (int i = 0; i < 30; i++) {
-            Thread.sleep(seconde);
-            comm.testRequestInsertNewRoom();
-        }
 
-        while (true) {
-
-        }
 
     }
 

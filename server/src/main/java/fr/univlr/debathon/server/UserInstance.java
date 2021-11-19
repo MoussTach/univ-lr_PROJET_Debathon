@@ -82,7 +82,7 @@ public class UserInstance extends Thread implements Runnable {
                 methodsGET(dataJson);
                 break;
             case "UPDATE":
-                methodsUPDATE (dataJson);
+                methodsUPDATE (dataJson, data);
                 break;
             case "INSERT":
                 methodsINSERT (dataJson, data);
@@ -93,19 +93,28 @@ public class UserInstance extends Thread implements Runnable {
     }
 
 
-    private void methodsUPDATE(Map dataJson) throws SQLException, JsonProcessingException {
+    private void methodsUPDATE(Map dataJson, String data) throws SQLException, JsonProcessingException {
 
-        Map data = null;
-        switch ((String) data.get("request")) {
+        switch ((String) dataJson.get("request")) {
             case "HOME":
                 // this.caseHOME(data);
                 break;
-            case "ROOM": //Cas ROOM souhaite
+            case "COMMENT": //Cas ROOM souhaite
                 // this.caseROOM (data);
+                break;
+            case "MCQ": //Cas ROOM souhaite
+                switch ((String) dataJson.get("type")) {
+                    case "VOTE":
+                        this.caseUpdateLikeMCQ (dataJson, data);
+                        break;
+                }
+
                 break;
         }
 
     }
+
+
 
     public void methodsINSERT (Map dataJson, String data) throws SQLException, JsonProcessingException {
         switch ((String) dataJson.get("request")) {
@@ -242,7 +251,20 @@ public class UserInstance extends Thread implements Runnable {
     }
 
 
+    // CASE UPDATE
 
+
+    private void caseUpdateLikeMCQ (Map dataMap, String data) throws JsonProcessingException, SQLException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode dataJson = objectMapper.readTree(data);
+
+        int id = dataJson.get("id").asInt();
+
+        McqDAO mcqDAO = new McqDAO(Server.c);
+        mcqDAO.updateNewLike(id);
+
+    }
 
 
 

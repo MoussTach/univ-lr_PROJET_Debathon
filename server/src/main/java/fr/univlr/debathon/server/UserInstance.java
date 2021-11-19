@@ -226,8 +226,7 @@ public class UserInstance extends Thread implements Runnable {
         int id = questionDAO.insertAndGetId(question);
 
         System.out.println("Nouvelle question d'id : " + id);
-
-
+        
     }
 
     private void caseInsertCOMMENT(Map dataMap, String data) throws JsonProcessingException, SQLException {

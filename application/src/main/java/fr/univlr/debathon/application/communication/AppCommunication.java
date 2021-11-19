@@ -114,6 +114,9 @@ public class AppCommunication extends Thread implements Runnable {
             }
         }
 
+        System.out.println("---" + Debathon.getInstance().getCurrent_debate());
+
+
     }
 
     public void methodsNEWCOMMENT(JsonNode dataJson) throws IOException {

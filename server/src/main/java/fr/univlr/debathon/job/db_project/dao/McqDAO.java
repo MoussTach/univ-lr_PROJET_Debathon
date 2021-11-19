@@ -40,7 +40,7 @@ public class McqDAO implements DAO<Mcq> {
             
             while (rs.next()) {
             	
-               qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("id_votes"), questionDAO.select(rs.getInt("id_question")), roomDAO.select(rs.getInt("id_room"))));
+               qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("id_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
             }
 
         } catch (SQLException e) {
@@ -63,8 +63,8 @@ public class McqDAO implements DAO<Mcq> {
 			
 			pstmt.setString(1, mcq.getLabel());
 			pstmt.setInt(2, mcq.getNb_votes());
-			pstmt.setInt(3, mcq.getQuestion().getId());
-			pstmt.setInt(4, mcq.getRoom().getId());
+			pstmt.setInt(3, mcq.getId_question());
+			pstmt.setInt(4, mcq.getId_room());
 			
 			pstmt.executeUpdate();
 			
@@ -86,12 +86,12 @@ public class McqDAO implements DAO<Mcq> {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);
 
 			pstmt.setString(1, mcq.getLabel());
-			pstmt.setInt(2, mcq.getQuestion().getId());
-			pstmt.setInt(3, mcq.getRoom().getId());
+			pstmt.setInt(2, mcq.getId_question());
+			pstmt.setInt(3, mcq.getId_room());
 
 			pstmt.executeUpdate();
 
-			return this.select(mcq.getLabel(), mcq.getQuestion().getId());
+			return this.select(mcq.getLabel(), mcq.getId_question());
 
 
 		} catch (Exception e) {
@@ -113,8 +113,8 @@ public class McqDAO implements DAO<Mcq> {
 			
 			pstmt.setString(1, mcq.getLabel());
 			pstmt.setInt(2, mcq.getNb_votes());
-			pstmt.setInt(3, mcq.getQuestion().getId());
-			pstmt.setInt(4, mcq.getRoom().getId());
+			pstmt.setInt(3, mcq.getId_question());
+			pstmt.setInt(4, mcq.getId_room());
 			pstmt.setInt(5, mcq.getId());
 			
 			pstmt.executeUpdate();
@@ -196,7 +196,7 @@ public class McqDAO implements DAO<Mcq> {
             
             while (rs.next()) {
             	
-               mcq = new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("id_votes"), questionDAO.select(rs.getInt("id_question")), roomDAO.select(rs.getInt("id_room")));
+               mcq = new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("id_votes"), rs.getInt("id_question"), rs.getInt("id_room"));
             }
 
         } catch (SQLException e) {
@@ -248,7 +248,7 @@ public class McqDAO implements DAO<Mcq> {
             
             while (rs.next()) {
             	
-               qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), questionDAO.select(rs.getInt("id_question")), roomDAO.select(rs.getInt("id_room"))));
+               qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
             }
 
         } catch (SQLException e) {
@@ -256,6 +256,34 @@ public class McqDAO implements DAO<Mcq> {
         }
 
         return qcmList;  	
+	}
+
+
+	public List<Mcq> selectMcqByIdSalon(int id) throws SQLException {
+		List<Mcq> qcmList = new ArrayList<>();
+
+		String sql = "SELECT idMcq, label, nb_votes, id_question, id_room FROM Mcq WHERE id_room = ?";
+
+		try {
+			PreparedStatement pstmt  = connection.prepareStatement(sql);
+
+			pstmt.setInt(1, id);
+
+			ResultSet rs  = pstmt.executeQuery();
+
+			QuestionDAO questionDAO = new QuestionDAO(this.connection);
+			RoomDAO roomDAO = new RoomDAO(this.connection);
+
+			while (rs.next()) {
+
+				qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
+			}
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+		return qcmList;
 	}
 	
 }

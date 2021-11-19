@@ -259,7 +259,7 @@ public class QuestionDAO implements DAO<Question> {
 
 		List<Question> listQuestion = new ArrayList<>();
 
-		String sql = "SELECT * FROM Question WHERE id_room = ?";
+		String sql = "SELECT idQuestion, label, context, type, is_active, id_room, id_user FROM Question WHERE id_room = ?";
 
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);

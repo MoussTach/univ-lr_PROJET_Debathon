@@ -83,6 +83,7 @@ public class AppCommunication extends Thread implements Runnable {
 
         //Boucle affetant chaque salon dans la list de salon
         for(int i = 0;i<dataJson.get("rooms").size();i++){
+
             Room room = this.getUnserialisation(dataJson.get("rooms").get(i).toString(), Room.class);
             System.out.println("---" + room);
             Debathon.getInstance().getDebates().add(room);
@@ -92,6 +93,29 @@ public class AppCommunication extends Thread implements Runnable {
     //Fonction call pour avoir les details d'une room
     public void methodsRESPONSEDETAILS(JsonNode dataJson) throws IOException{
         Debathon.getInstance().setCurrent_debate(this.getUnserialisation(dataJson.get("room_selected").get(0).toString(), Room.class));
+
+        List<Question> questionList = new ArrayList<>();
+        if (dataJson.get("room_selected").get(0).get("listQuestion") != null) {
+            for (int i = 0; i < dataJson.get("room_selected").get(0).get("listQuestion").size(); i++) {
+                questionList.add(this.getUnserialisation(dataJson.get("room_selected").get(0).get("listQuestion").get(i).toString(), Question.class));
+            }
+            Debathon.getInstance().getCurrent_debate().setListQuestions(questionList);
+        }
+
+
+        if (dataJson.get("mcq") != null) {
+            for (int i = 0; i < dataJson.get("mcq").size(); i++) {
+                System.out.println(dataJson.get("mcq").get(0).get(0));
+                Mcq mcq = this.getUnserialisation(dataJson.get("mcq").get(0).get(i).toString(), Mcq.class);
+                for (Question question : Debathon.getInstance().getCurrent_debate().getListQuestion()) {
+                    if (question.getId() == mcq.getId())
+                        question.getListMcq().add(mcq);
+                }
+            }
+        }
+
+        System.out.println("---" + Debathon.getInstance().getCurrent_debate());
+
 
     }
 

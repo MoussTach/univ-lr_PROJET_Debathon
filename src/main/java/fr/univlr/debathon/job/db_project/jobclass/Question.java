@@ -19,6 +19,7 @@ public class Question {
     private final ObjectProperty<Room> room = new SimpleObjectProperty<>();
 
     private final ListProperty<Comment> listComment = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<Mcq> listMcq = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ObjectProperty<User> user = new SimpleObjectProperty<>();
 
     public Question(){
@@ -168,10 +169,21 @@ public class Question {
         this.listComment.add(comment);
     }
 
+    public ObservableList<Mcq> getListMcq() {
+        return listMcq.get();
+    }
+
+    public ListProperty<Mcq> listMcqProperty() {
+        return listMcq;
+    }
+
+    public void setListMcq(ObservableList<Mcq> listMcq) {
+        this.listMcq.set(listMcq);
+    }
 
     @Override
     public String toString() {
-        return "Question{" +
+        return "---------Question{" +
                 "id=" + id +
                 ", label=" + label +
                 ", context=" + context +
@@ -179,7 +191,8 @@ public class Question {
                 ", is_active=" + is_active +
                 ", room=" + room +
                 ", listComment=" + listComment +
+                ", listMcq=" + listMcq +
                 ", user=" + user +
-                '}';
+                "}";
     }
 }

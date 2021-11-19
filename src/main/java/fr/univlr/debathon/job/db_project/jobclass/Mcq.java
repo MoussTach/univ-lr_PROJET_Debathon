@@ -8,39 +8,39 @@ public class Mcq {
     private final StringProperty label = new SimpleStringProperty("/");
     private final IntegerProperty nb_votes = new SimpleIntegerProperty(0);
 
-    private final ObjectProperty<Question> question = new SimpleObjectProperty<>();
-    private final ObjectProperty<Room> room = new SimpleObjectProperty<>();
+    private int id_question = 0;
+    private int id_room;
 
 
     public Mcq(){
     }
 
-    public Mcq(int id, String label, int nb_votes, Question question, Room room) {
+    public Mcq(int id, String label, int nb_votes, int id_question, int id_room) {
         this.id.set(id);
         this.label.set(label);
         this.nb_votes.set(nb_votes);
-        this.question.set(question);
-        this.room.set(room);
+        this.id_question = id_question;
+        this.id_room = id_room;
     }
 
     public Mcq(String label, Question question, Room room) {
         this.id.set(-1);
         this.label.set(label);
         this.nb_votes.set(0);
-        this.question.set(question);
-        this.room.set(room);
+        this.id_question = question.getId();
+        this.id_room = room.getId();
     }
 
     public Mcq(int id, String label, Question question, Room room) {
-        this(id, label, 0, question, room);
+        this(id, label, 0, question.getId(), room.getId());
     }
 
     public Mcq(Mcq clone) {
         this.id.set(clone.getId());
         this.label.set(clone.getLabel());
         this.nb_votes.set(clone.getNb_votes());
-        this.question.set(clone.getQuestion());
-        this.room.set(clone.getRoom());
+        this.id_question = clone.getId_question();
+        this.id_room = clone.getId_room();
     }
 
 
@@ -57,14 +57,6 @@ public class Mcq {
         return this.nb_votes.get();
     }
 
-    public Question getQuestion() {
-        return this.question.get();
-    }
-
-    public Room getRoom() {
-        return this.room.get();
-    }
-
 
     //Setter
     public void setId(int id) {
@@ -79,13 +71,6 @@ public class Mcq {
         this.nb_votes.set(nb_votes);
     }
 
-    public void setQuestion(Question question) {
-        this.question.set(question);
-    }
-
-    public void setRoom(Room room) {
-        this.room.set(room);
-    }
 
 
     //Property
@@ -101,12 +86,21 @@ public class Mcq {
         return nb_votes;
     }
 
-    public ObjectProperty<Question> questionProperty() {
-        return question;
+
+    public int getId_question() {
+        return id_question;
     }
 
-    public ObjectProperty<Room> roomProperty() {
-        return room;
+    public void setId_question(int id_question) {
+        this.id_question = id_question;
+    }
+
+    public int getId_room() {
+        return id_room;
+    }
+
+    public void setId_room(int id_room) {
+        this.id_room = id_room;
     }
 
     @Override
@@ -115,8 +109,8 @@ public class Mcq {
                 "id=" + id +
                 ", label=" + label +
                 ", nb_votes=" + nb_votes +
-                ", question=" + question +
-                ", room=" + room +
+                ", id_question=" + id_question +
+                ", id_room=" + id_room +
                 '}';
     }
 }

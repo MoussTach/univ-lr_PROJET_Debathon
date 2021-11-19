@@ -52,4 +52,13 @@ public class Category {
     public StringProperty labelProperty() {
         return label;
     }
+
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", label=" + label +
+                '}';
+    }
 }

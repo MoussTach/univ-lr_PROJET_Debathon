@@ -36,6 +36,15 @@ public class Question {
         this.user.set(user);
     }
 
+    public Question(String label, String context, String type, Room room, User user) {
+        this.label.set(label);
+        this.context.set(context);
+        this.type.set(type);
+        this.is_active.set(true);
+        this.room.set(room);
+        this.user.set(user);
+    }
+
     public Question(Question clone) {
         this.id.set(clone.getId());
         this.label.set(clone.getLabel());
@@ -151,5 +160,26 @@ public class Question {
 
     public ObjectProperty<User> userProperty() {
         return user;
+    }
+
+
+
+    public void addComment (Comment comment) {
+        this.listComment.add(comment);
+    }
+
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "id=" + id +
+                ", label=" + label +
+                ", context=" + context +
+                ", type=" + type +
+                ", is_active=" + is_active +
+                ", room=" + room +
+                ", listComment=" + listComment +
+                ", user=" + user +
+                '}';
     }
 }

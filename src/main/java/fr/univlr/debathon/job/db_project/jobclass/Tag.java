@@ -67,4 +67,13 @@ public class Tag {
     public StringProperty colorProperty() {
         return color;
     }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "id=" + id +
+                ", label=" + label +
+                ", color=" + color +
+                '}';
+    }
 }

@@ -169,25 +169,27 @@ public class TagDAO implements DAO<Tag> {
         
         List<Tag> tagList = new ArrayList<>();
 
-        StringBuilder builder = new StringBuilder();
+        if (!listIdTag.isEmpty()) {
+            StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < listIdTag.size(); i++) {
             builder.append(listIdTag.get(i)).append(",");
         }
 
-        String sql = "SELECT idTag, label, color FROM Tag WHERE idTag in ("  +builder.deleteCharAt( builder.length() -1).toString()+ ")";
+            String sql = "SELECT idTag, label, color FROM Tag WHERE idTag in ("  +builder.deleteCharAt( builder.length() -1).toString()+ ")";
 
-        try {
-            PreparedStatement pstmt  = connection.prepareStatement(sql);
+            try {
+                PreparedStatement pstmt  = connection.prepareStatement(sql);
 
-            ResultSet rs  = pstmt.executeQuery();
+                ResultSet rs  = pstmt.executeQuery();
 
-            while (rs.next()) {
-                tagList.add(new Tag(rs.getInt("idTag"), rs.getString("label"), rs.getString("color")));
+                while (rs.next()) {
+                    tagList.add(new Tag(rs.getInt("idTag"), rs.getString("label"), rs.getString("color")));
+                }
+
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
             }
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
 
         return tagList;    

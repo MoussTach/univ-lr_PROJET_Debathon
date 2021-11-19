@@ -14,21 +14,19 @@ public class Server {
     static final int taille = 8192;
     static final byte buffer[] = new byte[taille];
 
-    public static final UserManager userManager = new UserManager();
-
     public static Connection c = null;
-    static final String db_name = "server/db_debathon.db";
+    static String db_name = "server/db_debathon.db";
+    protected static List<UserInstance> userInstanceList = new ArrayList<>();
 
 
     public static void main(String[] args) throws Exception{
 
         ServerSocket serverSocket;
-        List<UserInstance> userInstanceList = new ArrayList<>();
 
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:" + db_name); //Creation connection on db
-            c.setAutoCommit(false);
+            c.setAutoCommit(true);
             System.out.println("Opened database successfully");
 
             serverSocket = new ServerSocket(9878);
@@ -38,14 +36,13 @@ public class Server {
                 Socket userSocket = serverSocket.accept();
 
                 UserInstance userInstance = new UserInstance(userSocket);
-                userInstanceList.add(userInstance);
-                Thread t = new Thread(userInstance);
-                t.start();
 
-                for (UserInstance ui : userInstanceList) {
-                    System.out.println("----");
-                    System.out.println("----");
-                }
+                userInstance.start();
+                userInstanceList.add(userInstance);
+
+                System.out.println("======> Un nouveau thread de lancé : " + userInstance.getName() + "  <=======");
+                System.out.println("Nombre de Thread présent : " + userInstanceList.size());
+
             }
 
 

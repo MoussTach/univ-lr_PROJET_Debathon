@@ -2,7 +2,10 @@ package fr.univlr.debathon.job.db_project.jobclass;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,18 +20,22 @@ public class Room {
 
     private final BooleanProperty is_open = new SimpleBooleanProperty(false);
 
-    private final ObjectProperty<Date> date_start = new SimpleObjectProperty<>();
-    private final ObjectProperty<Date> date_end = new SimpleObjectProperty<>();
+    private ObjectProperty<LocalDate> date_start = new SimpleObjectProperty<>();
+    private ObjectProperty<LocalDate> date_end = new SimpleObjectProperty<>();
 
     private final ObjectProperty<Category> category = new SimpleObjectProperty<>();
 
     private final ListProperty<Tag> listTag = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ListProperty<User> listUtilisateurs = new SimpleListProperty<>(FXCollections.observableArrayList());
 
+    private ListProperty<Question> listQuestions = new SimpleListProperty<>(FXCollections.observableArrayList());
+
     public Room(){
 
     }
-    public Room(int id, String label, String description, String key, String mail, boolean is_open, Date date_start, Date date_end, Category category, List<Tag> listTag) {
+    public Room(int id, String label, String description, String key, String mail,
+                boolean is_open, LocalDate date_start, LocalDate date_end,
+                Category category, List<Tag> listTag, List<Question> questionList) {
         this.id.set(id);
         this.label.set(label);
         this.description.set(description);
@@ -37,6 +44,21 @@ public class Room {
         this.is_open.set(is_open);
         this.date_start.set(date_start);
         this.date_end.set(date_end);
+        this.category.set(category);
+        this.listTag.addAll(listTag);
+        this.listQuestions.addAll(questionList);
+    }
+
+    public Room(String label, String description, String key, String mail,
+                Category category, List<Tag> listTag) {
+        this.id.set(1);
+        this.label.set(label);
+        this.description.set(description);
+        this.key.set(key);
+        this.mail.set(mail);
+        this.is_open.set(true);
+        this.date_start.set(null);
+        this.date_end.set(null);
         this.category.set(category);
         this.listTag.addAll(listTag);
     }
@@ -81,11 +103,11 @@ public class Room {
         return this.is_open.get();
     }
 
-    public Date getDate_start() {
+    public LocalDate getDate_start() {
         return this.date_start.get();
     }
 
-    public Date getDate_end() {
+    public LocalDate getDate_end() {
         return this.date_end.get();
     }
 
@@ -127,11 +149,11 @@ public class Room {
         this.is_open.set(is_open);
     }
 
-    public void setDate_start(Date date_start) {
+    public void setDate_start(LocalDate date_start) {
         this.date_start.set(date_start);
     }
 
-    public void setDate_end(Date date_end) {
+    public void setDate_end(LocalDate date_end) {
         this.date_end.set(date_end);
     }
 
@@ -214,11 +236,11 @@ public class Room {
         return is_open;
     }
 
-    public ObjectProperty<Date> date_startProperty() {
+    public ObjectProperty<LocalDate> date_startProperty() {
         return date_start;
     }
 
-    public ObjectProperty<Date> date_endProperty() {
+    public ObjectProperty<LocalDate> date_endProperty() {
         return date_end;
     }
 
@@ -232,5 +254,54 @@ public class Room {
 
     public ListProperty<User> listUtilisateursProperty() {
         return listUtilisateurs;
+    }
+
+
+
+
+    public ObservableList<Question> getListQuestions() {
+        return listQuestions.get();
+    }
+
+    public ListProperty<Question> listQuestionsProperty() {
+        return listQuestions;
+    }
+
+    public void setListQuestions(ObservableList<Question> listQuestions) {
+        this.listQuestions.set(listQuestions);
+    }
+
+    public void setListQuestions(List<Question> listQuestions) {
+        this.listQuestions.addAll(listQuestions);
+    }
+
+    public List<Question> getListQuestion () {
+        List<Question> questionList = new ArrayList<>();
+        for (Question q: this.listQuestions) {
+            questionList.add(q);
+        }
+        return questionList;
+    }
+
+    public void addQuestion (Question question) {
+        this.listQuestions.add(question);
+    }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", label=" + label +
+                ", description=" + description +
+                ", key=" + key +
+                ", mail=" + mail +
+                ", is_open=" + is_open +
+                ", date_start=" + date_start +
+                ", date_end=" + date_end +
+                ", category=" + category +
+                ", listTag=" + listTag +
+                ", listUtilisateurs=" + listUtilisateurs +
+                ", listQuestions=" + listQuestions +
+                '}';
     }
 }

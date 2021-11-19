@@ -36,10 +36,12 @@ public class Server {
                 Socket userSocket = serverSocket.accept();
 
                 UserInstance userInstance = new UserInstance(userSocket);
+
+                userInstance.start();
                 userInstanceList.add(userInstance);
-                Thread t = new Thread(userInstance);
-                t.start();
-                System.out.println("======> Un nouveau thread de lancé : " + t.getName() + "  <=======");
+
+                System.out.println("======> Un nouveau thread de lancé : " + userInstance.getName() + "  <=======");
+                System.out.println("Nombre de Thread présent : " + userInstanceList.size());
 
             }
 

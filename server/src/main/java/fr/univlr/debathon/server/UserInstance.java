@@ -27,7 +27,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-public class UserInstance implements Runnable {
+public class UserInstance extends Thread implements Runnable {
 
     public  final Socket socket;
     public BufferedReader in;
@@ -67,6 +67,7 @@ public class UserInstance implements Runnable {
 
 
     public void sendData (ObjectNode root) throws JsonProcessingException {
+        System.out.println(root);
         out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
         out.flush();
     }
@@ -270,8 +271,8 @@ public class UserInstance implements Runnable {
 
     public void sendNewComment (Comment comment) throws JsonProcessingException {
         for (UserInstance ui : Server.userInstanceList) {
-            if (ui.getWhereIam() == comment.getRoom().getId()) {
-                this.sendData(this.getObjetNode("NEWCOMMENT", "new_comment", comment));
+            if (ui != null && ui.getWhereIam() == comment.getRoom().getId()) {
+                ui.sendData(this.getObjetNode("NEWCOMMENT", "new_comment", comment));
             }
         }
     }
@@ -283,8 +284,8 @@ public class UserInstance implements Runnable {
 
     public void sendNewQuestion (Question question) throws JsonProcessingException {
         for (UserInstance ui : Server.userInstanceList) {
-            if (ui.getWhereIam() == question.getRoom().getId()) {
-                this.sendData(this.getObjetNode("NEWQUESTION", "new_question", question));
+            if (ui != null && ui.getWhereIam() == question.getRoom().getId()) {
+                ui.sendData(this.getObjetNode("NEWQUESTION", "new_question", question));
             }
         }
     }
@@ -295,7 +296,8 @@ public class UserInstance implements Runnable {
 
     public void sendNewRoom (Room room) throws JsonProcessingException {
         for (UserInstance ui : Server.userInstanceList) {
-            if (ui.getWhereIam() == -1)
+            if (ui != null && ui.getWhereIam() == -1)
+                System.out.println("------> " + ui.getName());
                 ui.sendData(this.getObjetNode("NEWROOM", "new_room", room));
         }
     }
@@ -339,6 +341,7 @@ public class UserInstance implements Runnable {
                 data = in.readLine();
             }
             System.out.println("Server out of service");
+            Server.userInstanceList.remove(this);
             // out.close();
         } catch (IOException | SQLException e) {
             e.printStackTrace();

@@ -15,7 +15,7 @@ import java.net.Socket;
 import java.time.LocalDate;
 import java.util.*;
 
-public class AppCommunication implements Runnable {
+public class AppCommunication extends Thread implements Runnable {
 
     final Socket userSocket; // socket used by client to send and recieve data from server
     final BufferedReader in;   // object to read data from socket
@@ -26,14 +26,9 @@ public class AppCommunication implements Runnable {
     private ArrayList<Question> questions_select_room = new ArrayList<Question>();
 
     public AppCommunication () throws IOException {
-        userSocket = new Socket("127.0.0.1",9878);
+        userSocket = new Socket("localhost",9878);
         out = new PrintWriter(userSocket.getOutputStream());
         in = new BufferedReader(new InputStreamReader(userSocket.getInputStream()));
-
-        this.testRequestInsertNewRoom();
-        //this.testRequestInsertNewQuestion();
-        //this.testRequestInsertNewComment();
-        //this.testRequestInsertNewMcq();
 
     }
 
@@ -46,7 +41,7 @@ public class AppCommunication implements Runnable {
                 .fromJson(objects, classT);
     }
 
-    private void sendData (ObjectMapper objectMapper, ObjectNode root) throws JsonProcessingException {
+    public void sendData (ObjectMapper objectMapper, ObjectNode root) throws JsonProcessingException {
         out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
         out.flush();
     }
@@ -84,7 +79,7 @@ public class AppCommunication implements Runnable {
 
 
     //Fonction call pour avoir les details des rooms de l'accueil
-    private void methodsRESPONSE(JsonNode dataJson, ObjectMapper objectMapper) throws IOException {
+    public void methodsRESPONSE(JsonNode dataJson, ObjectMapper objectMapper) throws IOException {
 
         //Boucle affetant chaque salon dans la list de salon
         for(int i = 0;i<dataJson.get("rooms").size();i++){
@@ -95,12 +90,12 @@ public class AppCommunication implements Runnable {
     }
 
     //Fonction call pour avoir les details d'une room
-    private void methodsRESPONSEDETAILS(JsonNode dataJson) throws IOException{
+    public void methodsRESPONSEDETAILS(JsonNode dataJson) throws IOException{
         Debathon.getInstance().setCurrent_debate(this.getUnserialisation(dataJson.get("room_selected").get(0).toString(), Room.class));
 
     }
 
-    private void methodsNEWCOMMENT(JsonNode dataJson) throws IOException {
+    public void methodsNEWCOMMENT(JsonNode dataJson) throws IOException {
         Comment comment = this.getUnserialisation(dataJson.get("new_comment").get(0).toString(), Comment.class);
 
 
@@ -112,21 +107,22 @@ public class AppCommunication implements Runnable {
 
     }
 
-    private void methodsNEWQUESTION (JsonNode dataJson) throws IOException {
+    public void methodsNEWQUESTION (JsonNode dataJson) throws IOException {
         Question question = this.getUnserialisation(dataJson.get("new_question").get(0).toString(), Question.class);
 
         Debathon.getInstance().getCurrent_debate().addQuestion(question);
 
     }
 
-    private void methodsNEWROOM (JsonNode dataJson) throws IOException {
+    public void methodsNEWROOM (JsonNode dataJson) throws IOException {
         Room room = this.getUnserialisation(dataJson.get("new_room").get(0).toString(), Room.class);
 
         Debathon.getInstance().getDebates().add(room);
+        System.out.println(room);
 
     }
 
-    private void methodsNEWMCQ(JsonNode dataJson) throws IOException {
+    public void methodsNEWMCQ(JsonNode dataJson) throws IOException {
         Mcq mcq = this.getUnserialisation(dataJson.get("new_mcq").get(0).toString(), Mcq.class);
         System.out.println(mcq);
         Debathon.getInstance().getMcq().add(mcq);
@@ -185,13 +181,13 @@ public class AppCommunication implements Runnable {
         this.sendData(mapper, root);
 
     }
-    private void testRequestInsertNewRoom () throws JsonProcessingException {
+    public void testRequestInsertNewRoom () throws JsonProcessingException {
         String key = AlphaNumericStringGenerator.getRandomString(6);
         Category category = new Category(1, "Catégorie");
         List<Tag> listTag = new ArrayList<>();
         listTag.add(new Tag(1, "Oui", "couleur"));
         listTag.add(new Tag(2, "Tag", "couelurur"));
-        Room room = new Room("Nouveau salon", "Ceci est un nouveau salon", key,
+        Room room = new Room("Salon de Julien", "Ceci est un nouveau salon", key,
                 "mail@mail.mail", category, listTag);
 
         this.requestInsertNewRoom(room);
@@ -209,7 +205,7 @@ public class AppCommunication implements Runnable {
         this.sendData(mapper, root);
 
     }
-    private void testRequestInsertNewQuestion () throws JsonProcessingException {
+    public void testRequestInsertNewQuestion () throws JsonProcessingException {
         User user = new User(1, "User");
         Room room = new Room();
         room.setId(2);
@@ -229,7 +225,7 @@ public class AppCommunication implements Runnable {
         c.addPOJO(comment);
         this.sendData(mapper, root);
     }
-    private void testRequestInsertNewComment () throws JsonProcessingException {
+    public void testRequestInsertNewComment () throws JsonProcessingException {
         Room room = new Room();
         room.setId(2);
         Question question = new Question();
@@ -251,7 +247,7 @@ public class AppCommunication implements Runnable {
         c.addPOJO(mcq);
         this.sendData(mapper, root);
     }
-    private void testRequestInsertNewMcq () throws JsonProcessingException {
+    public void testRequestInsertNewMcq () throws JsonProcessingException {
 
         Room room = new Room();
         room.setId(2);
@@ -267,7 +263,9 @@ public class AppCommunication implements Runnable {
 
 
 
-
+    public void uselessFonction () {
+        System.out.println("I'm useless");
+    }
 
 
 
@@ -322,8 +320,8 @@ public class AppCommunication implements Runnable {
                 data = in.readLine();
             }
             System.out.println("Server out of service");
-            out.close();
-            userSocket.close();
+            //out.close();
+            //userSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -287,10 +287,10 @@ public class Room {
                 ", is_open=" + is_open +
                 ", date_start=" + date_start +
                 ", date_end=" + date_end +
-                ", category=" + category +
-                ", listTag=" + listTag +
-                ", listUtilisateurs=" + listUtilisateurs +
-                ", listQuestions=" + listQuestions +
+                ",\n category=" + category +
+                ",\n listTag=" + listTag +
+                ",\n listUtilisateurs=" + listUtilisateurs +
+                ",\n listQuestions=" + listQuestions +
                 '}';
     }
 }

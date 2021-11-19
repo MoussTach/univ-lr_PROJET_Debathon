@@ -21,9 +21,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +69,7 @@ public class UserInstance extends Thread implements Runnable {
 
 
     public void sendData (ObjectNode root) throws JsonProcessingException {
-        System.out.println(root);
+
         out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
         out.flush();
     }
@@ -176,11 +178,18 @@ public class UserInstance extends Thread implements Runnable {
         rootRoom.put("methods","RESPONSEDETAILS");
         //ajout de la room selectionne
         ArrayNode room = rootRoom.putArray("room_selected");
+        ArrayNode mcq = rootRoom.putArray("mcq");
 
         RoomDAO roomDAO = new RoomDAO(Server.c);
         //Selection de la room avec son id
         Room roomSelected = roomDAO.select((int) data.get("id"));
         room.addPOJO(roomSelected);
+
+        McqDAO mcqDAO = new McqDAO(Server.c);
+        List<Mcq> mcqList = mcqDAO.selectMcqByIdSalon(roomSelected.getId());
+        mcq.addPOJO(mcqList);
+
+        System.out.println(rootRoom);
 
         this.sendData(rootRoom);
     }

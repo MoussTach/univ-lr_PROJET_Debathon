@@ -50,7 +50,6 @@ public class Debathon {
             this.appCommunication = new AppCommunication();
             this.appCommunication.start();
             this.appCommunication.requestHome();
-            System.out.println(this.debates.size());
         } catch (Exception e) {
             if (LOGGER.isErrorEnabled()) {
                 LOGGER.error(String.format("Error when trying to run Debathon: %s", e.getMessage()), e);

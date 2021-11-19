@@ -77,6 +77,31 @@ public class McqDAO implements DAO<Mcq> {
 		
 	}
 
+	public int insertAndGetId(Mcq mcq) throws SQLException {
+
+		String sql = "INSERT INTO MCQ (label, id_question, id_room) values (?,?,?)";
+
+		try {
+
+			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+
+			pstmt.setString(1, mcq.getLabel());
+			pstmt.setInt(2, mcq.getQuestion().getId());
+			pstmt.setInt(3, mcq.getRoom().getId());
+
+			pstmt.executeUpdate();
+
+			return this.select(mcq.getLabel(), mcq.getQuestion().getId());
+
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return -1;
+		}
+
+	}
+
+
 	@Override
 	public boolean update(Mcq mcq) throws SQLException {
 
@@ -157,6 +182,30 @@ public class McqDAO implements DAO<Mcq> {
         }
 
         return mcq;  	
+	}
+
+	public int select(String label, int id_question) throws SQLException {
+		Mcq mcq = null;
+
+		String sql = "SELECT idMcq FROM Mcq WHERE label = ? and id_question = ?";
+
+		try {
+			PreparedStatement pstmt  = connection.prepareStatement(sql);
+
+			pstmt.setString(1, label);
+			pstmt.setInt(2, id_question);
+
+			ResultSet rs  = pstmt.executeQuery();
+
+			if (rs.next()) {
+				return rs.getInt("idMcq");
+			}
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+		return -1;
 	}
 
 	

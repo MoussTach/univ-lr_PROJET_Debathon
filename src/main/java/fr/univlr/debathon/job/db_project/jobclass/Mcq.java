@@ -23,6 +23,14 @@ public class Mcq {
         this.room.set(room);
     }
 
+    public Mcq(String label, Question question, Room room) {
+        this.id.set(-1);
+        this.label.set(label);
+        this.nb_votes.set(0);
+        this.question.set(question);
+        this.room.set(room);
+    }
+
     public Mcq(int id, String label, Question question, Room room) {
         this(id, label, 0, question, room);
     }

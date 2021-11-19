@@ -8,9 +8,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonDeserializer;
 import fr.univlr.debathon.job.db_project.dao.CommentDAO;
+import fr.univlr.debathon.job.db_project.dao.McqDAO;
 import fr.univlr.debathon.job.db_project.dao.QuestionDAO;
 import fr.univlr.debathon.job.db_project.dao.RoomDAO;
 import fr.univlr.debathon.job.db_project.jobclass.Comment;
+import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
 import org.hildan.fxgson.FxGson;
@@ -42,9 +44,9 @@ public class UserInstance implements Runnable {
         out = new PrintWriter(userSocket.getOutputStream());
         this.objectMapper = new ObjectMapper();
 
-        this.testSendNewComment ();
-        this.testSendNewQuestion();
-        this.testSendNewRoom();
+        //this.testSendNewComment ();
+        //this.testSendNewQuestion();
+        //this.testSendNewRoom();
     }
 
 
@@ -64,7 +66,7 @@ public class UserInstance implements Runnable {
     }
 
 
-    private void sendData (ObjectNode root) throws JsonProcessingException {
+    public void sendData (ObjectNode root) throws JsonProcessingException {
         out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
         out.flush();
     }
@@ -115,9 +117,11 @@ public class UserInstance implements Runnable {
             case "COMMENT": //Cas ROOM souhaite
                 this.caseInsertCOMMENT(dataJson, data);
                 break;
+            case "MCQ": //Cas ROOM souhaite
+                this.caseInsertMCQ(dataJson, data);
+                break;
         }
     }
-
 
 
     public void methodsGET(Map data) throws SQLException, JsonProcessingException {
@@ -183,8 +187,12 @@ public class UserInstance implements Runnable {
 
         Room room = this.getUnserialisation(dataJson.get("new_room").get(0).toString(), Room.class);
 
-        int id = roomDAO.insertAndGetId(room);
-        System.out.println("Nouveau salon d'id : " + id);
+        Room roomRes = roomDAO.insertAndGetId(room);
+        System.out.println("Nouveau salon d'id : " + roomRes.getId());
+
+        if (roomRes != null) {
+            this.sendNewRoom(roomRes);
+        }
 
     }
 
@@ -218,6 +226,20 @@ public class UserInstance implements Runnable {
     }
 
 
+    private void caseInsertMCQ(Map dataMap, String data) throws JsonProcessingException, SQLException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode dataJson = objectMapper.readTree(data);
+
+        McqDAO mcqDAO = new McqDAO(Server.c);
+
+        Mcq mcq = this.getUnserialisation(dataJson.get("new_mcq").get(0).toString(), Mcq.class);
+
+        int id = mcqDAO.insertAndGetId(mcq);
+
+        System.out.println("Nouveau mcq d'id : " + id);
+
+    }
+
 
 
 
@@ -247,7 +269,11 @@ public class UserInstance implements Runnable {
 
 
     public void sendNewComment (Comment comment) throws JsonProcessingException {
-        this.sendData(this.getObjetNode("NEWCOMMENT", "new_comment", comment));
+        for (UserInstance ui : Server.userInstanceList) {
+            if (ui.getWhereIam() == comment.getRoom().getId()) {
+                this.sendData(this.getObjetNode("NEWCOMMENT", "new_comment", comment));
+            }
+        }
     }
     private void testSendNewComment() throws SQLException, JsonProcessingException {
         CommentDAO commentDAO = new CommentDAO(Server.c);
@@ -256,7 +282,11 @@ public class UserInstance implements Runnable {
 
 
     public void sendNewQuestion (Question question) throws JsonProcessingException {
-        this.sendData(this.getObjetNode("NEWQUESTION", "new_question", question));
+        for (UserInstance ui : Server.userInstanceList) {
+            if (ui.getWhereIam() == question.getRoom().getId()) {
+                this.sendData(this.getObjetNode("NEWQUESTION", "new_question", question));
+            }
+        }
     }
     private void testSendNewQuestion () throws SQLException, JsonProcessingException {
         QuestionDAO questionDAO = new QuestionDAO(Server.c);
@@ -264,7 +294,10 @@ public class UserInstance implements Runnable {
     }
 
     public void sendNewRoom (Room room) throws JsonProcessingException {
-        this.sendData(this.getObjetNode("NEWROOM", "new_room", room));
+        for (UserInstance ui : Server.userInstanceList) {
+            if (ui.getWhereIam() == -1)
+                ui.sendData(this.getObjetNode("NEWROOM", "new_room", room));
+        }
     }
     private void testSendNewRoom () throws SQLException, JsonProcessingException {
         RoomDAO roomDAO = new RoomDAO(Server.c);

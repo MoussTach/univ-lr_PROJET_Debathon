@@ -31,8 +31,9 @@ public class AppCommunication implements Runnable {
         in = new BufferedReader(new InputStreamReader(userSocket.getInputStream()));
 
         this.testRequestInsertNewRoom();
-        this.testRequestInsertNewQuestion();
-        this.testRequestInsertNewComment();
+        //this.testRequestInsertNewQuestion();
+        //this.testRequestInsertNewComment();
+        //this.testRequestInsertNewMcq();
 
     }
 
@@ -73,9 +74,11 @@ public class AppCommunication implements Runnable {
             case "NEWROOM":
                 methodsNEWROOM (dataJson);
                 break;
+            case "NEWMCQ":
+                methodsNEWMCQ (dataJson);
+                break;
         }
     }
-
 
 
 
@@ -93,24 +96,40 @@ public class AppCommunication implements Runnable {
 
     //Fonction call pour avoir les details d'une room
     private void methodsRESPONSEDETAILS(JsonNode dataJson) throws IOException{
-
-        selected_room = this.getUnserialisation(dataJson.get("room_selected").get(0).toString(), Room.class);
+        Debathon.getInstance().setCurrent_debate(this.getUnserialisation(dataJson.get("room_selected").get(0).toString(), Room.class));
 
     }
 
-    private void methodsNEWCOMMENT(JsonNode dataJson) {
+    private void methodsNEWCOMMENT(JsonNode dataJson) throws IOException {
         Comment comment = this.getUnserialisation(dataJson.get("new_comment").get(0).toString(), Comment.class);
-        System.out.println(comment);
+
+
+        for (Question question : Debathon.getInstance().getCurrent_debate().getListQuestion()) {
+            if (question.getId() == comment.getQuestion().getId()) {
+                question.addComment(comment);
+            }
+        }
+
     }
 
-    private void methodsNEWQUESTION (JsonNode dataJson) {
+    private void methodsNEWQUESTION (JsonNode dataJson) throws IOException {
         Question question = this.getUnserialisation(dataJson.get("new_question").get(0).toString(), Question.class);
-        System.out.println(question);
+
+        Debathon.getInstance().getCurrent_debate().addQuestion(question);
+
     }
 
-    private void methodsNEWROOM (JsonNode dataJson) {
+    private void methodsNEWROOM (JsonNode dataJson) throws IOException {
         Room room = this.getUnserialisation(dataJson.get("new_room").get(0).toString(), Room.class);
-        System.out.println(room);
+
+        Debathon.getInstance().getDebates().add(room);
+
+    }
+
+    private void methodsNEWMCQ(JsonNode dataJson) throws IOException {
+        Mcq mcq = this.getUnserialisation(dataJson.get("new_mcq").get(0).toString(), Mcq.class);
+        System.out.println(mcq);
+        Debathon.getInstance().getMcq().add(mcq);
     }
 
 
@@ -221,6 +240,29 @@ public class AppCommunication implements Runnable {
         this.requestInsertNewComment(comment);
     }
 
+    public void requestInsertNewMcq (Mcq mcq) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+
+        root.put("methods","INSERT");
+        root.put("request","MCQ");
+
+        ArrayNode c = root.putArray("new_mcq");
+        c.addPOJO(mcq);
+        this.sendData(mapper, root);
+    }
+    private void testRequestInsertNewMcq () throws JsonProcessingException {
+
+        Room room = new Room();
+        room.setId(2);
+        Question question = new Question();
+        question.setId(6);
+
+        Mcq mcq = new Mcq("Mcq texte", question, room);
+
+        this.requestInsertNewMcq(mcq);
+
+    }
 
 
 

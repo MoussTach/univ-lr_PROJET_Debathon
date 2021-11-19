@@ -283,6 +283,10 @@ public class Room {
         return questionList;
     }
 
+    public void addQuestion (Question question) {
+        this.listQuestions.add(question);
+    }
+
     @Override
     public String toString() {
         return "Room{" +

@@ -88,7 +88,7 @@ public class RoomDAO implements DAO<Room> {
 	}
 
 
-	public int insertAndGetId(Room room) throws SQLException {
+	public Room insertAndGetId(Room room) throws SQLException {
 
 		String sql = "INSERT INTO Room (label, description, key, mail, id_category) values (?,?,?,?,?)";
 
@@ -108,7 +108,7 @@ public class RoomDAO implements DAO<Room> {
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			return -1;
+			return null;
 		}
 
 	}
@@ -202,7 +202,7 @@ public class RoomDAO implements DAO<Room> {
 	}
 
 
-	public int selectByKey(String key) throws SQLException {
+	public Room selectByKey(String key) throws SQLException {
 
 		int id = -1;
 
@@ -223,7 +223,7 @@ public class RoomDAO implements DAO<Room> {
 			System.out.println("oauis prb selectbykey");
 			e.printStackTrace();
 		}
-		return id;
+		return this.select(id);
 	}
 
 }

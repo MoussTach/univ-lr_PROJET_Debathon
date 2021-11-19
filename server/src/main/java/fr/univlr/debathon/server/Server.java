@@ -16,12 +16,12 @@ public class Server {
 
     public static Connection c = null;
     static String db_name = "server/db_debathon.db";
+    protected static List<UserInstance> userInstanceList = new ArrayList<>();
 
 
     public static void main(String[] args) throws Exception{
 
         ServerSocket serverSocket;
-        List<UserInstance> userInstanceList = new ArrayList<>();
 
         try {
             Class.forName("org.sqlite.JDBC");

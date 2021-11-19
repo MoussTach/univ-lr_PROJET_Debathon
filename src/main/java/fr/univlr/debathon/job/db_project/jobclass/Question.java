@@ -162,6 +162,13 @@ public class Question {
         return user;
     }
 
+
+
+    public void addComment (Comment comment) {
+        this.listComment.add(comment);
+    }
+
+
     @Override
     public String toString() {
         return "Question{" +

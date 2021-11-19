@@ -1,6 +1,7 @@
 package fr.univlr.debathon.application.communication;
 
 import fr.univlr.debathon.job.db_project.jobclass.Category;
+import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
 import fr.univlr.debathon.job.db_project.jobclass.Tag;
 import javafx.beans.property.ListProperty;
@@ -9,6 +10,8 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.IOException;
+
 public class Debathon {
 
     private static Debathon debathon = null;
@@ -16,9 +19,20 @@ public class Debathon {
     private final ListProperty<Category> categories = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ListProperty<Tag> tags = new SimpleListProperty<>(FXCollections.observableArrayList());
 
+
+    private final ListProperty<Mcq> mcq = new SimpleListProperty<>(FXCollections.observableArrayList());
+
     private final ListProperty<Room> debates = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-    private Debathon() {
+    private Room current_debate = null;
+
+
+
+    private AppCommunication appCommunication = null;
+
+    private Debathon() throws IOException {
+
+        this.appCommunication = new AppCommunication();
 
         //TODO suppr
         Room debate = new Room();
@@ -40,7 +54,7 @@ public class Debathon {
      *
      * @return {@link Debathon} - return class
      */
-    public static Debathon getInstance() {
+    public static Debathon getInstance() throws IOException {
         if (debathon == null)
             debathon = new Debathon();
         return debathon;
@@ -112,5 +126,27 @@ public class Debathon {
      */
     public ListProperty<Room> debatesProperty() {
         return debates;
+    }
+
+
+    public Room getCurrent_debate() {
+        return current_debate;
+    }
+
+    public void setCurrent_debate (Room room) {
+        this.current_debate = room;
+    }
+
+
+    public ObservableList<Mcq> getMcq() {
+        return mcq.get();
+    }
+
+    public ListProperty<Mcq> mcqProperty() {
+        return mcq;
+    }
+
+    public void setMcq(ObservableList<Mcq> mcq) {
+        this.mcq.set(mcq);
     }
 }

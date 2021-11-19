@@ -7,9 +7,9 @@ import javafx.beans.property.StringProperty;
 
 public class Tag {
     
-    private IntegerProperty id = new SimpleIntegerProperty(-1);
-    private StringProperty label = new SimpleStringProperty("/");
-    private StringProperty color = new SimpleStringProperty("#ffffff");
+    private final IntegerProperty id = new SimpleIntegerProperty(-1);
+    private final StringProperty label = new SimpleStringProperty("/");
+    private final StringProperty color = new SimpleStringProperty("#ffffff");
 
     public Tag(){
 

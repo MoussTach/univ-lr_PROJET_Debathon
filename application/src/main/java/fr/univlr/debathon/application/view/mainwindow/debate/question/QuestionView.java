@@ -3,17 +3,12 @@ package fr.univlr.debathon.application.view.mainwindow.debate.question;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
-import fr.univlr.debathon.application.view.mainwindow.HomePageView;
-import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
-import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.QuestionViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.ResponseViewModel;
 import fr.univlr.debathon.log.generate.CustomLogger;
-import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -64,10 +59,7 @@ public class QuestionView extends FxmlView_SceneCycle<QuestionViewModel> impleme
         this.listChangeListener_Responses = change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    change.getAddedSubList().forEach(item -> Platform.runLater(() -> {
-                        if (!vBoxQuestions.getChildren().contains(item.getView()))
-                            vBoxQuestions.getChildren().add(item.getView());
-                    }));
+                    change.getAddedSubList().stream().filter(item -> !vBoxQuestions.getChildren().contains(item.getView())).forEach(item -> vBoxQuestions.getChildren().add(item.getView()));
                 } else if (change.wasRemoved()) {
                     change.getRemoved().forEach(item -> vBoxQuestions.getChildren().remove(item.getView()));
                 }

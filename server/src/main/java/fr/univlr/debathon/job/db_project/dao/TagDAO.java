@@ -172,7 +172,7 @@ public class TagDAO implements DAO<Tag> {
         StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < listIdTag.size(); i++) {
-            builder.append(listIdTag.get(i) + ",");
+            builder.append(listIdTag.get(i)).append(",");
         }
 
         String sql = "SELECT idTag, label, color FROM Tag WHERE idTag in ("  +builder.deleteCharAt( builder.length() -1).toString()+ ")";

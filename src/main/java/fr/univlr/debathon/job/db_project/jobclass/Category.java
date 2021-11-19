@@ -6,8 +6,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Category {
-    private IntegerProperty id = new SimpleIntegerProperty(-1);
-    private StringProperty label = new SimpleStringProperty("/");
+    private final IntegerProperty id = new SimpleIntegerProperty(-1);
+    private final StringProperty label = new SimpleStringProperty("/");
 
     public Category(){
 

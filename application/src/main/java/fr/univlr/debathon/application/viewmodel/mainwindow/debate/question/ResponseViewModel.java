@@ -2,6 +2,7 @@ package fr.univlr.debathon.application.viewmodel.mainwindow.debate.question;
 
 import de.saxsys.mvvmfx.InjectScope;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
+import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -13,8 +14,7 @@ public class ResponseViewModel extends ViewModel_SceneCycle {
 
     private static final CustomLogger LOGGER = CustomLogger.create(ResponseViewModel.class.getName());
 
-    //TODO Model
-    //private Response
+    private final Mcq response;
 
     //Text
     private final StringProperty lblResponse_label = new SimpleStringProperty("/");
@@ -25,11 +25,38 @@ public class ResponseViewModel extends ViewModel_SceneCycle {
     @InjectScope
     private ResponseScope responseScope;
 
-    public ResponseViewModel() {
+    public ResponseViewModel(Mcq response) {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[public][constructor] Creation of the ResponseViewModel() object.");
         }
 
+        this.response = response;
+
+        bindResponse();
+    }
+
+    private void bindResponse() {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the ResponseViewModel.bindResponse()");
+        }
+
+        if (this.response != null) {
+            this.lblResponse_label.bind(this.response.labelProperty());
+
+            //TODO value
+        }
+    }
+
+    private void unbindResponse() {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the ResponseViewModel.unbindResponse()");
+        }
+
+        if (this.response != null) {
+            this.lblResponse_label.unbind();
+
+            //TODO value
+        }
     }
 
 
@@ -60,11 +87,25 @@ public class ResponseViewModel extends ViewModel_SceneCycle {
     }
 
 
+    /**
+     * Getter for the variable response.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link Mcq} - return the variable response.
+     */
+    public Mcq getResponse() {
+        return this.response;
+    }
+
+
+
     @Override
     public void onViewAdded_Cycle() {
     }
 
     @Override
     public void onViewRemoved_Cycle() {
+        unbindResponse();
     }
 }

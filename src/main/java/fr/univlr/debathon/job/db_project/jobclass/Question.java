@@ -8,18 +8,18 @@ import java.util.List;
 
 public class Question {
     
-    private IntegerProperty id = new SimpleIntegerProperty(-1);
+    private final IntegerProperty id = new SimpleIntegerProperty(-1);
 
-    private StringProperty label = new SimpleStringProperty("/");
-    private StringProperty context = new SimpleStringProperty("/");
-    private StringProperty type = new SimpleStringProperty("/");
+    private final StringProperty label = new SimpleStringProperty("/");
+    private final StringProperty context = new SimpleStringProperty("/");
+    private final StringProperty type = new SimpleStringProperty("/");
 
-    private BooleanProperty is_active = new SimpleBooleanProperty(false);
+    private final BooleanProperty is_active = new SimpleBooleanProperty(false);
 
-    private ObjectProperty<Room> room = new SimpleObjectProperty<>();
+    private final ObjectProperty<Room> room = new SimpleObjectProperty<>();
 
-    private ListProperty<Comment> listComment = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private ObjectProperty<User> user = new SimpleObjectProperty<>();
+    private final ListProperty<Comment> listComment = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ObjectProperty<User> user = new SimpleObjectProperty<>();
 
     public Question(){
 

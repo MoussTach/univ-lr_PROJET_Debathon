@@ -4,12 +4,12 @@ import javafx.beans.property.*;
 
 public class Mcq {
     
-    private IntegerProperty id = new SimpleIntegerProperty(-1);
-    private StringProperty label = new SimpleStringProperty("/");
-    private IntegerProperty nb_votes = new SimpleIntegerProperty(0);
+    private final IntegerProperty id = new SimpleIntegerProperty(-1);
+    private final StringProperty label = new SimpleStringProperty("/");
+    private final IntegerProperty nb_votes = new SimpleIntegerProperty(0);
 
-    private ObjectProperty<Question> question = new SimpleObjectProperty<>();
-    private ObjectProperty<Room> room = new SimpleObjectProperty<>();
+    private final ObjectProperty<Question> question = new SimpleObjectProperty<>();
+    private final ObjectProperty<Room> room = new SimpleObjectProperty<>();
 
 
     public Mcq(){

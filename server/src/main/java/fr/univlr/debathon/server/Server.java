@@ -14,10 +14,10 @@ public class Server {
     static final int taille = 8192;
     static final byte buffer[] = new byte[taille];
 
-    public static UserManager userManager = new UserManager();
+    public static final UserManager userManager = new UserManager();
 
     public static Connection c = null;
-    static String db_name = "server/db_debathon.db";
+    static final String db_name = "server/db_debathon.db";
 
 
     public static void main(String[] args) throws Exception{

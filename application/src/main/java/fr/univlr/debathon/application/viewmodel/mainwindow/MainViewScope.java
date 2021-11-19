@@ -1,7 +1,7 @@
 package fr.univlr.debathon.application.viewmodel.mainwindow;
 
 import de.saxsys.mvvmfx.Scope;
-import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
+import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.layout.BorderPane;
@@ -15,8 +15,9 @@ public class MainViewScope implements Scope {
 
     private final ObjectProperty<BorderPane> basePane = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<DelegateCommand> prevCommand = new SimpleObjectProperty<>(null);
-    private final ObjectProperty<DelegateCommand> homeCommand = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<CompositeCommand> prevCommand = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<CompositeCommand> currentCommand = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<CompositeCommand> homeCommand = new SimpleObjectProperty<>(new CompositeCommand());
 
 
     /**
@@ -38,8 +39,20 @@ public class MainViewScope implements Scope {
      *
      * @return {@link ObjectProperty} - return the property of the variable prevCommand.
      */
-    public ObjectProperty<DelegateCommand> prevCommandProperty() {
+    public ObjectProperty<CompositeCommand> prevCommandProperty() {
         return prevCommand;
+    }
+
+    /**
+     * Property of the variable currentCommand.
+     * Use to set the execution the current view.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link ObjectProperty} - return the property of the variable currentCommand.
+     */
+    public ObjectProperty<CompositeCommand> currentCommandProperty() {
+        return currentCommand;
     }
 
     /**
@@ -50,7 +63,7 @@ public class MainViewScope implements Scope {
      *
      * @return {@link ObjectProperty} - return the property of the variable homeCommand.
      */
-    public ObjectProperty<DelegateCommand> homeCommandProperty() {
+    public ObjectProperty<CompositeCommand> homeCommandProperty() {
         return homeCommand;
     }
 }

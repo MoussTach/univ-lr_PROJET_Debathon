@@ -8,26 +8,23 @@
 
 <BorderPane style="-fx-border-color: ORANGE; -fx-border-radius: 10; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.debate.question.QuestionView">
    <top>
-      <VBox spacing="5.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label fx:id="lblQuestion" maxWidth="1.7976931348623157E308" text="lblQuestion">
-               <font>
-                  <Font name="Calibri" size="16.0" />
-               </font></Label>
-            <Separator maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
-         </children>
-         <BorderPane.margin>
-            <Insets />
-         </BorderPane.margin>
-         <padding>
-            <Insets left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </VBox>
+       <VBox spacing="5.0" BorderPane.alignment="CENTER">
+           <BorderPane.margin>
+               <Insets/>
+           </BorderPane.margin>
+           <padding>
+               <Insets left="10.0" right="10.0" top="10.0"/>
+           </padding>
+           <Label fx:id="lblQuestion" maxWidth="1.7976931348623157E308" text="lblQuestion">
+              <font>
+                  <Font name="Calibri" size="16.0"/>
+              </font>
+           </Label>
+           <Separator maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS"/>
+       </VBox>
    </top>
    <center>
        <VBox fx:id="vBoxQuestions" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" BorderPane.alignment="CENTER">
-           <fx:include source="ResponseView.fxml" />
-           <fx:include source="ResponseView.fxml" />
          <BorderPane.margin>
             <Insets top="5.0" />
          </BorderPane.margin>
@@ -37,39 +34,41 @@
        </VBox>
    </center>
    <bottom>
-      <StackPane BorderPane.alignment="CENTER">
-         <children>
-            <Separator prefWidth="200.0" StackPane.alignment="TOP_CENTER" />
-            <BorderPane>
-               <right>
-                  <Button fx:id="btnValid" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#act_btnValid" prefWidth="75.0" style="-fx-background-radius: 10;" text="btnValid" BorderPane.alignment="CENTER">
-                     <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <Image url="@../../../../../../../../img/confirm_64.png" />
-                        </ImageView>
-                     </graphic>
+       <StackPane BorderPane.alignment="CENTER">
+           <BorderPane.margin>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="10.0"/>
+           </BorderPane.margin>
+           <Separator prefWidth="200.0" StackPane.alignment="TOP_CENTER"/>
+           <BorderPane>
+              <right>
+                  <Button fx:id="btnValid" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false"
+                          onAction="#act_btnValid" prefWidth="75.0" style="-fx-background-radius: 10;" text="btnValid"
+                          BorderPane.alignment="CENTER">
+                      <graphic>
+                          <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                              <Image url="@../../../../../../../../img/confirm_64.png"/>
+                          </ImageView>
+                      </graphic>
                   </Button>
-               </right>
-               <left>
-                  <Button fx:id="btnComments" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#act_btnComments" prefWidth="75.0" style="-fx-background-radius: 10;" text="btnComments" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font name="Calibri" size="13.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <Image url="@../../../../../../../../img/comments_64.png" />
-                        </ImageView>
-                     </graphic>
+              </right>
+              <left>
+                  <Button fx:id="btnComments" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false"
+                          onAction="#act_btnComments" prefWidth="75.0" style="-fx-background-radius: 10;"
+                          text="btnComments" BorderPane.alignment="CENTER">
+                      <font>
+                          <Font name="Calibri" size="13.0"/>
+                      </font>
+                      <graphic>
+                          <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                              <Image url="@../../../../../../../../img/comments_64.png"/>
+                          </ImageView>
+                      </graphic>
                   </Button>
-               </left>
-               <StackPane.margin>
-                  <Insets top="10.0" />
-               </StackPane.margin>
-            </BorderPane>
-         </children>
-         <BorderPane.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
-         </BorderPane.margin>
-      </StackPane>
+              </left>
+              <StackPane.margin>
+                  <Insets top="10.0"/>
+              </StackPane.margin>
+           </BorderPane>
+       </StackPane>
    </bottom>
 </BorderPane>

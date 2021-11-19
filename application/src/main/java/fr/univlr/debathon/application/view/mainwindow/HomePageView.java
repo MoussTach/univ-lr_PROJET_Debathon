@@ -3,20 +3,17 @@ package fr.univlr.debathon.application.view.mainwindow;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
-import fr.univlr.debathon.application.view.mainwindow.debate.DebateThumbnailView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
 import fr.univlr.debathon.application.viewmodel.mainwindow.HomePageViewModel;
-import fr.univlr.debathon.application.viewmodel.mainwindow.debate.DebateThumbnailViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import fr.univlr.debathon.log.generate.CustomLogger;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
-import javafx.collections.WeakListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import org.controlsfx.control.textfield.CustomTextField;
 
@@ -27,6 +24,7 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
 
     private static final CustomLogger LOGGER = CustomLogger.create(HomePageView.class.getName());
 
+    @FXML private BorderPane borderPane;
     @FXML private TitledPane tPaneParameters;
 
     //Header organizer
@@ -57,14 +55,14 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
     @FXML
     private void act_btnAddTag() {
         LOGGER.input(String.format("Press the button %s", btnAddTag.getId()));
-
-        this.homePageViewModel.loadTag();
     }
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.setViewModel(homePageViewModel);
+
+        this.homePageViewModel.borderPaneProperty().set(borderPane);
 
         //Text
         tPaneParameters.textProperty().bind(this.homePageViewModel.tPaneParameters_labelProperty());
@@ -78,21 +76,16 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
         //Value
         chkShowCreatedDebate.selectedProperty().bindBidirectional(this.homePageViewModel.chkShowCreatedDebate_valueProperty());
         this.homePageViewModel.listTag_selected_valueProperty().forEach(item -> flowTag.getChildren().add(item.getView()));
-        Platform.runLater(() -> {
-            this.listChangeListener_tag = change -> {
-                while (change.next()) {
-                    if (change.wasAdded()) {
-                        change.getAddedSubList().forEach(item -> Platform.runLater(() -> {
-                            if (!flowTag.getChildren().contains(item.getView()))
-                                flowTag.getChildren().add(item.getView());
-                        }));
-                    } else if (change.wasRemoved()) {
-                        change.getRemoved().forEach(item -> flowTag.getChildren().remove(item.getView()));
-                    }
+        this.listChangeListener_tag = change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    change.getAddedSubList().stream().filter(item -> !flowTag.getChildren().contains(item.getView())).forEach(item -> flowTag.getChildren().add(item.getView()));
+                } else if (change.wasRemoved()) {
+                    change.getRemoved().forEach(item -> flowTag.getChildren().remove(item.getView()));
                 }
-            };
-            this.homePageViewModel.listTag_selected_valueProperty().addListener(this.listChangeListener_tag);
-        });
+            }
+        };
+        this.homePageViewModel.listTag_selected_valueProperty().addListener(this.listChangeListener_tag);
 
         tfSearch.textProperty().bindBidirectional(this.homePageViewModel.tfSearch_valueProperty());
 
@@ -100,21 +93,16 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
         scrollPane.setFitToHeight(true);
 
         this.homePageViewModel.listDebate_node_valueProperty().forEach(item -> flowTag.getChildren().add(item));
-        Platform.runLater(() -> {
-            this.listChangeListener_DebateThumbnail = change -> {
-                while (change.next()) {
-                    if (change.wasAdded()) {
-                        change.getAddedSubList().forEach(item -> Platform.runLater(() -> {
-                            if (!flowDebate.getChildren().contains(item))
-                                flowDebate.getChildren().add(item);
-                        }));
-                    } else if (change.wasRemoved()) {
-                        change.getRemoved().forEach(item -> Platform.runLater(() -> flowDebate.getChildren().remove(item)));
-                    }
+        this.listChangeListener_DebateThumbnail = change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    change.getAddedSubList().stream().filter(item -> !flowDebate.getChildren().contains(item)).forEach(item -> flowDebate.getChildren().add(item));
+                } else if (change.wasRemoved()) {
+                    change.getRemoved().forEach(item -> flowDebate.getChildren().remove(item));
                 }
-            };
-            this.homePageViewModel.listDebate_node_valueProperty().addListener(this.listChangeListener_DebateThumbnail);
-        });
+            }
+        };
+        this.homePageViewModel.listDebate_node_valueProperty().addListener(this.listChangeListener_DebateThumbnail);
 
         Bindings.bindContent(flowDebate.getChildren(), this.homePageViewModel.getFilteredData());
     }

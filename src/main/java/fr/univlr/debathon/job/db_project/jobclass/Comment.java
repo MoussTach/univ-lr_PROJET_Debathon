@@ -4,16 +4,16 @@ import javafx.beans.property.*;
 
 public class Comment {
 
-    private IntegerProperty id = new SimpleIntegerProperty(-1);
-    private StringProperty comment = new SimpleStringProperty("");
+    private final IntegerProperty id = new SimpleIntegerProperty(-1);
+    private final StringProperty comment = new SimpleStringProperty("");
         
-    private IntegerProperty nb_likes = new SimpleIntegerProperty(0);
-    private IntegerProperty nb_dislikes = new SimpleIntegerProperty(0);
+    private final IntegerProperty nb_likes = new SimpleIntegerProperty(0);
+    private final IntegerProperty nb_dislikes = new SimpleIntegerProperty(0);
 
-    private ObjectProperty<Comment> parent = new SimpleObjectProperty<>();
-    private ObjectProperty<Question> question = new SimpleObjectProperty<>();
-    private ObjectProperty<Room> room = new SimpleObjectProperty<>();
-    private ObjectProperty<User> user = new SimpleObjectProperty<>();
+    private final ObjectProperty<Comment> parent = new SimpleObjectProperty<>();
+    private final ObjectProperty<Question> question = new SimpleObjectProperty<>();
+    private final ObjectProperty<Room> room = new SimpleObjectProperty<>();
+    private final ObjectProperty<User> user = new SimpleObjectProperty<>();
 
     public Comment(){
 

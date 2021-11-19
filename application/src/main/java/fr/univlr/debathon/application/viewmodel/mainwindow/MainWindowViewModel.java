@@ -4,7 +4,7 @@ import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewTuple;
-import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
+import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
 import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.view.taskmanager.TaskManagerWindowView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
@@ -123,7 +123,7 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[private][method] usage of MainWindowViewModel.actvm_btnPrev().");
         }
 
-        DelegateCommand command = this.mainViewScope.prevCommandProperty().get();
+        CompositeCommand command = this.mainViewScope.prevCommandProperty().get();
         if (command != null && command.isExecutable())
             command.execute();
     }
@@ -138,7 +138,7 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[private][method] usage of MainWindowViewModel.actvm_btnHome().");
         }
 
-        DelegateCommand command = this.mainViewScope.homeCommandProperty().get();
+        CompositeCommand command = this.mainViewScope.homeCommandProperty().get();
         if (command != null && command.isExecutable())
             command.execute();
     }

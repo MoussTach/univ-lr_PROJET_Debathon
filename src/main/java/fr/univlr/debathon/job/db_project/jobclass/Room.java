@@ -8,22 +8,22 @@ import java.util.List;
 
 public class Room {
     
-    private IntegerProperty id = new SimpleIntegerProperty(-1);
+    private final IntegerProperty id = new SimpleIntegerProperty(-1);
 
-    private StringProperty label = new SimpleStringProperty("/");
-    private StringProperty description = new SimpleStringProperty("/");
-    private StringProperty key = new SimpleStringProperty("/");
-    private StringProperty mail = new SimpleStringProperty("/");
+    private final StringProperty label = new SimpleStringProperty("/");
+    private final StringProperty description = new SimpleStringProperty("/");
+    private final StringProperty key = new SimpleStringProperty("/");
+    private final StringProperty mail = new SimpleStringProperty("/");
 
-    private BooleanProperty is_open = new SimpleBooleanProperty(false);
+    private final BooleanProperty is_open = new SimpleBooleanProperty(false);
 
-    private ObjectProperty<Date> date_start = new SimpleObjectProperty<>();
-    private ObjectProperty<Date> date_end = new SimpleObjectProperty<>();
+    private final ObjectProperty<Date> date_start = new SimpleObjectProperty<>();
+    private final ObjectProperty<Date> date_end = new SimpleObjectProperty<>();
 
-    private ObjectProperty<Category> category = new SimpleObjectProperty<>();
+    private final ObjectProperty<Category> category = new SimpleObjectProperty<>();
 
-    private ListProperty<Tag> listTag = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private ListProperty<User> listUtilisateurs = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<Tag> listTag = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<User> listUtilisateurs = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public Room(){
 

@@ -1,8 +1,6 @@
 package fr.univlr.debathon.application.communication;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -13,7 +11,6 @@ import fr.univlr.debathon.job.db_project.jobclass.Room;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.*;
 
 public class AppCommunication implements Runnable {
@@ -77,14 +74,14 @@ public class AppCommunication implements Runnable {
         try {
             data = in.readLine();
 
-            String dataReceveid = "";
+            StringBuilder dataReceveid = new StringBuilder();
 
             while(data!=null){
-                dataReceveid += data;
+                dataReceveid.append(data);
 
                 if (data.equals("}")) {
-                    analyseData(dataReceveid);
-                    dataReceveid = "";
+                    analyseData(dataReceveid.toString());
+                    dataReceveid = new StringBuilder();
                 }
 
                 data = in.readLine();

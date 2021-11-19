@@ -1,1 +1,0 @@
-java -Djava.library.path=connection -jar ${project.artifactId}-${project.version}-executable.jar

@@ -18,8 +18,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -140,14 +138,14 @@ public class UserInstance implements Runnable {
         try {
             String data = in.readLine();
 
-            String dataReceveid = "";
+            StringBuilder dataReceveid = new StringBuilder();
 
             while(data!=null){
-                dataReceveid += data;
+                dataReceveid.append(data);
 
                 if (data.equals("}")) {
-                    analyseData(dataReceveid);
-                    dataReceveid = "";
+                    analyseData(dataReceveid.toString());
+                    dataReceveid = new StringBuilder();
                 }
 
                 data = in.readLine();

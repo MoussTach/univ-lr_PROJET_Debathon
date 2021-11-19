@@ -1,6 +1,7 @@
 package fr.univlr.debathon.application.viewmodel.mainwindow.debate.items;
 
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
+import fr.univlr.debathon.job.db_project.jobclass.Tag;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -9,6 +10,8 @@ public class TagViewModel extends ViewModel_SceneCycle implements Comparable<Tag
 
     private static final CustomLogger LOGGER = CustomLogger.create(TagViewModel.class.getName());
 
+    private final Tag tag;
+
     //Text
     private final StringProperty lblTag_label = new SimpleStringProperty("");
 
@@ -16,11 +19,38 @@ public class TagViewModel extends ViewModel_SceneCycle implements Comparable<Tag
     private final StringProperty color = new SimpleStringProperty("#FFA07A");
 
 
-    public TagViewModel() {
+    public TagViewModel(Tag tag) {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[public][constructor] Creation of the TagViewModel() object.");
         }
+
+        this.tag = tag;
+
+        bindTag();
     }
+
+    private void bindTag() {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the TagViewModel.bindTag()");
+        }
+
+        if (tag != null) {
+            lblTag_label.bind(this.tag.labelProperty());
+            color.bind(this.tag.colorProperty());
+        }
+    }
+
+    private void unbindTag() {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the TagViewModel.unbindTag()");
+        }
+
+        if (tag != null) {
+            lblTag_label.unbind();
+            color.unbind();
+        }
+    }
+
 
     //Text
     /**
@@ -47,6 +77,18 @@ public class TagViewModel extends ViewModel_SceneCycle implements Comparable<Tag
     }
 
 
+    /**
+     * Getter for the variable tag.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link Tag} - return the variable tag.
+     */
+    public Tag getTag() {
+        return this.tag;
+    }
+
+
     @Override
     public int compareTo(TagViewModel other) {
         return this.lblTag_label.get().compareTo(other.lblTag_label.get());
@@ -58,5 +100,6 @@ public class TagViewModel extends ViewModel_SceneCycle implements Comparable<Tag
 
     @Override
     public void onViewRemoved_Cycle() {
+        unbindTag();
     }
 }

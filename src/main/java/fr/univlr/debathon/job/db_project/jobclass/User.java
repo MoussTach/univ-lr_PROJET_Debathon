@@ -7,8 +7,8 @@ import javafx.beans.property.StringProperty;
 
 public class User {
     
-    private IntegerProperty id = new SimpleIntegerProperty(-1);
-    private StringProperty label = new SimpleStringProperty("/");
+    private final IntegerProperty id = new SimpleIntegerProperty(-1);
+    private final StringProperty label = new SimpleStringProperty("/");
 
     public User(){
 

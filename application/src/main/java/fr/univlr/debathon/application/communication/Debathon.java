@@ -5,7 +5,6 @@ import fr.univlr.debathon.job.db_project.jobclass.Room;
 import fr.univlr.debathon.job.db_project.jobclass.Tag;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -36,7 +35,7 @@ public class Debathon {
     /**
      * Pattern singleton
      *
-     * @Author Gaetan Brenckle
+     * @author Gaetan Brenckle
      *
      * @return {@link Debathon} - return class
      */

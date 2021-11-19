@@ -3,16 +3,19 @@ package fr.univlr.debathon.application.viewmodel.mainwindow;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewTuple;
+import de.saxsys.mvvmfx.utils.commands.Action;
+import de.saxsys.mvvmfx.utils.commands.Command;
+import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
+import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
-import fr.univlr.debathon.application.taskmanager.TaskArray;
-import fr.univlr.debathon.application.taskmanager.Task_Custom;
-import fr.univlr.debathon.application.taskmanager.ThreadArray;
+import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.mainwindow.debate.DebateThumbnailView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.DebateThumbnailViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
+import fr.univlr.debathon.job.db_project.jobclass.Room;
 import fr.univlr.debathon.language.LanguageBundle;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Platform;
@@ -26,18 +29,17 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.util.Pair;
+import javafx.scene.layout.BorderPane;
 
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import static fr.univlr.debathon.application.Main.TASKMANAGER;
 
 public class HomePageViewModel extends ViewModel_SceneCycle {
 
     private final ObjectProperty<ResourceBundle> resBundle_ = LanguageBundle.getInstance().bindResourceBundle("properties.language.mainwindow.lg_homePage");
     private static final CustomLogger LOGGER = CustomLogger.create(HomePageViewModel.class.getName());
+
+    private final ObjectProperty<BorderPane> borderPane = new SimpleObjectProperty<>(null);
 
     //Text
     private final StringProperty tPaneParameters_label = new SimpleStringProperty(this.resBundle_.get().getString("tPaneParameters"));
@@ -61,7 +63,30 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
     private final ObservableRuleBasedValidator rule_changeFilter = new ObservableRuleBasedValidator();
 
-    private ListChangeListener<ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> > listChangeListener_Debate;
+    private final Command prevCommand = new DelegateCommand(() -> new Action() {
+        @Override
+        protected void action() {
+            //TODO
+            System.out.println("act prev Home");
+            Platform.runLater(() -> {
+                BorderPane mainBorderPane = mainViewScope.basePaneProperty().get();
+                mainBorderPane.setCenter(borderPane.get());
+            });
+        }
+    }, true);
+    private final Command homeCommand = new DelegateCommand(() -> new Action() {
+        @Override
+        protected void action() {
+            //TODO
+            System.out.println("act home Home");
+            Platform.runLater(() -> {
+                BorderPane mainBorderPane = mainViewScope.basePaneProperty().get();
+                mainBorderPane.setCenter(borderPane.get());
+            });
+        }
+    }, true);
+
+    private ListChangeListener<Room> listChangeListener_Debate;
     private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_;
 
     @InjectScope
@@ -80,106 +105,73 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
         rule_changeFilter.addRule(createRule_changeFilter());
 
-        this.listChangeListener_Debate = change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    change.getAddedSubList().forEach(item -> Platform.runLater(() -> listDebate_node_value.add(item.getView())));
-                } else if (change.wasRemoved()) {
-                    change.getRemoved().forEach(item -> Platform.runLater(() -> listDebate_node_value.remove(item.getView())));
-                }
-            }
-        };
-        this.listDebate_value.addListener(this.listChangeListener_Debate);
-
         //ResourceBundle Listener
         this.listener_ChangedValue_bundleLanguage_ = this::listener_bundleLanguage;
         this.resBundle_.addListener(this.listener_ChangedValue_bundleLanguage_);
 
-        loadDebate();
-        //TODO loadTag();
+        bindDebate();
     }
 
-    //TODO define a call to the data base
-    public void loadDebate() {
+    private void bindDebate() {
         if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("[private][method] usage of HomePageViewModel.loadDebate().");
+            LOGGER.trace("[public][method] Usage of the HomePageViewModel.bindDebate()");
         }
 
-        Task_Custom<Void> task_loadDebate = new Task_Custom<>(new Image(getClass().getResourceAsStream("/img/add_64.png")), "Load dabates") {
-
-            @Override
-            protected Void call_Task() {
-                try {
-                    for (int i = 0; i < 10; i++) {
-                        DebateThumbnailViewModel debateThumbnailViewModel = new DebateThumbnailViewModel();
-
-                        //Random name
-                        char[] array = "1234567890qwertyuiopasdfghjklzxcvbnm".toCharArray();
-                        StringBuilder randomString = new StringBuilder();
-                        for (int x = 0; x < 10; x++) {
-                            randomString.append(array[(int) (Math.random() * (10 + 1))]);
-                        }
-
-                        debateThumbnailViewModel.lblTitle_valueProperty().set(randomString.toString());
-                        debateThumbnailViewModel.lblNbPeople_valueProperty().set("3");
-
-                        if (i % 2 == 0) {
-                            TagViewModel tagViewModel = new TagViewModel();
-                            tagViewModel.lblTag_labelProperty().set("test");
-
-
-                            final ViewTuple<TagView, TagViewModel> tagViewTuple = FluentViewLoader.fxmlView(TagView.class)
-                                    .viewModel(tagViewModel)
-                                    .load();
-
-                            debateThumbnailViewModel.listTag_selected_valueProperty().add(tagViewTuple);
-                        }
-
-                        final ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> debateViewTuple = FluentViewLoader.fxmlView(DebateThumbnailView.class)
+        Debathon.getInstance().getDebates().forEach(room ->
+                Platform.runLater(() -> {
+                    if (room != null) {
+                        DebateThumbnailViewModel debateThumbnailViewModel = new DebateThumbnailViewModel(room);
+                        final ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> debateThumbViewTuple = FluentViewLoader.fxmlView(DebateThumbnailView.class)
                                 .providedScopes(mainViewScope)
                                 .viewModel(debateThumbnailViewModel)
                                 .load();
 
-                        Platform.runLater(() -> listDebate_value.add(debateViewTuple));
+                        listDebate_value.add(debateThumbViewTuple);
+                        listDebate_node_value.add(debateThumbViewTuple.getView());
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                }));
+
+        this.listChangeListener_Debate = change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    change.getAddedSubList().forEach(item ->
+                            Platform.runLater(() -> {
+                                if (item != null) {
+                                    DebateThumbnailViewModel debateThumbnailViewModel = new DebateThumbnailViewModel(item);
+                                    final ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> debateThumbViewTuple = FluentViewLoader.fxmlView(DebateThumbnailView.class)
+                                            .providedScopes(mainViewScope)
+                                            .viewModel(debateThumbnailViewModel)
+                                            .load();
+
+                                    listDebate_value.add(debateThumbViewTuple);
+                                    listDebate_node_value.add(debateThumbViewTuple.getView());
+                                }
+                            })
+                    );
+                } else if (change.wasRemoved()) {
+                    change.getRemoved().forEach(item ->
+                            Platform.runLater(() -> {
+                                //TODO
+                                listDebate_node_value.removeIf(debate -> listDebate_value.contains(item));
+                                listDebate_value.removeIf(debate -> debate.getViewModel().getDebate().equals(item));
+                            })
+                    );
                 }
-                return null;
             }
         };
-
-        TASKMANAGER.addArray(new TaskArray<>(ThreadArray.ExecutionType.PARALLEL).setLevel(0)
-                .addTask(new Pair<Task_Custom<Void>, ThreadArray<?>>(task_loadDebate, new TaskArray<>(ThreadArray.ExecutionType.END).setLevel(1)))
-        );
+        Debathon.getInstance().debatesProperty().addListener(this.listChangeListener_Debate);
     }
 
-    //TODO define a call to the data base
-    public void loadTag() {
+
+    private void unbindDebate() {
         if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("[private][method] usage of HomePageViewModel.loadTag().");
+            LOGGER.trace("[public][method] Usage of the HomePageViewModel.unbindDebate()");
         }
 
-        Task_Custom<Void> task_loadTag = new Task_Custom<>(new Image(getClass().getResourceAsStream("/img/add_64.png")), "Load tags") {
-
-            @Override
-            protected Void call_Task() {
-                for (int i = 0; i < 1; i++) {
-                    TagViewModel tagViewModel = new TagViewModel();
-                    tagViewModel.lblTag_labelProperty().set("test");
-
-                    final ViewTuple<TagView, TagViewModel> tagViewTuple = FluentViewLoader.fxmlView(TagView.class)
-                            .viewModel(tagViewModel)
-                            .load();
-                    Platform.runLater(() -> listTag_selected_value.add(tagViewTuple));
-                }
-                return null;
-            }
-        };
-
-        TASKMANAGER.addArray(new TaskArray<>(ThreadArray.ExecutionType.PARALLEL).setLevel(0)
-                .addTask(new Pair<Task_Custom<Void>, ThreadArray<?>>(task_loadTag, new TaskArray<>(ThreadArray.ExecutionType.END).setLevel(1)))
-        );
+        if (this.listChangeListener_Debate != null) {
+            Debathon.getInstance().debatesProperty().removeListener(this.listChangeListener_Debate);
+            this.listChangeListener_Debate = null;
+        }
     }
 
 
@@ -217,7 +209,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
                             if (this.tfSearch_value.get() != null && !this.tfSearch_value.get().isEmpty() && filterKeep) {
                                 String lowerCaseFilter = this.tfSearch_value.get().toLowerCase();
 
-                                filterKeep = optionalDebate.get().getViewModel().lblTitle_valueProperty().toString().toLowerCase().contains(lowerCaseFilter);
+                                filterKeep = optionalDebate.get().getViewModel().lblTitle_labelProperty().toString().toLowerCase().contains(lowerCaseFilter);
                             }
                         }
                         return filterKeep;
@@ -234,6 +226,17 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
      */
     public FilteredList<Node> getFilteredData() {
         return filteredData;
+    }
+
+    /**
+     * Property of the variable borderPane.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link ObjectProperty} - return the property of the variable borderPane.
+     */
+    public ObjectProperty<BorderPane> borderPaneProperty() {
+        return borderPane;
     }
 
 
@@ -371,22 +374,22 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
     @Override
     public void onViewAdded_Cycle() {
+        //TODO
+        System.out.println("OnView home");
+        this.mainViewScope.prevCommandProperty().set(this.mainViewScope.currentCommandProperty().get());
+        this.mainViewScope.currentCommandProperty().set(new CompositeCommand());
+        this.mainViewScope.currentCommandProperty().get().register(this.prevCommand);
+        this.mainViewScope.homeCommandProperty().get().register(this.homeCommand);
     }
 
     @Override
     public void onViewRemoved_Cycle() {
-        mainViewScope.prevCommandProperty().set(null);
-        mainViewScope.homeCommandProperty().set(null);
-
         if (this.listener_ChangedValue_bundleLanguage_ != null) {
             this.resBundle_.removeListener(this.listener_ChangedValue_bundleLanguage_);
             this.listener_ChangedValue_bundleLanguage_ = null;
         }
 
-        if (this.listChangeListener_Debate != null) {
-            this.listDebate_value.removeListener(this.listChangeListener_Debate);
-            this.listChangeListener_Debate = null;
-        }
+        unbindDebate();
 
         LanguageBundle.getInstance().unbindResourceBundle(this.resBundle_);
     }

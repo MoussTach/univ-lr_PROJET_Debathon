@@ -1,11 +1,13 @@
 package fr.univlr.debathon.application.view.mainwindow.debate;
 
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.ViewTuple;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
+import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.DebateThumbnailViewModel;
+import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import fr.univlr.debathon.log.generate.CustomLogger;
-import javafx.application.Platform;
-import javafx.collections.WeakListChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -28,6 +30,7 @@ public class DebateThumbnailView extends FxmlView_SceneCycle<DebateThumbnailView
     @InjectViewModel
     private DebateThumbnailViewModel debateThumbnailViewModel;
 
+    private ListChangeListener<ViewTuple<TagView, TagViewModel>> listChangeListener_tag;
 
     @FXML
     public void act_btnOpenDebate() {
@@ -41,18 +44,20 @@ public class DebateThumbnailView extends FxmlView_SceneCycle<DebateThumbnailView
         this.setViewModel(debateThumbnailViewModel);
 
         //Value
-        this.lblTitle.textProperty().bind(this.debateThumbnailViewModel.lblTitle_valueProperty());
+        this.lblTitle.textProperty().bind(this.debateThumbnailViewModel.lblTitle_labelProperty());
+
         this.debateThumbnailViewModel.listTag_selected_valueProperty().forEach(item -> flowTag.getChildren().add(item.getView()));
-        Platform.runLater(() ->
-                this.debateThumbnailViewModel.listTag_selected_valueProperty().addListener(new WeakListChangeListener<>(change -> {
-                    while (change.next()) {
-                        if (change.wasAdded()) {
-                            change.getAddedSubList().forEach(item -> Platform.runLater(() -> flowTag.getChildren().add(item.getView())));
-                        } else if (change.wasRemoved()) {
-                            change.getRemoved().forEach(item -> flowTag.getChildren().remove(item.getView()));
-                        }
-                    }
-                })));
+        this.listChangeListener_tag = change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    change.getAddedSubList().stream().filter(item -> !flowTag.getChildren().contains(item.getView())).forEach(item -> flowTag.getChildren().add(item.getView()));
+                } else if (change.wasRemoved()) {
+                    change.getRemoved().forEach(item -> flowTag.getChildren().remove(item.getView()));
+                }
+            }
+        };
+        this.debateThumbnailViewModel.listTag_selected_valueProperty().addListener(this.listChangeListener_tag);
+
         this.lblNbPeople.textProperty().bind(this.debateThumbnailViewModel.lblNbPeople_valueProperty());
     }
 
@@ -63,5 +68,9 @@ public class DebateThumbnailView extends FxmlView_SceneCycle<DebateThumbnailView
 
     @Override
     public void onViewRemoved_Cycle() {
+        if (this.listChangeListener_tag != null) {
+            this.debateThumbnailViewModel.listTag_selected_valueProperty().removeListener(this.listChangeListener_tag);
+            this.listChangeListener_tag = null;
+        }
     }
 }

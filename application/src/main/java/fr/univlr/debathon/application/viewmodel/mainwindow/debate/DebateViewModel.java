@@ -7,6 +7,7 @@ import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
 import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
+import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
 import fr.univlr.debathon.application.view.mainwindow.debate.question.QuestionView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
@@ -113,38 +114,46 @@ public class DebateViewModel extends ViewModel_SceneCycle {
             };
             this.debate.listTagProperty().addListener(this.listChangeListener_tag);
 
-            this.debate.getListQuestion().forEach(question ->
-                    Platform.runLater(() -> {
-                        if (question != null) {
-                            QuestionViewModel questionViewModel = new QuestionViewModel(question);
-                            final ViewTuple<QuestionView, QuestionViewModel> questionViewTuple = FluentViewLoader.fxmlView(QuestionView.class)
-                                    .viewModel(questionViewModel)
-                                    .load();
+            try {
+                Debathon.getInstance().getAppCommunication().requestRoom(this.debate.getId());
 
-                            listQuestion_value.add(questionViewTuple);
+                this.debate.getListQuestion().forEach(question ->
+                        Platform.runLater(() -> {
+                            if (question != null) {
+                                QuestionViewModel questionViewModel = new QuestionViewModel(question);
+                                final ViewTuple<QuestionView, QuestionViewModel> questionViewTuple = FluentViewLoader.fxmlView(QuestionView.class)
+                                        .viewModel(questionViewModel)
+                                        .load();
+
+                                listQuestion_value.add(questionViewTuple);
+                            }
+                        }));
+                this.listChangeListener_question = change -> {
+                    while (change.next()) {
+                        if (change.wasAdded()) {
+                            change.getAddedSubList().forEach(item ->
+                                    Platform.runLater(() -> {
+                                        if (item != null) {
+                                            QuestionViewModel questionViewModel = new QuestionViewModel(item);
+                                            final ViewTuple<QuestionView, QuestionViewModel> questionViewTuple = FluentViewLoader.fxmlView(QuestionView.class)
+                                                    .viewModel(questionViewModel)
+                                                    .load();
+
+                                            listQuestion_value.add(questionViewTuple);
+                                        }
+                                    })
+                            );
+                        } else if (change.wasRemoved()) {
+                            change.getRemoved().forEach(item -> listQuestion_value.removeIf(question -> question.getViewModel().getQuestion().equals(item)));
                         }
-                    }));
-            this.listChangeListener_question = change -> {
-                while (change.next()) {
-                    if (change.wasAdded()) {
-                        change.getAddedSubList().forEach(item ->
-                                Platform.runLater(() -> {
-                                    if (item != null) {
-                                        QuestionViewModel questionViewModel = new QuestionViewModel(item);
-                                        final ViewTuple<QuestionView, QuestionViewModel> questionViewTuple = FluentViewLoader.fxmlView(QuestionView.class)
-                                                .viewModel(questionViewModel)
-                                                .load();
-
-                                        listQuestion_value.add(questionViewTuple);
-                                    }
-                                })
-                        );
-                    } else if (change.wasRemoved()) {
-                        change.getRemoved().forEach(item -> listQuestion_value.removeIf(question -> question.getViewModel().getQuestion().equals(item)));
                     }
+                };
+                this.debate.listQuestionsProperty().addListener(this.listChangeListener_question);
+            } catch (Exception e) {
+                if (LOGGER.isWarnEnabled()) {
+                    LOGGER.warn("Unable setup the update of the list of question");
                 }
-            };
-            this.debate.listQuestionsProperty().addListener(this.listChangeListener_question);
+            }
         }
     }
 

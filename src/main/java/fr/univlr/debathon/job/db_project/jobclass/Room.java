@@ -276,21 +276,5 @@ public class Room {
         this.listQuestions.add(question);
     }
 
-    @Override
-    public String toString() {
-        return "Room{" +
-                "id=" + id +
-                ", label=" + label +
-                ", description=" + description +
-                ", key=" + key +
-                ", mail=" + mail +
-                ", is_open=" + is_open +
-                ", date_start=" + date_start +
-                ", date_end=" + date_end +
-                ",\n category=" + category +
-                ",\n listTag=" + listTag +
-                ",\n listUtilisateurs=" + listUtilisateurs +
-                ",\n listQuestions=" + listQuestions +
-                '}';
-    }
+
 }

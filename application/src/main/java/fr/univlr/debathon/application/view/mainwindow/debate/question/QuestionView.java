@@ -2,6 +2,7 @@ package fr.univlr.debathon.application.view.mainwindow.debate.question;
 
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
+import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.QuestionViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.ResponseViewModel;
@@ -43,8 +44,8 @@ public class QuestionView extends FxmlView_SceneCycle<QuestionViewModel> impleme
     public void act_btnValid() {
         LOGGER.input(String.format("Press the button %s", btnValid.getId()));
 
-        //TODO check if the question if answser before
         vBoxQuestions.setDisable(true);
+        this.questionViewModel.actvm_btnValid();
     }
 
     @Override

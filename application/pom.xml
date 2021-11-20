@@ -52,7 +52,6 @@
             <groupId>fr.univlr.debathon</groupId>
             <artifactId>Debathon</artifactId>
             <version>1.0.0</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

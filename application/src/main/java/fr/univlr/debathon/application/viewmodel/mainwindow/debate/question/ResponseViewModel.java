@@ -3,17 +3,20 @@ package fr.univlr.debathon.application.viewmodel.mainwindow.debate.question;
 import de.saxsys.mvvmfx.InjectScope;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
+import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ToggleGroup;
 
 public class ResponseViewModel extends ViewModel_SceneCycle {
 
     private static final CustomLogger LOGGER = CustomLogger.create(ResponseViewModel.class.getName());
 
+    private final QuestionViewModel questionView;
     private final Mcq response;
 
     //Text
@@ -22,14 +25,17 @@ public class ResponseViewModel extends ViewModel_SceneCycle {
     //Value
     private final BooleanProperty responseValue = new SimpleBooleanProperty();
 
+    private ChangeListener<Boolean> listener_ChangedValue_;
+
     @InjectScope
     private ResponseScope responseScope;
 
-    public ResponseViewModel(Mcq response) {
+    public ResponseViewModel(QuestionViewModel questionView, Mcq response) {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[public][constructor] Creation of the ResponseViewModel() object.");
         }
 
+        this.questionView = questionView;
         this.response = response;
 
         bindResponse();
@@ -43,7 +49,14 @@ public class ResponseViewModel extends ViewModel_SceneCycle {
         if (this.response != null) {
             this.lblResponse_label.bind(this.response.labelProperty());
 
-            //TODO value
+            this.listener_ChangedValue_ = (observableValue, newValue, oldValue) -> {
+                if (Boolean.TRUE.equals(newValue)) {
+                    this.questionView.listSelected_mcqProperty().add(this.response);
+                } else {
+                    this.questionView.listSelected_mcqProperty().remove(this.response);
+                }
+            };
+            this.responseValue.addListener(this.listener_ChangedValue_);
         }
     }
 
@@ -55,7 +68,10 @@ public class ResponseViewModel extends ViewModel_SceneCycle {
         if (this.response != null) {
             this.lblResponse_label.unbind();
 
-            //TODO value
+            if (this.listener_ChangedValue_ != null) {
+                this.responseValue.removeListener(this.listener_ChangedValue_);
+                this.listener_ChangedValue_ = null;
+            }
         }
     }
 
@@ -98,6 +114,16 @@ public class ResponseViewModel extends ViewModel_SceneCycle {
         return this.response;
     }
 
+    /**
+     * Getter for the variable questionView.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link QuestionViewModel} - return the variable questionView.
+     */
+    public QuestionViewModel getQuestionView() {
+        return this.questionView;
+    }
 
 
     @Override

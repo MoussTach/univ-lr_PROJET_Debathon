@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonDeserializer;
+import fr.univlr.debathon.application.viewmodel.mainwindow.HomePageViewModel;
 import fr.univlr.debathon.job.db_project.jobclass.*;
+import fr.univlr.debathon.log.generate.CustomLogger;
 import org.hildan.fxgson.FxGson;
 
 
@@ -16,6 +18,8 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class AppCommunication extends Thread implements Runnable {
+
+    private static final CustomLogger LOGGER = CustomLogger.create(AppCommunication.class.getName());
 
     final Socket userSocket; // socket used by client to send and recieve data from server
     final BufferedReader in;   // object to read data from socket
@@ -34,9 +38,9 @@ public class AppCommunication extends Thread implements Runnable {
 
     private <T> T getUnserialisation(String objects, Class<T> classT) {
         return FxGson.coreBuilder().registerTypeAdapter(
-                        LocalDate.class,
-                        (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext) ->
-                                LocalDate.parse(json.getAsJsonPrimitive().getAsString()))
+                LocalDate.class,
+                (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext) ->
+                        LocalDate.parse(json.getAsJsonPrimitive().getAsString()))
                 .enableComplexMapKeySerialization().create()
                 .fromJson(objects, classT);
     }
@@ -91,32 +95,47 @@ public class AppCommunication extends Thread implements Runnable {
     }
 
     //Fonction call pour avoir les details d'une room
-    public void methodsRESPONSEDETAILS(JsonNode dataJson) throws IOException{
-        Debathon.getInstance().setCurrent_debate(this.getUnserialisation(dataJson.get("room_selected").get(0).toString(), Room.class));
+    public void methodsRESPONSEDETAILS(JsonNode dataJson) throws IOException {
+        Room jsonRoom = this.getUnserialisation(dataJson.get("room_selected").get(0).toString(), Room.class);
+        Optional<Room> optionalDebate = Debathon.getInstance().getDebates().stream().filter(room -> room.getId() == jsonRoom.getId()).findAny();
+
+        if (optionalDebate.isEmpty()) {
+            if (LOGGER.isWarnEnabled()) {
+                LOGGER.warn("The debate requested wasn't on the list in cache, based of his ID");
+            }
+            return;
+        }
+        Debathon.getInstance().setCurrent_debate(optionalDebate.get());
 
         List<Question> questionList = new ArrayList<>();
         if (dataJson.get("room_selected").get(0).get("listQuestion") != null) {
             for (int i = 0; i < dataJson.get("room_selected").get(0).get("listQuestion").size(); i++) {
-                questionList.add(this.getUnserialisation(dataJson.get("room_selected").get(0).get("listQuestion").get(i).toString(), Question.class));
+
+                Question jsonQuestion = this.getUnserialisation(dataJson.get("room_selected").get(0).get("listQuestion").get(i).toString(), Question.class);
+                Optional<Question> optionalQuestion = Debathon.getInstance().getCurrent_debate().listQuestionsProperty().parallelStream().filter(question -> question.getId() == jsonQuestion.getId()).findAny();
+
+                if (optionalQuestion.isEmpty()) {
+                    questionList.add(jsonQuestion);
+                }
+
             }
-            Debathon.getInstance().getCurrent_debate().setListQuestions(questionList);
+            Debathon.getInstance().getCurrent_debate().listQuestionsProperty().addAll(questionList);
         }
 
-
         if (dataJson.get("mcq") != null) {
-            for (int i = 0; i < dataJson.get("mcq").size(); i++) {
-                System.out.println(dataJson.get("mcq").get(0).get(0));
-                Mcq mcq = this.getUnserialisation(dataJson.get("mcq").get(0).get(i).toString(), Mcq.class);
+            for (int i = 0; i < dataJson.get("mcq").get(0).size(); i++) {
+
+                Mcq jsonMcq = this.getUnserialisation(dataJson.get("mcq").get(0).get(i).toString(), Mcq.class);
+
                 for (Question question : Debathon.getInstance().getCurrent_debate().getListQuestion()) {
-                    if (question.getId() == mcq.getId())
-                        question.getListMcq().add(mcq);
+                    Optional<Mcq> optionalMcq = question.getListMcq().parallelStream().filter(mcq -> mcq.getId() == jsonMcq.getId()).findAny();
+
+                    if (optionalMcq.isEmpty() && question.getId() == jsonMcq.getId_question()) {
+                        question.getListMcq().add(jsonMcq);
+                    }
                 }
             }
         }
-
-        System.out.println("---" + Debathon.getInstance().getCurrent_debate());
-
-
     }
 
     public void methodsNEWCOMMENT(JsonNode dataJson) throws IOException {

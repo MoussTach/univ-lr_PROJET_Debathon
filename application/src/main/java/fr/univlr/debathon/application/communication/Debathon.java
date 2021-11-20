@@ -36,17 +36,6 @@ public class Debathon {
     private Debathon() {
 
         try {
-            //TODO suppr
-            Room debate = new Room();
-            debate.setLabel("Name");
-
-            Tag tag = new Tag();
-            tag.setLabel("tag");
-            debate.addTag(tag);
-
-            tags.add(tag);
-            debates.add(debate);
-
             this.appCommunication = new AppCommunication();
             this.appCommunication.start();
             this.appCommunication.requestHome();

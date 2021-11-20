@@ -29,12 +29,15 @@ public class ResponseView extends FxmlView_SceneCycle<ResponseViewModel> impleme
 
         //TODO need response Model
         Node nodeResponse = null;
-        if (true) {
+        if (this.responseViewModel.getQuestionView().getQuestion().getType().equals("unique")) {
             nodeResponse = new RadioButton();
             ((RadioButton) nodeResponse).setToggleGroup(this.responseViewModel.getGroup());
-        } else if (true) {
+            this.responseViewModel.responseValueProperty().bind(((RadioButton) nodeResponse).selectedProperty());
+
+        } else if (this.responseViewModel.getQuestionView().getQuestion().getType().equals("multiple")) {
             nodeResponse = new CheckBox();
-        }
+            this.responseViewModel.responseValueProperty().bind(((CheckBox) nodeResponse).selectedProperty());
+        } //Libre
 
         if (nodeResponse != null) {
             BorderPane.setMargin(nodeResponse, new Insets(0, 10, 0, 0));
@@ -58,5 +61,6 @@ public class ResponseView extends FxmlView_SceneCycle<ResponseViewModel> impleme
         this.lblResponse.textProperty().unbind();
 
         //Value
+        this.responseViewModel.responseValueProperty().unbind();
     }
 }

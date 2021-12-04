@@ -3,8 +3,10 @@ package fr.univlr.debathon.application.view.mainwindow;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
+import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
 import fr.univlr.debathon.application.viewmodel.mainwindow.HomePageViewModel;
+import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.CategoryViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.beans.binding.Bindings;
@@ -33,13 +35,14 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
     @FXML private Button btnCreateNewDebate;
 
     //Header parameters
-    @FXML private Button btnAddTag;
+    @FXML private Button btnAddItem;
     @FXML private FlowPane flowTag;
     @FXML private CustomTextField tfSearch;
 
     @FXML private ScrollPane scrollPane;
     @FXML private FlowPane flowDebate;
 
+    private ListChangeListener<ViewTuple<CategoryView, CategoryViewModel> > listChangeListener_category;
     private ListChangeListener<ViewTuple<TagView, TagViewModel> > listChangeListener_tag;
     private ListChangeListener<Node> listChangeListener_DebateThumbnail;
 
@@ -53,8 +56,10 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
     }
 
     @FXML
-    private void act_btnAddTag() {
-        LOGGER.input(String.format("Press the button %s", btnAddTag.getId()));
+    private void act_btnAddItem() {
+        LOGGER.input(String.format("Press the button %s", btnAddItem.getId()));
+
+        this.homePageViewModel.actvm_createAddItem(btnAddItem);
     }
 
 
@@ -71,7 +76,7 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
         chkShowCreatedDebate.textProperty().bind(this.homePageViewModel.chkShowCreatedDebate_labelProperty());
         btnCreateNewDebate.textProperty().bind(this.homePageViewModel.btnCreateNewDebate_labelProperty());
 
-        btnAddTag.textProperty().bind(this.homePageViewModel.btnAddTag_labelProperty());
+        btnAddItem.textProperty().bind(this.homePageViewModel.btnAddTag_labelProperty());
 
         //Value
         chkShowCreatedDebate.selectedProperty().bindBidirectional(this.homePageViewModel.chkShowCreatedDebate_valueProperty());
@@ -130,7 +135,7 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
         chkShowCreatedDebate.textProperty().unbind();
         btnCreateNewDebate.textProperty().unbind();
 
-        btnAddTag.textProperty().unbind();
+        btnAddItem.textProperty().unbind();
 
         //Value
         chkShowCreatedDebate.selectedProperty().unbindBidirectional(this.homePageViewModel.chkShowCreatedDebate_valueProperty());

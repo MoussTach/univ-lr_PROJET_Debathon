@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+
+<BorderPane prefWidth="250.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.SelectWindowView">
+   <center>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="lblCategory" alignment="CENTER" maxHeight="30.0" maxWidth="1.7976931348623157E308" minWidth="150.0" prefHeight="30.0" style="-fx-border-radius: 10; -fx-border-color: BLUE;" text="lblCategory" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="3.0" top="3.0" />
+               </padding>
+               <font>
+                  <Font name="Calibri Bold" size="14.0" />
+               </font>
+            </Label>
+            <FlowPane fx:id="flowCategories">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="2.0" right="2.0" top="2.0" />
+               </VBox.margin>
+            </FlowPane>
+            <Separator />
+            <Label fx:id="lblTags" alignment="CENTER" maxHeight="30.0" maxWidth="1.7976931348623157E308" minWidth="150.0" prefHeight="30.0" style="-fx-border-radius: 10; -fx-border-color: RED;" text="lblTags" textAlignment="CENTER">
+               <padding>
+                  <Insets bottom="3.0" top="3.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="Calibri Bold" size="14.0" />
+               </font>
+            </Label>
+            <FlowPane fx:id="flowTags">
+               <VBox.margin>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </VBox.margin>
+            </FlowPane>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

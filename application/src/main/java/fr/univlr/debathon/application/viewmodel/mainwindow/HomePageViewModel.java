@@ -2,6 +2,7 @@ package fr.univlr.debathon.application.viewmodel.mainwindow;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectScope;
+import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
@@ -9,13 +10,21 @@ import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
+import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.communication.Debathon;
+import fr.univlr.debathon.application.view.mainwindow.SelectWindowView;
 import fr.univlr.debathon.application.view.mainwindow.debate.DebateThumbnailView;
+import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.DebateThumbnailViewModel;
+import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.CategoryViewModel;
+import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.SelectCategoryScope;
+import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.SelectTagScope;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
+import fr.univlr.debathon.job.db_project.jobclass.Category;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
+import fr.univlr.debathon.job.db_project.jobclass.Tag;
 import fr.univlr.debathon.language.LanguageBundle;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Platform;
@@ -30,10 +39,13 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
+import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
 
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+@ScopeProvider(scopes= {SelectCategoryScope.class, SelectTagScope.class})
 public class HomePageViewModel extends ViewModel_SceneCycle {
 
     private final ObjectProperty<ResourceBundle> resBundle_ = LanguageBundle.getInstance().bindResourceBundle("properties.language.mainwindow.lg_homePage");
@@ -54,6 +66,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     //Value
     private final BooleanProperty chkShowCreatedDebate_value = new SimpleBooleanProperty(false);
 
+    private final ListProperty<ViewTuple<CategoryView, CategoryViewModel> > listCategory_selected_value = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ListProperty<ViewTuple<TagView, TagViewModel> > listTag_selected_value = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final StringProperty tfSearch_value = new SimpleStringProperty();
 
@@ -86,11 +99,23 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         }
     }, true);
 
+
+    private ListChangeListener<Category> listChangeListener_Category;
+    private ListChangeListener<Tag> listChangeListener_Tag;
+
     private ListChangeListener<Room> listChangeListener_Debate;
     private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_;
 
     @InjectScope
     private MainViewScope mainViewScope;
+
+    @InjectScope
+    private SelectCategoryScope selectCategoryScope;
+
+    @InjectScope
+    private SelectTagScope selectTagScope;
+
+    private PopOver popOver_selectItems;
 
 
     /**
@@ -110,6 +135,25 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         this.resBundle_.addListener(this.listener_ChangedValue_bundleLanguage_);
 
         bindDebate();
+        Platform.runLater(this::bindSelectedItems);
+    }
+
+    public void initialize() {
+        popOver_selectItems = new PopOver(FluentViewLoader.fxmlView(SelectWindowView.class)
+                .providedScopes(selectCategoryScope, selectTagScope)
+                .load().getView());
+        popOver_selectItems.setDetachable(false);
+        popOver_selectItems.setArrowLocation(PopOver.ArrowLocation.TOP_CENTER);
+
+        Launch.APPLICATION_STOP.addListener(new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (popOver_selectItems != null) {
+                    popOver_selectItems.hide(Duration.millis(0));
+                }
+                Launch.APPLICATION_STOP.removeListener(this);
+            }
+        });
     }
 
     private void bindDebate() {
@@ -164,10 +208,109 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         Debathon.getInstance().debatesProperty().addListener(this.listChangeListener_Debate);
     }
 
+    private void bindSelectedItems() {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[private][method] Usage of the HomePageViewModel.bindSelectedItems()");
+        }
+
+        this.selectCategoryScope.selectedCategoriesProperty().forEach(category -> {
+            if (category != null) {
+                CategoryViewModel categoryViewModel = new CategoryViewModel(category);
+                final ViewTuple<CategoryView, CategoryViewModel> categoryViewTuple = FluentViewLoader.fxmlView(CategoryView.class)
+                        .viewModel(categoryViewModel)
+                        .load();
+
+                listCategory_selected_value.add(categoryViewTuple);
+            }
+        });
+
+        this.listChangeListener_Category = change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    change.getAddedSubList().forEach(item ->
+                            Platform.runLater(() -> {
+                                if (item != null) {
+                                    CategoryViewModel categoryViewModel = new CategoryViewModel(item);
+                                    final ViewTuple<CategoryView, CategoryViewModel> categoryViewTuple = FluentViewLoader.fxmlView(CategoryView.class)
+                                            .viewModel(categoryViewModel)
+                                            .load();
+
+                                    listCategory_selected_value.add(categoryViewTuple);
+                                }
+                            })
+                    );
+                } else if (change.wasRemoved()) {
+                    change.getRemoved().forEach(item ->
+                            Platform.runLater(() -> {
+                                Optional<ViewTuple<CategoryView, CategoryViewModel>> optional = listCategory_selected_value.stream().filter(category -> category.getViewModel().getCategory().equals(item)).findAny();
+                                optional.ifPresent(listCategory_selected_value::remove);
+                            })
+                    );
+                }
+            }
+        };
+        this.selectCategoryScope.selectedCategoriesProperty().addListener(this.listChangeListener_Category);
+
+        //-----------------------
+
+        this.selectTagScope.selectedTagsProperty().forEach(tag -> {
+            if (tag != null) {
+                TagViewModel tagViewModel = new TagViewModel(tag);
+                final ViewTuple<TagView, TagViewModel> tagViewTuple = FluentViewLoader.fxmlView(TagView.class)
+                        .viewModel(tagViewModel)
+                        .load();
+
+                listTag_selected_value.add(tagViewTuple);
+            }
+        });
+
+        this.listChangeListener_Tag = change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    change.getAddedSubList().forEach(item ->
+                            Platform.runLater(() -> {
+                                if (item != null) {
+                                    TagViewModel tagViewModel = new TagViewModel(item);
+                                    final ViewTuple<TagView, TagViewModel> tagViewTuple = FluentViewLoader.fxmlView(TagView.class)
+                                            .viewModel(tagViewModel)
+                                            .load();
+
+                                    listTag_selected_value.add(tagViewTuple);
+                                }
+                            })
+                    );
+                } else if (change.wasRemoved()) {
+                    change.getRemoved().forEach(item ->
+                            Platform.runLater(() -> {
+                                Optional<ViewTuple<TagView, TagViewModel>> optional = listTag_selected_value.stream().filter(tag -> tag.getViewModel().getTag().equals(item)).findAny();
+                                optional.ifPresent(listTag_selected_value::remove);
+                            })
+                    );
+                }
+            }
+        };
+        this.selectTagScope.selectedTagsProperty().addListener(this.listChangeListener_Tag);
+    }
+
+    private void unbindSelectedItems() {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[private][method] Usage of the HomePageViewModel.unbindSelectedItems()");
+        }
+
+        if (this.listChangeListener_Category != null) {
+            this.selectCategoryScope.selectedCategoriesProperty().removeListener(this.listChangeListener_Category);
+            this.listChangeListener_Category = null;
+        }
+
+        if (this.listChangeListener_Tag != null) {
+            this.selectTagScope.selectedTagsProperty().removeListener(this.listChangeListener_Tag);
+            this.listChangeListener_Tag = null;
+        }
+    }
 
     private void unbindDebate() {
         if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("[public][method] Usage of the HomePageViewModel.unbindDebate()");
+            LOGGER.trace("[private][method] Usage of the HomePageViewModel.unbindDebate()");
         }
 
         if (this.listChangeListener_Debate != null) {
@@ -218,6 +361,25 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
                     });
             return null;
         }, this.tfSearch_value, this.listTag_selected_value, this.listDebate_value);
+    }
+
+
+    /**
+     * Show a popover to select categories and tags.
+     *
+     * @author Gaetan Brenckle
+     * @param node - {@link Node} - node used to show the popover
+     */
+    public void actvm_createAddItem(Node node) {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the HomePageViewModel.actvm_createAddItem()");
+        }
+
+        if (popOver_selectItems.isShowing()) {
+            popOver_selectItems.hide();
+        } else {
+            popOver_selectItems.show(node);
+        }
     }
 
 
@@ -392,6 +554,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         }
 
         unbindDebate();
+        unbindSelectedItems();
 
         LanguageBundle.getInstance().unbindResourceBundle(this.resBundle_);
     }

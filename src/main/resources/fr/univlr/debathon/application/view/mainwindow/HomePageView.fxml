@@ -75,7 +75,7 @@
                               <Insets bottom="2.0" left="3.0" right="3.0" top="4.0" />
                            </HBox.margin>
                         </FlowPane>
-                        <Button fx:id="btnAddTag" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#act_btnAddTag" style="-fx-background-radius: 5;" text="btnAddTag">
+                        <Button fx:id="btnAddItem" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#act_btnAddItem" style="-fx-background-radius: 5;" text="btnAddItem">
                            <HBox.margin>
                               <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                            </HBox.margin>

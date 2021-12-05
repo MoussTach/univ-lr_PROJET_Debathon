@@ -70,12 +70,17 @@
                   </right>
                   <center>
                      <HBox maxWidth="1.7976931348623157E308" style="-fx-border-color: DARKBLUE; -fx-border-radius: 5;" BorderPane.alignment="CENTER">
+                        <FlowPane fx:id="flowCategory" prefWidth="0.0" HBox.hgrow="NEVER">
+                           <HBox.margin>
+                              <Insets bottom="2.0" left="3.0" right="3.0" top="4.0" />
+                           </HBox.margin></FlowPane>
+                        <Separator orientation="VERTICAL" />
                         <FlowPane fx:id="flowTag" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets bottom="2.0" left="3.0" right="3.0" top="4.0" />
                            </HBox.margin>
                         </FlowPane>
-                        <Button fx:id="btnAddItem" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#act_btnAddItem" style="-fx-background-radius: 5;" text="btnAddItem">
+                        <Button fx:id="btnAddItem" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#act_btnAddItem" style="-fx-background-radius: 5;" text="btnAddTag">
                            <HBox.margin>
                               <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                            </HBox.margin>

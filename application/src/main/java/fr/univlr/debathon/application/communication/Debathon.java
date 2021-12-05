@@ -35,6 +35,16 @@ public class Debathon {
 
     private Debathon() {
 
+        //TODO tests, remove
+        categories.add(new Category(1, "cat1"));
+        categories.add(new Category(2, "cat2"));
+        categories.add(new Category(2, "cat3"));
+
+        tags.add(new Tag(1, "Le Pen", "#ffffff"));
+        tags.add(new Tag(2, "Macron", "#ffffff"));
+        tags.add(new Tag(3, "Zemmour", "#ffffff"));
+        tags.add(new Tag(4, "tag4", "#ffffff"));
+
         try {
             this.appCommunication = new AppCommunication();
             this.appCommunication.start();

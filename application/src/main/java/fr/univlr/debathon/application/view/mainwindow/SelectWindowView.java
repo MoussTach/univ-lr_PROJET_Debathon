@@ -42,6 +42,18 @@ public class SelectWindowView extends FxmlView_SceneCycle<SelectWindowViewModel>
         lblTags.textProperty().bind(this.selectWindowViewModel.lblTags_labelProperty());
 
         //Values
+        this.selectWindowViewModel.listCategories_valueProperty().forEach(item -> flowCategories.getChildren().add(item.getView()));
+        this.listChangeListener_category = change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    change.getAddedSubList().stream().filter(item -> !flowCategories.getChildren().contains(item.getView())).forEach(item -> flowCategories.getChildren().add(item.getView()));
+                } else if (change.wasRemoved()) {
+                    change.getRemoved().forEach(item -> flowCategories.getChildren().remove(item.getView()));
+                }
+            }
+        };
+        this.selectWindowViewModel.listCategories_valueProperty().addListener(this.listChangeListener_category);
+
         this.selectWindowViewModel.listTags_valueProperty().forEach(item -> flowTags.getChildren().add(item.getView()));
         this.listChangeListener_tag = change -> {
             while (change.next()) {
@@ -53,19 +65,6 @@ public class SelectWindowView extends FxmlView_SceneCycle<SelectWindowViewModel>
             }
         };
         this.selectWindowViewModel.listTags_valueProperty().addListener(this.listChangeListener_tag);
-
-
-        this.selectWindowViewModel.listCategories_valueProperty().forEach(item -> flowCategories.getChildren().add(item.getView()));
-        this.listChangeListener_category = change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    change.getAddedSubList().stream().filter(item -> !flowCategories.getChildren().contains(item.getView())).forEach(item -> flowTags.getChildren().add(item.getView()));
-                } else if (change.wasRemoved()) {
-                    change.getRemoved().forEach(item -> flowCategories.getChildren().remove(item.getView()));
-                }
-            }
-        };
-        this.selectWindowViewModel.listCategories_valueProperty().addListener(this.listChangeListener_category);
     }
 
 

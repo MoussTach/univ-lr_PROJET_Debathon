@@ -18,7 +18,7 @@ public class CategorySelectViewModel extends ViewModel_SceneCycle {
     private final Category category;
 
     //Text
-    private final StringProperty tbtnTag_label = new SimpleStringProperty("");
+    private final StringProperty tbtnCategory_label = new SimpleStringProperty("");
 
     //Value
     private final StringProperty color = new SimpleStringProperty("#FFA07A");
@@ -42,7 +42,7 @@ public class CategorySelectViewModel extends ViewModel_SceneCycle {
         }
 
         if (category != null) {
-            tbtnTag_label.bind(this.category.labelProperty());
+            tbtnCategory_label.bind(this.category.labelProperty());
 
             /*TODO color
             Platform.runLater(() -> {
@@ -59,7 +59,7 @@ public class CategorySelectViewModel extends ViewModel_SceneCycle {
         }
 
         if (category != null) {
-            tbtnTag_label.unbind();
+            tbtnCategory_label.unbind();
             color.unbind();
         }
     }
@@ -80,14 +80,14 @@ public class CategorySelectViewModel extends ViewModel_SceneCycle {
 
     //Text
     /**
-     * Property of the variable tbtnTag_label.
+     * Property of the variable tbtnCategory_label.
      *
      * @author Gaetan Brenckle
      *
-     * @return {@link StringProperty} - return the property of the variable tbtnTag_label.
+     * @return {@link StringProperty} - return the property of the variable tbtnCategory_label.
      */
-    public StringProperty tbtnTag_labelProperty() {
-        return tbtnTag_label;
+    public StringProperty tbtnCategory_labelProperty() {
+        return tbtnCategory_label;
     }
 
     //Value

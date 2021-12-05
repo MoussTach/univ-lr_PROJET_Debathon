@@ -1,11 +1,13 @@
 package fr.univlr.debathon.application.view.mainwindow.debate.items;
 
+import de.saxsys.mvvmfx.InjectViewModel;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.CategorySelectViewModel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 
@@ -17,17 +19,16 @@ public class CategorySelectView extends FxmlView_SceneCycle<CategorySelectViewMo
     @FXML private BorderPane bPaneCategory;
     @FXML private ToggleButton tbtnCategory;
 
-    @FXML
+    @InjectViewModel
     private CategorySelectViewModel categorySelectViewModel;
 
     private ChangeListener<Boolean> listenerValue = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.setViewModel(categorySelectViewModel);
 
         //Text
-        tbtnCategory.textProperty().bind(this.categorySelectViewModel.tbtnTag_labelProperty());
+        tbtnCategory.textProperty().bind(this.categorySelectViewModel.tbtnCategory_labelProperty());
 
         this.categorySelectViewModel.colorProperty().addListener((observableValue, oldValue, newValue) -> {
             bPaneCategory.setStyle(
@@ -41,6 +42,8 @@ public class CategorySelectView extends FxmlView_SceneCycle<CategorySelectViewMo
         });
 
         //Value
+        tbtnCategory.setToggleGroup(this.categorySelectViewModel.getGroup());
+
         this.listenerValue = (observableValue, oldValue, newValue) ->
                 this.categorySelectViewModel.addToList(newValue);
         this.tbtnCategory.selectedProperty().addListener(this.listenerValue);

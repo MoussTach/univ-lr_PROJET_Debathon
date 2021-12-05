@@ -1,5 +1,6 @@
 package fr.univlr.debathon.application.view.mainwindow.debate.items;
 
+import de.saxsys.mvvmfx.InjectViewModel;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagSelectViewModel;
 import javafx.beans.value.ChangeListener;
@@ -17,7 +18,7 @@ public class TagSelectView extends FxmlView_SceneCycle<TagSelectViewModel> imple
     @FXML private BorderPane bPaneTag;
     @FXML private ToggleButton tbtnTag;
 
-    @FXML
+    @InjectViewModel
     private TagSelectViewModel tagSelectViewModel;
 
     private ChangeListener<Boolean> listenerValue = null;

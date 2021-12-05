@@ -35,6 +35,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
@@ -335,6 +336,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
                         Optional<ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> > optionalDebate = listDebate_value.stream().filter(debateModel -> debateModel.getView().equals(debate)).findFirst();
 
                         if (optionalDebate.isPresent()) {
+                            //TODO add categories
                             if (!listTag_selected_value.isEmpty()) {
                                 filterKeep = false;
 
@@ -471,6 +473,17 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
      */
     public BooleanProperty chkShowCreatedDebate_valueProperty() {
         return chkShowCreatedDebate_value;
+    }
+
+    /**
+     * Property of the variable listCategory_selected_value.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link ListProperty} - return the property of the variable listCategory_selected_value.
+     */
+    public ListProperty<ViewTuple<CategoryView, CategoryViewModel>> listCategory_selected_valueProperty() {
+        return listCategory_selected_value;
     }
 
     /**

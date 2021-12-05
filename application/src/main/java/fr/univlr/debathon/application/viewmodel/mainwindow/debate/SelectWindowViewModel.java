@@ -64,10 +64,11 @@ public class SelectWindowViewModel extends ViewModel_SceneCycle {
         //ResourceBundle Listener
         this.listener_ChangedValue_bundleLanguage_ = this::listener_bundleLanguage;
         this.resBundle_.addListener(this.listener_ChangedValue_bundleLanguage_);
-
-        bindSelectedItems();
     }
 
+    public void initialize() {
+        bindSelectedItems();
+    }
 
     private void bindSelectedItems() {
         if (LOGGER.isTraceEnabled()) {

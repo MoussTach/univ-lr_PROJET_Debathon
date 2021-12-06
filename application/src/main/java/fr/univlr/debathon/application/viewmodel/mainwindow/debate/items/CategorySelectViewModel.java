@@ -44,12 +44,10 @@ public class CategorySelectViewModel extends ViewModel_SceneCycle {
         if (category != null) {
             tbtnCategory_label.bind(this.category.labelProperty());
 
-            /*TODO color
             Platform.runLater(() -> {
                 color.set(this.category.getColor());
                 color.bind(this.category.colorProperty());
             });
-             */
         }
     }
 

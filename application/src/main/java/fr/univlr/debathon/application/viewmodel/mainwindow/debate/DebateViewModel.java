@@ -240,8 +240,6 @@ public class DebateViewModel extends ViewModel_SceneCycle {
     @Override
     public void onViewAdded_Cycle() {
 
-        //TODO
-        System.out.println("OnView debate");
         this.mainViewScope.prevCommandProperty().set(this.mainViewScope.currentCommandProperty().get());
         this.mainViewScope.currentCommandProperty().set(new CompositeCommand());
         this.mainViewScope.currentCommandProperty().get().register(this.prevCommand);

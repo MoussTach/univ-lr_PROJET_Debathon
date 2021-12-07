@@ -86,30 +86,44 @@ public class AppCommunication extends Thread implements Runnable {
     public void methodsRESPONSE(JsonNode dataJson, ObjectMapper objectMapper) throws IOException {
 
         //Boucle affetant chaque salon dans la list de salon
-        for(int i = 0;i<dataJson.get("rooms").size();i++){
+        for(int i = 0; i < dataJson.get("rooms").size(); i++){
 
             Room room = this.getUnserialisation(dataJson.get("rooms").get(i).toString(), Room.class);
-            System.out.println("---" + room);
 
-            for (Tag tag : room.getListTag()) {
-                boolean _tag = true;
-                for (Tag t : Debathon.getInstance().getTags()) {
-                    if (t.getLabel().equals(tag.getLabel()))
-                        _tag = false;
+            List<Tag> shadowListTag = new ArrayList<>(room.getListTag());
+            for (Tag currentTag : room.getListTag()) {
+                boolean exist = false;
+
+                for (Tag tag : Debathon.getInstance().getTags()) {
+                    if (tag.getLabel().equals(currentTag.getLabel())) {
+
+                        if (!tag.equals(currentTag)) {
+                            shadowListTag.remove(currentTag);
+                            shadowListTag.add(tag);
+                        }
+
+                        exist = true;
+                    }
                 }
-                if (_tag)
-                    Debathon.getInstance().getTags().add(tag);
+                if (!exist) {
+                    Debathon.getInstance().getTags().add(currentTag);
+                }
             }
+            room.setListTag(shadowListTag);
 
-            boolean cat = true;
+            boolean exist = false;
             for (Category category : Debathon.getInstance().getCategories()) {
-                if (room.getCategory() != null && category.getLabel().equals(room.getCategory().getLabel()))
-                    cat = false;
+                if (room.getCategory() != null && category.getLabel().equals(room.getCategory().getLabel())) {
+
+                    if (!room.getCategory().equals(category)) {
+                        room.setCategory(category);
+                    }
+
+                    exist = true;
+                }
             }
-            if (cat)
+            if (!exist)
                 Debathon.getInstance().getCategories().add(room.getCategory());
-
-
 
             Debathon.getInstance().getDebates().add(room);
         }

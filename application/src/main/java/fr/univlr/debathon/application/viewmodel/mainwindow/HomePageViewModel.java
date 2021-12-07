@@ -43,6 +43,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -67,7 +69,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     //Value
     private final BooleanProperty chkShowCreatedDebate_value = new SimpleBooleanProperty(false);
 
-    private final ListProperty<ViewTuple<CategoryView, CategoryViewModel> > listCategory_selected_value = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ObjectProperty<ViewTuple<CategoryView, CategoryViewModel> > category_selected_value = new SimpleObjectProperty<>();
     private final ListProperty<ViewTuple<TagView, TagViewModel> > listTag_selected_value = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final StringProperty tfSearch_value = new SimpleStringProperty();
 
@@ -101,7 +103,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     }, true);
 
 
-    private ListChangeListener<Category> listChangeListener_Category;
+    private ChangeListener<Category> changeListener_Category;
     private ListChangeListener<Tag> listChangeListener_Tag;
 
     private ListChangeListener<Room> listChangeListener_Debate;
@@ -214,43 +216,19 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[private][method] Usage of the HomePageViewModel.bindSelectedItems()");
         }
 
-        this.selectCategoryScope.selectedCategoriesProperty().forEach(category -> {
-            if (category != null) {
-                CategoryViewModel categoryViewModel = new CategoryViewModel(category);
+        this.changeListener_Category = (observableValue, oldValue, newValue) -> {
+            if (newValue != null) {
+                CategoryViewModel categoryViewModel = new CategoryViewModel(newValue);
                 final ViewTuple<CategoryView, CategoryViewModel> categoryViewTuple = FluentViewLoader.fxmlView(CategoryView.class)
                         .viewModel(categoryViewModel)
                         .load();
 
-                listCategory_selected_value.add(categoryViewTuple);
-            }
-        });
-
-        this.listChangeListener_Category = change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    change.getAddedSubList().forEach(item ->
-                            Platform.runLater(() -> {
-                                if (item != null) {
-                                    CategoryViewModel categoryViewModel = new CategoryViewModel(item);
-                                    final ViewTuple<CategoryView, CategoryViewModel> categoryViewTuple = FluentViewLoader.fxmlView(CategoryView.class)
-                                            .viewModel(categoryViewModel)
-                                            .load();
-
-                                    listCategory_selected_value.add(categoryViewTuple);
-                                }
-                            })
-                    );
-                } else if (change.wasRemoved()) {
-                    change.getRemoved().forEach(item ->
-                            Platform.runLater(() -> {
-                                Optional<ViewTuple<CategoryView, CategoryViewModel>> optional = listCategory_selected_value.stream().filter(category -> category.getViewModel().getCategory().equals(item)).findAny();
-                                optional.ifPresent(listCategory_selected_value::remove);
-                            })
-                    );
-                }
+                this.category_selected_value.set(categoryViewTuple);
+            } else {
+                this.category_selected_value.set(null);
             }
         };
-        this.selectCategoryScope.selectedCategoriesProperty().addListener(this.listChangeListener_Category);
+        this.selectCategoryScope.selectedCategoryProperty().addListener(this.changeListener_Category);
 
         //-----------------------
 
@@ -298,9 +276,9 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[private][method] Usage of the HomePageViewModel.unbindSelectedItems()");
         }
 
-        if (this.listChangeListener_Category != null) {
-            this.selectCategoryScope.selectedCategoriesProperty().removeListener(this.listChangeListener_Category);
-            this.listChangeListener_Category = null;
+        if (this.changeListener_Category != null) {
+            this.selectCategoryScope.selectedCategoryProperty().removeListener(this.changeListener_Category);
+            this.changeListener_Category = null;
         }
 
         if (this.listChangeListener_Tag != null) {
@@ -332,24 +310,20 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
                     debate -> {
                         //Select sort
                         boolean filterKeep = true;
-
                         Optional<ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> > optionalDebate = listDebate_value.stream().filter(debateModel -> debateModel.getView().equals(debate)).findFirst();
 
                         if (optionalDebate.isPresent()) {
-                            //TODO add categories
-                            if (!listTag_selected_value.isEmpty()) {
-                                filterKeep = false;
 
-                                for (ViewTuple<TagView, TagViewModel> itemView : optionalDebate.get().getViewModel().listTag_selected_valueProperty()) {
-                                    for (ViewTuple<TagView, TagViewModel> itemActual : this.listTag_selected_value) {
-                                        filterKeep = itemView.getViewModel().lblTag_labelProperty().get().equals(itemActual.getViewModel().lblTag_labelProperty().get());
-                                        if (filterKeep)
-                                            break;
-                                    }
+                            //Categories
+                            if (this.category_selected_value.get() != null) {
+                                filterKeep = this.category_selected_value.get().getViewModel().getCategory().equals(optionalDebate.get().getViewModel().getDebate().getCategory());
+                            }
 
-                                    if (!filterKeep)
-                                        break;
-                                }
+                            //Tags
+                            if (!listTag_selected_value.isEmpty() && filterKeep) {
+                                List<Tag> currentTags = new ArrayList<>();
+                                this.listTag_selected_value.forEach(tag -> currentTags.add(tag.getViewModel().getTag()));
+                                filterKeep = optionalDebate.get().getViewModel().getDebate().getListTag().containsAll(currentTags);
                             }
 
                             //Select search
@@ -362,7 +336,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
                         return filterKeep;
                     });
             return null;
-        }, this.tfSearch_value, this.listTag_selected_value, this.listDebate_value);
+        }, this.tfSearch_value, this.category_selected_value, this.listTag_selected_value, this.listDebate_value);
     }
 
 
@@ -476,14 +450,14 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     }
 
     /**
-     * Property of the variable listCategory_selected_value.
+     * Property of the variable category_selected_value.
      *
      * @author Gaetan Brenckle
      *
-     * @return {@link ListProperty} - return the property of the variable listCategory_selected_value.
+     * @return {@link ObjectProperty} - return the property of the variable category_selected_value.
      */
-    public ListProperty<ViewTuple<CategoryView, CategoryViewModel>> listCategory_selected_valueProperty() {
-        return listCategory_selected_value;
+    public ObjectProperty<ViewTuple<CategoryView, CategoryViewModel>> category_selected_valueProperty() {
+        return category_selected_value;
     }
 
     /**
@@ -551,8 +525,6 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
     @Override
     public void onViewAdded_Cycle() {
-        //TODO
-        System.out.println("OnView home");
         this.mainViewScope.prevCommandProperty().set(this.mainViewScope.currentCommandProperty().get());
         this.mainViewScope.currentCommandProperty().set(new CompositeCommand());
         this.mainViewScope.currentCommandProperty().get().register(this.prevCommand);

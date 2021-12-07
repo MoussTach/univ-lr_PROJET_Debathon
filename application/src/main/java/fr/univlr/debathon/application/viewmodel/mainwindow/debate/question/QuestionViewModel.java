@@ -119,8 +119,6 @@ public class QuestionViewModel extends ViewModel_SceneCycle {
 
         listSelected_mcq.forEach(mcq -> {
             try {
-                //TODO print
-                System.out.println("response select : " + this.responseScope.selectedProperty().get().getLabel());
                 Debathon.getInstance().getAppCommunication().methodsUPDATE_VOTE_MCQ(this.responseScope.selectedProperty().get().getId());
 
             } catch (JsonProcessingException e) {

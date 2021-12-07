@@ -3,10 +3,11 @@ package fr.univlr.debathon.application.viewmodel.mainwindow.debate.items;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.job.db_project.jobclass.Category;
 import fr.univlr.debathon.log.generate.CustomLogger;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class CategoryViewModel extends ViewModel_SceneCycle implements Comparable<CategoryViewModel> {
+public class CategoryViewModel extends ViewModel_SceneCycle {
 
     private static final CustomLogger LOGGER = CustomLogger.create(CategoryViewModel.class.getName());
 
@@ -37,12 +38,10 @@ public class CategoryViewModel extends ViewModel_SceneCycle implements Comparabl
         if (category != null) {
             lblCategory_label.bind(this.category.labelProperty());
 
-            /* Color
             Platform.runLater(() -> {
                 color.set(this.category.getColor());
                 color.bind(this.category.colorProperty());
             });
-             */
         }
     }
 
@@ -94,11 +93,6 @@ public class CategoryViewModel extends ViewModel_SceneCycle implements Comparabl
         return this.category;
     }
 
-
-    @Override
-    public int compareTo(CategoryViewModel other) {
-        return this.lblCategory_label.get().compareTo(other.lblCategory_label.get());
-    }
 
     @Override
     public void onViewAdded_Cycle() {

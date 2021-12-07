@@ -10,6 +10,8 @@ import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.Category
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,7 +45,7 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
     @FXML private ScrollPane scrollPane;
     @FXML private FlowPane flowDebate;
 
-    private ListChangeListener<ViewTuple<CategoryView, CategoryViewModel> > listChangeListener_category;
+    private ChangeListener<ViewTuple<CategoryView, CategoryViewModel> > changeListener_category;
     private ListChangeListener<ViewTuple<TagView, TagViewModel> > listChangeListener_tag;
     private ListChangeListener<Node> listChangeListener_DebateThumbnail;
 
@@ -82,17 +84,13 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
         //Value
         chkShowCreatedDebate.selectedProperty().bindBidirectional(this.homePageViewModel.chkShowCreatedDebate_valueProperty());
 
-        this.homePageViewModel.listCategory_selected_valueProperty().forEach(item -> flowCategory.getChildren().add(item.getView()));
-        this.listChangeListener_category = change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    change.getAddedSubList().stream().filter(item -> !flowCategory.getChildren().contains(item.getView())).forEach(item -> flowCategory.getChildren().add(item.getView()));
-                } else if (change.wasRemoved()) {
-                    change.getRemoved().forEach(item -> flowCategory.getChildren().remove(item.getView()));
-                }
-            }
+        this.changeListener_category = (observableValue, oldValue, newValue) -> {
+            if (oldValue != null)
+                flowCategory.getChildren().remove(oldValue.getView());
+            if (newValue != null)
+                flowCategory.getChildren().add(newValue.getView());
         };
-        this.homePageViewModel.listCategory_selected_valueProperty().addListener(this.listChangeListener_category);
+        this.homePageViewModel.category_selected_valueProperty().addListener(this.changeListener_category);
 
         this.homePageViewModel.listTag_selected_valueProperty().forEach(item -> flowTag.getChildren().add(item.getView()));
         this.listChangeListener_tag = change -> {
@@ -132,9 +130,9 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
 
     @Override
     public void onViewRemoved_Cycle() {
-        if (this.listChangeListener_category != null) {
-            this.homePageViewModel.listCategory_selected_valueProperty().removeListener(this.listChangeListener_category);
-            this.listChangeListener_category = null;
+        if (this.changeListener_category != null) {
+            this.homePageViewModel.category_selected_valueProperty().removeListener(this.changeListener_category);
+            this.changeListener_category = null;
         }
 
         if (this.listChangeListener_tag != null) {

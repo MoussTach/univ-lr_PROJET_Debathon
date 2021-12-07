@@ -174,7 +174,6 @@ public class McqDAO implements DAO<Mcq> {
 
 	@Override
 	public List<Mcq> selectByMultiCondition(Map<String, String> map) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

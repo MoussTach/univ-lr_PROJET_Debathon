@@ -164,7 +164,6 @@ public class RoomDAO implements DAO<Room> {
 
 	@Override
 	public List<Room> selectByMultiCondition(Map<String, String> map) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

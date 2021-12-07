@@ -111,7 +111,6 @@ public class UserDAO implements DAO<User> {
 
 	@Override
 	public List<User> selectByMultiCondition(Map<String, String> map) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

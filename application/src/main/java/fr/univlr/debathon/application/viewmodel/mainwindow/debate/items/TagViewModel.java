@@ -7,7 +7,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class TagViewModel extends ViewModel_SceneCycle implements Comparable<TagViewModel> {
+public class TagViewModel extends ViewModel_SceneCycle {
 
     private static final CustomLogger LOGGER = CustomLogger.create(TagViewModel.class.getName());
 
@@ -93,11 +93,6 @@ public class TagViewModel extends ViewModel_SceneCycle implements Comparable<Tag
         return this.tag;
     }
 
-
-    @Override
-    public int compareTo(TagViewModel other) {
-        return this.lblTag_label.get().compareTo(other.lblTag_label.get());
-    }
 
     @Override
     public void onViewAdded_Cycle() {

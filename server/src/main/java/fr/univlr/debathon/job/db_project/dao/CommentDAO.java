@@ -293,7 +293,6 @@ public class CommentDAO implements DAO<Comment> {
 
 	@Override
 	public List<Comment> selectByMultiCondition(Map<String, String> map) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -27,7 +27,6 @@ public class ResponseView extends FxmlView_SceneCycle<ResponseViewModel> impleme
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.setViewModel(responseViewModel);
 
-        //TODO need response Model
         Node nodeResponse = null;
         if (this.responseViewModel.getQuestionView().getQuestion().getType().equals("unique")) {
             nodeResponse = new RadioButton();

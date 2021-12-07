@@ -156,7 +156,6 @@ public class QuestionDAO implements DAO<Question> {
 
 	@Override
 	public List<Question> selectByMultiCondition(Map<String, String> map) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

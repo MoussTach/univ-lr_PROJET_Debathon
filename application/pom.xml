@@ -3,7 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>fr.univlr.debathon</groupId>
+        <artifactId>Debathon</artifactId>
+        <version>1.0.0</version>
+        <relativePath/>
+    </parent>
 
     <groupId>fr.univlr.debathon.application</groupId>
     <artifactId>Debathon_application</artifactId>
@@ -48,6 +55,7 @@
             <artifactId>jfoenix</artifactId>
             <version>9.0.10</version>
         </dependency>
+
         <dependency>
             <groupId>fr.univlr.debathon</groupId>
             <artifactId>Debathon</artifactId>
@@ -69,7 +77,11 @@
         <resources>
             <resource>
                 <directory>../src/main/resources</directory>
-                <filtering>true</filtering>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>../application/src/main/resources</directory>
+                <filtering>false</filtering>
             </resource>
         </resources>
         <plugins>
@@ -132,15 +144,6 @@
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
-            </plugin>
 
             <plugin>
                 <groupId>com.zenjava</groupId>
@@ -183,7 +186,7 @@
                         <configuration>
                             <headerType>gui</headerType>
                             <outfile>target/${project.name}.exe</outfile>
-                            <jar>target/${project.artifactId}-${parent.version}-executable.jar</jar>
+                            <jar>target/${project.artifactId}-${project.parent.version}-executable.jar</jar>
                             <!-- if <dontWrapJar>true</dontWrapJar> change to this conf <jar>${project.artifactId}-${project.version}.jar</jar> -->
                             <dontWrapJar>false</dontWrapJar>
                             <errTitle>Error in launch4j plugin</errTitle>
@@ -202,8 +205,8 @@
                                 <fileDescription>Projet réalisé par Gaetan Brenckle, Gautier Pitek, Camille Herbain, Camille Pierre-jean et Julien Février, à destination de l'association CDIJ.</fileDescription>
                                 <copyright>Copyright (c) 2021 </copyright>
                                 <companyName>univ-LR</companyName>
-                                <productVersion>${parent.version}</productVersion>
-                                <txtProductVersion>${parent.version}</txtProductVersion>
+                                <productVersion>${project.parent.version}</productVersion>
+                                <txtProductVersion>${project.parent.version}</txtProductVersion>
                                 <productName>${project.artifactId}</productName>
                                 <internalName>${project.artifactId}</internalName>
                                 <originalFilename>${project.name}.exe</originalFilename>

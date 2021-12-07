@@ -6,9 +6,15 @@
 
     <groupId>fr.univlr.debathon</groupId>
     <artifactId>Debathon</artifactId>
+    <packaging>pom</packaging>
     <version>1.0.0</version>
 
     <name>Debathon</name>
+
+    <modules>
+        <module>server</module>
+        <module>application</module>
+    </modules>
 
     <developers>
         <developer>
@@ -91,10 +97,25 @@
             <artifactId>fx-gson</artifactId>
             <version>4.0.1</version>
         </dependency>
-
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <arg-java-config/>
         <dataCreated-directory>data_created</dataCreated-directory>
         <data-directory>data_resources</data-directory>

@@ -6,11 +6,14 @@ import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.Respo
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.TextAlignment;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,7 +21,8 @@ import java.util.ResourceBundle;
 public class ResponseView extends FxmlView_SceneCycle<ResponseViewModel> implements Initializable {
 
     @FXML private BorderPane borderPane;
-    @FXML private Label lblResponse;
+
+    private ButtonBase nodeResponse;
 
     @InjectViewModel
     private ResponseViewModel responseViewModel;
@@ -27,7 +31,6 @@ public class ResponseView extends FxmlView_SceneCycle<ResponseViewModel> impleme
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.setViewModel(responseViewModel);
 
-        Node nodeResponse = null;
         if (this.responseViewModel.getQuestionView().getQuestion().getType().equals("unique")) {
             nodeResponse = new RadioButton();
             ((RadioButton) nodeResponse).setToggleGroup(this.responseViewModel.getGroup());
@@ -38,13 +41,18 @@ public class ResponseView extends FxmlView_SceneCycle<ResponseViewModel> impleme
             this.responseViewModel.responseValueProperty().bind(((CheckBox) nodeResponse).selectedProperty());
         } //Libre
 
+
         if (nodeResponse != null) {
+            nodeResponse.textProperty().bind(this.responseViewModel.lblResponse_labelProperty());
+
             BorderPane.setMargin(nodeResponse, new Insets(0, 10, 0, 0));
-            borderPane.setLeft(nodeResponse);
+            nodeResponse.setTextAlignment(TextAlignment.CENTER);
+            nodeResponse.setMaxWidth(Double.MAX_VALUE);
+            nodeResponse.setAlignment(Pos.CENTER_LEFT);
+            borderPane.setCenter(nodeResponse);
         }
 
         //Text
-        this.lblResponse.textProperty().bind(this.responseViewModel.lblResponse_labelProperty());
 
         //Value
     }
@@ -57,7 +65,9 @@ public class ResponseView extends FxmlView_SceneCycle<ResponseViewModel> impleme
     @Override
     public void onViewRemoved_Cycle() {
         //Text
-        this.lblResponse.textProperty().unbind();
+        if (nodeResponse != null) {
+            this.nodeResponse.textProperty().unbind();
+        }
 
         //Value
         this.responseViewModel.responseValueProperty().unbind();

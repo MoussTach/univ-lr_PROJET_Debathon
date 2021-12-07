@@ -61,7 +61,7 @@
                            <CustomTextField fx:id="tfSearch">
                               <right>
                                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                    <Image url="@../../../../../../../../../../src/main/resources/img/loupe_32x32.png" />
+                                    <Image url="@../../../../../../../resources/img/loupe_32x32.png" />
                                  </ImageView>
                               </right>
                            </CustomTextField>

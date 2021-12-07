@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane style="-fx-border-color: ORANGE; -fx-border-radius: 10; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.debate.question.QuestionView">
+<BorderPane maxWidth="600.0" style="-fx-border-color: ORANGE; -fx-border-radius: 10; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.debate.question.QuestionView">
    <top>
       <VBox spacing="5.0" BorderPane.alignment="CENTER">
          <children>
@@ -26,8 +26,6 @@
    </top>
    <center>
        <VBox fx:id="vBoxQuestions" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" BorderPane.alignment="CENTER">
-           <fx:include source="ResponseView.fxml" />
-           <fx:include source="ResponseView.fxml" />
          <BorderPane.margin>
             <Insets top="5.0" />
          </BorderPane.margin>
@@ -45,7 +43,7 @@
                   <Button fx:id="btnValid" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#act_btnValid" prefWidth="75.0" style="-fx-background-radius: 10;" text="btnValid" BorderPane.alignment="CENTER">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <Image url="@../../../../../../../../../../../../src/main/resources/img/confirm_64.png" />
+                           <Image url="@../../../../../../../../img/confirm_64.png" />
                         </ImageView>
                      </graphic>
                   </Button>
@@ -57,7 +55,7 @@
                      </font>
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <Image url="@../../../../../../../../../../../../src/main/resources/img/comments_64.png" />
+                           <Image url="@../../../../../../../../img/comments_64.png" />
                         </ImageView>
                      </graphic>
                   </Button>

@@ -34,8 +34,6 @@ public class Debathon {
     private AppCommunication appCommunication = null;
 
     private Debathon() {
-
-
         try {
             this.appCommunication = new AppCommunication();
             this.appCommunication.start();

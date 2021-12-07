@@ -4,18 +4,20 @@ import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewTuple;
 import fr.univlr.debathon.application.view.mainwindow.debate.DebateView;
+import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.MainViewScope;
+import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.CategoryViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
+import fr.univlr.debathon.job.db_project.jobclass.Category;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
 import fr.univlr.debathon.job.db_project.jobclass.Tag;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Platform;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.scene.layout.BorderPane;
@@ -28,9 +30,12 @@ public class DebateThumbnailViewModel extends ViewModel_SceneCycle {
 
     //Value
     private final StringProperty lblTitle_label = new SimpleStringProperty("/");
+    private final ObjectProperty<ViewTuple<CategoryView, CategoryViewModel>> category_value = new SimpleObjectProperty<>();
     private final ListProperty<ViewTuple<TagView, TagViewModel>> listTag_selected_value = new SimpleListProperty<>(FXCollections.observableArrayList());
+
     private final StringProperty lblNbPeople_value = new SimpleStringProperty("/");
 
+    private ChangeListener<Category> changeListener_category = null;
     private ListChangeListener<Tag> listChangeListener_tag = null;
 
     @InjectScope
@@ -61,6 +66,35 @@ public class DebateThumbnailViewModel extends ViewModel_SceneCycle {
         if (this.debate != null) {
             this.lblTitle_label.bind(this.debate.labelProperty());
 
+            if (this.debate.getCategory() != null) {
+                CategoryViewModel categoryViewModel = new CategoryViewModel(this.debate.getCategory());
+                final ViewTuple<CategoryView, CategoryViewModel> categoryViewTuple = FluentViewLoader.fxmlView(CategoryView.class)
+                        .viewModel(categoryViewModel)
+                        .load();
+
+                this.category_value.set(categoryViewTuple);
+            }
+
+            if (this.changeListener_category == null) {
+                this.changeListener_category = (observableValue, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        CategoryViewModel categoryViewModel = new CategoryViewModel(newValue);
+                        final ViewTuple<CategoryView, CategoryViewModel> categoryViewTuple = FluentViewLoader.fxmlView(CategoryView.class)
+                                .viewModel(categoryViewModel)
+                                .load();
+
+                        this.category_value.set(categoryViewTuple);
+
+                    } else {
+
+                        this.category_value.set(null);
+                    }
+                };
+                this.debate.categoryProperty().addListener(this.changeListener_category);
+            }
+
+            //-------------------------------
+
             this.debate.getListTag().forEach(tag ->
                     Platform.runLater(() -> {
                         if (tag != null) {
@@ -72,28 +106,31 @@ public class DebateThumbnailViewModel extends ViewModel_SceneCycle {
                             listTag_selected_value.add(tagViewTuple);
                         }
                     }));
-            this.listChangeListener_tag = change -> {
-                while (change.next()) {
-                    if (change.wasAdded()) {
-                        change.getAddedSubList().forEach(item ->
-                                Platform.runLater(() -> {
-                                    if (item != null) {
-                                        TagViewModel tagViewModel = new TagViewModel(item);
-                                        final ViewTuple<TagView, TagViewModel> tagViewTuple = FluentViewLoader.fxmlView(TagView.class)
-                                                .viewModel(tagViewModel)
-                                                .load();
 
-                                        listTag_selected_value.add(tagViewTuple);
-                                    }
-                                })
-                        );
-                    } else if (change.wasRemoved()) {
-                        change.getRemoved().forEach(item -> Platform.runLater(() -> listTag_selected_value.removeIf(tag -> tag.getViewModel().getTag().equals(item))));
+            if (this.listChangeListener_tag == null) {
+                this.listChangeListener_tag = change -> {
+                    while (change.next()) {
+                        if (change.wasAdded()) {
+                            change.getAddedSubList().forEach(item ->
+                                    Platform.runLater(() -> {
+                                        if (item != null) {
+                                            TagViewModel tagViewModel = new TagViewModel(item);
+                                            final ViewTuple<TagView, TagViewModel> tagViewTuple = FluentViewLoader.fxmlView(TagView.class)
+                                                    .viewModel(tagViewModel)
+                                                    .load();
+
+                                            listTag_selected_value.add(tagViewTuple);
+                                        }
+                                    })
+                            );
+                        } else if (change.wasRemoved()) {
+                            change.getRemoved().forEach(item -> Platform.runLater(() -> listTag_selected_value.removeIf(tag -> tag.getViewModel().getTag().equals(item))));
+                        }
                     }
-                }
-            };
-            this.debate.listTagProperty().addListener(this.listChangeListener_tag);
+                };
 
+                this.debate.listTagProperty().addListener(this.listChangeListener_tag);
+            }
         }
     }
 
@@ -104,6 +141,11 @@ public class DebateThumbnailViewModel extends ViewModel_SceneCycle {
 
         if (this.debate != null) {
             this.lblTitle_label.unbind();
+
+            if (this.changeListener_category != null) {
+                this.debate.categoryProperty().removeListener(this.changeListener_category);
+                this.changeListener_category = null;
+            }
 
             if (this.listChangeListener_tag != null) {
                 this.debate.listTagProperty().removeListener(this.listChangeListener_tag);
@@ -142,11 +184,22 @@ public class DebateThumbnailViewModel extends ViewModel_SceneCycle {
     }
 
     /**
+     * Property of the variable category_value.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link ObjectProperty} - return the property of the variable category_value.
+     */
+    public ObjectProperty<ViewTuple<CategoryView, CategoryViewModel>> category_valueProperty() {
+        return category_value;
+    }
+
+    /**
      * Property of the variable listTag_selected_value.
      *
      * @author Gaetan Brenckle
      *
-     * @return {@link StringProperty} - return the property of the variable listTag_selected_value.
+     * @return {@link ListProperty} - return the property of the variable listTag_selected_value.
      */
     public ListProperty<ViewTuple<TagView, TagViewModel>> listTag_selected_valueProperty() {
         return listTag_selected_value;
@@ -182,6 +235,5 @@ public class DebateThumbnailViewModel extends ViewModel_SceneCycle {
 
     @Override
     public void onViewRemoved_Cycle() {
-        unbindDebate();
     }
 }

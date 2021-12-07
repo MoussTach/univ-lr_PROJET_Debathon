@@ -2,14 +2,30 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
 
 <BorderPane prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.debate.DebateView">
    <top>
       <StackPane BorderPane.alignment="CENTER">
          <children>
             <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+            <BorderPane>
+               <right>
+                  <Button fx:id="btnShowStatMail" mnemonicParsing="false" onAction="#act_btnShowStatMail" style="-fx-background-radius: 10;" BorderPane.alignment="CENTER">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <Image url="@../../../../../../../img/documentWrite_64.png" />
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </right>
+               <padding>
+                  <Insets right="30.0" />
+               </padding>
+            </BorderPane>
             <Label fx:id="lblTitle" text="lblTitle" StackPane.alignment="CENTER">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -26,20 +42,43 @@
    </top>
    <center>
       <SplitPane dividerPositions="0.2" orientation="VERTICAL" BorderPane.alignment="CENTER">
-        <items>
-            <BorderPane />
-            <ScrollPane prefHeight="200.0" prefWidth="200.0">
+         <items>
+            <BorderPane>
+               <top>
+                  <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+                     <children>
+                        <HBox alignment="CENTER" maxWidth="600.0" VBox.vgrow="NEVER">
+                           <children>
+                              <FlowPane fx:id="flowCategory" alignment="CENTER" columnHalignment="CENTER" prefWidth="0.0" HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets bottom="2.0" left="3.0" right="3.0" top="4.0" />
+                                 </HBox.margin>
+                              </FlowPane>
+                              <Separator orientation="VERTICAL" />
+                              <FlowPane fx:id="flowTag" alignment="CENTER" columnHalignment="CENTER" HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets bottom="2.0" left="3.0" right="3.0" top="4.0" />
+                                 </HBox.margin>
+                              </FlowPane>
+                           </children>
+                        </HBox>
+                        <Separator maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </top>
+               <center>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" BorderPane.alignment="CENTER">
+                     <content>
+                        <WebView fx:id="webDebate" minHeight="-1.0" prefHeight="-1.0" prefWidth="-1.0" />
+                     </content>
+                  </ScrollPane>
+               </center></BorderPane>
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                <content>
-                 <FlowPane fx:id="flowQuestion" alignment="TOP_CENTER" columnHalignment="CENTER" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="20.0">
-                    <fx:include source="question/QuestionView.fxml" />
-                    <fx:include source="question/QuestionView.fxml" />
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                 </FlowPane>
+                  <VBox fx:id="vboxQuestion" alignment="CENTER" spacing="10.0" />
                </content>
             </ScrollPane>
-        </items>
+         </items>
       </SplitPane>
    </center>
 </BorderPane>

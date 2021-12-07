@@ -20,7 +20,7 @@
                   <Font name="Calibri Bold" size="14.0" />
                </font>
             </Label>
-            <FlowPane fx:id="flowCategories">
+            <FlowPane fx:id="flowCategories" alignment="CENTER" columnHalignment="CENTER" hgap="2.0" vgap="2.0">
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="2.0" />
                </VBox.margin>
@@ -37,7 +37,7 @@
                   <Font name="Calibri Bold" size="14.0" />
                </font>
             </Label>
-            <FlowPane fx:id="flowTags">
+            <FlowPane fx:id="flowTags" alignment="CENTER" columnHalignment="CENTER" hgap="2.0" vgap="2.0">
                <VBox.margin>
                   <Insets bottom="5.0" left="10.0" right="10.0" top="2.0" />
                </VBox.margin>

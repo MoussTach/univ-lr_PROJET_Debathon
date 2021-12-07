@@ -39,7 +39,7 @@ public class PDFdata {
             e.printStackTrace();
         }
 
-        }
+    }
 
     public static List<PDFquestion> getRequest1 (int debate_id) {
 
@@ -95,5 +95,31 @@ public class PDFdata {
 
     }
 
+
+    public static List<String> getEmail (int id_debate) {
+
+        List<String> list = new ArrayList<>();
+
+        String sql = "SELECT email FROM EMAIL_ROOM WHERE id_room = ?";
+
+
+
+        try {
+            PreparedStatement pstmt = PDFGenerator.c.prepareStatement(sql);
+
+            pstmt.setInt(1, id_debate);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next())
+                list.add(rs.getString("email"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+
+    }
 
 }

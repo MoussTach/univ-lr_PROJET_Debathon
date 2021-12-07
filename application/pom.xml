@@ -193,7 +193,7 @@
                             <classPath>
                                 <mainClass>fr.univlr.debathon.application.Main</mainClass>
                             </classPath>
-                            <icon>../src/main/resources/img/logo/Logo_univLR_64.ico</icon>
+                            <icon>../src/main/resources/img/logo/debathon_256.ico</icon>
                             <jre>
                                 <minVersion>1.8.0</minVersion>
                                 <initialHeapSize>512</initialHeapSize>

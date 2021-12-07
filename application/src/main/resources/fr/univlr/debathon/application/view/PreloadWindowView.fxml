@@ -10,7 +10,7 @@
            xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="fr.univlr.debathon.application.view.PreloadWindowView">
     <ImageView pickOnBounds="true" preserveRatio="true">
-        <Image url="@../../../../../../../../../src/main/resources/img/logo/Logo_univLR_256.png"/>
+        <Image url="@../../../../../../../../../src/main/resources/img/logo/debathon_512.png"/>
     </ImageView>
     <ProgressBar fx:id="progressBar_Preloader" maxWidth="1.7976931348623157E308" styleClass="changeBar-color">
         <padding>

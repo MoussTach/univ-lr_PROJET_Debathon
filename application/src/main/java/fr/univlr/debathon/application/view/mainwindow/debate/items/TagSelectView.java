@@ -42,8 +42,24 @@ public class TagSelectView extends FxmlView_SceneCycle<TagSelectViewModel> imple
         });
 
         //Value
-        this.listenerValue = (observableValue, oldValue, newValue) ->
-                this.tagSelectViewModel.addToList(newValue);
+        this.listenerValue = (observableValue, oldValue, newValue) -> {
+            if (Boolean.TRUE.equals(newValue)) {
+                tbtnTag.setStyle(
+                        String.format("-fx-background-color:%s;-fx-border-radius:%s;-fx-background-radius:%s;",
+                                "#BCBCBC",
+                                "10",
+                                "10"
+                        ));
+            } else {
+                tbtnTag.setStyle(
+                        String.format("-fx-background-color:%s;-fx-border-radius:%s;-fx-background-radius:%s;",
+                                "WHITE",
+                                "10",
+                                "10"
+                        ));
+            }
+            this.tagSelectViewModel.addToList(newValue);
+        };
         this.tbtnTag.selectedProperty().addListener(this.listenerValue);
     }
 

@@ -9,12 +9,15 @@
    <center>
        <StackPane BorderPane.alignment="CENTER">
            <BorderPane.margin>
-               <Insets bottom="3.0" left="4.0" right="4.0" top="3.0"/>
+               <Insets bottom="3.0" left="4.0" right="4.0" top="3.0" />
            </BorderPane.margin>
-           <Label fx:id="lblTag" text="lblTag">
+           <Label fx:id="lblTag" style="-fx-background-color: WHITE; -fx-background-radius: 10;" text="lblTag">
               <font>
-                  <Font name="Calibri Bold" size="14.0"/>
+                  <Font name="Calibri Bold" size="14.0" />
               </font>
+            <padding>
+               <Insets bottom="2.0" left="3.0" right="3.0" top="2.0" />
+            </padding>
            </Label>
        </StackPane>
    </center>

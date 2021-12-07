@@ -44,8 +44,24 @@ public class CategorySelectView extends FxmlView_SceneCycle<CategorySelectViewMo
         //Value
         tbtnCategory.setToggleGroup(this.categorySelectViewModel.getGroup());
 
-        this.listenerValue = (observableValue, oldValue, newValue) ->
-                this.categorySelectViewModel.addToList(newValue);
+        this.listenerValue = (observableValue, oldValue, newValue) -> {
+            if (Boolean.TRUE.equals(newValue)) {
+                tbtnCategory.setStyle(
+                        String.format("-fx-background-color:%s;-fx-border-radius:%s;-fx-background-radius:%s;",
+                                "#BCBCBC",
+                                "10",
+                                "10"
+                        ));
+            } else {
+                tbtnCategory.setStyle(
+                        String.format("-fx-background-color:%s;-fx-border-radius:%s;-fx-background-radius:%s;",
+                                "WHITE",
+                                "10",
+                                "10"
+                        ));
+            }
+            this.categorySelectViewModel.addToList(newValue);
+        };
         this.tbtnCategory.selectedProperty().addListener(this.listenerValue);
     }
 

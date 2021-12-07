@@ -61,7 +61,8 @@ public class PDFdata {
 
             ResultSet rs  = pstmt.executeQuery();
 
-            int id, pourcentage;
+            int id;
+            float  pourcentage;
             String label;
             while (rs.next()) {
                 id = rs.getInt("id_question");

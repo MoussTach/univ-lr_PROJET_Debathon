@@ -4,10 +4,15 @@ import javafx.scene.chart.PieChart;
 import org.jfree.data.general.PieDataset;
 
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.util.List;
 public class TestPdf {
+    /*
     public static void main(String[] args){
         //PDFGenerator pdfG = new PDFGenerator();
         //pdfG.getPDF();
@@ -21,5 +26,25 @@ public class TestPdf {
 
         gen.savePieAsPng("Question 1",data);
 
+    }
+    */
+
+
+    public static void main(String[] args) {
+        try {
+            PDFGenerator.c = DriverManager.getConnection("jdbc:sqlite:server/db_debathon.db"); //Creation connection on db
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+
+        List<PDFquestion> questions = PDFdata.getRequest1(1);
+        PDFGenerator generator = new PDFGenerator();
+        generator.getPDF(questions.get(0));
+        /*
+        for (PDFquestion question:questions) {
+            ChartGenerator.getInstance().genPieQuestion(question);
+        }*/
+        //chartGen.genPieQuestion(questions.get(0));
     }
 }

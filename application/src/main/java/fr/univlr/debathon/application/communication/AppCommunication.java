@@ -90,6 +90,27 @@ public class AppCommunication extends Thread implements Runnable {
 
             Room room = this.getUnserialisation(dataJson.get("rooms").get(i).toString(), Room.class);
             System.out.println("---" + room);
+
+            for (Tag tag : room.getListTag()) {
+                boolean _tag = true;
+                for (Tag t : Debathon.getInstance().getTags()) {
+                    if (t.getLabel().equals(tag.getLabel()))
+                        _tag = false;
+                }
+                if (_tag)
+                    Debathon.getInstance().getTags().add(tag);
+            }
+
+            boolean cat = true;
+            for (Category category : Debathon.getInstance().getCategories()) {
+                if (room.getCategory() != null && category.getLabel().equals(room.getCategory().getLabel()))
+                    cat = false;
+            }
+            if (cat)
+                Debathon.getInstance().getCategories().add(room.getCategory());
+
+
+
             Debathon.getInstance().getDebates().add(room);
         }
     }
@@ -227,7 +248,7 @@ public class AppCommunication extends Thread implements Runnable {
     }
     public void testRequestInsertNewRoom () throws JsonProcessingException {
         String key = AlphaNumericStringGenerator.getRandomString(6);
-        Category category = new Category(1, "Catégorie");
+        Category category = new Category(1, "Catégorie", "#000");
         List<Tag> listTag = new ArrayList<>();
         listTag.add(new Tag(1, "Oui", "couleur"));
         listTag.add(new Tag(2, "Tag", "couelurur"));

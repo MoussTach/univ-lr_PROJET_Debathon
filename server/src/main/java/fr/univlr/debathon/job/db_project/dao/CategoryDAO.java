@@ -40,7 +40,7 @@ public class CategoryDAO implements DAO<Category> {
     public List<Category> selectAll() throws SQLException {
         List<Category> categoryList = new ArrayList<>();
 
-        String sql = "SELECT idCategory, label FROM Category";
+        String sql = "SELECT idCategory, label, color FROM Category";
 
         try {
             PreparedStatement pstmt  = connection.prepareStatement(sql);
@@ -48,7 +48,7 @@ public class CategoryDAO implements DAO<Category> {
             ResultSet rs  = pstmt.executeQuery();
             
             while (rs.next()) {
-                categoryList.add(new Category(rs.getInt("idCategory"), rs.getString("label")));
+                categoryList.add(new Category(rs.getInt("idCategory"), rs.getString("label"), rs.getString("color")));
             }
 
         } catch (SQLException e) {
@@ -66,12 +66,13 @@ public class CategoryDAO implements DAO<Category> {
      * @throws SQLException - throw the exception to force a try catch when used.
      */
     public boolean insert(Category category) throws SQLException {
-        String sql = "INSERT INTO Category (idCategory, label) VALUES(?,?)";
+        String sql = "INSERT INTO Category (idCategory, label, color) VALUES(?,?,?)";
 
         try {
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, category.getId());
             pstmt.setString(2, category.getLabel());
+            pstmt.setString(3, category.getColor());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -90,12 +91,13 @@ public class CategoryDAO implements DAO<Category> {
      * @throws SQLException - throw the exception to force a try catch when used.
      */
     public boolean update(Category category) throws SQLException {
-        String sql = "UPDATE Category SET label = ? WHERE idCategory = ?";
+        String sql = "UPDATE Category SET label = ?, color = ? WHERE idCategory = ?";
         
         try {
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setInt(2, category.getId());
+            pstmt.setInt(3, category.getId());
             pstmt.setString(1, category.getLabel());
+            pstmt.setString(2, category.getColor());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -149,8 +151,8 @@ public class CategoryDAO implements DAO<Category> {
      */
     public Category select (int id) throws SQLException {
         Category category = null;
-        
-        String sql = "SELECT idCategory, label FROM Category WHERE idCategory = ?";
+
+        String sql = "SELECT idCategory, label, color FROM Category WHERE idCategory = ?";
 
         try {
              PreparedStatement pstmt  = connection.prepareStatement(sql);
@@ -160,7 +162,7 @@ public class CategoryDAO implements DAO<Category> {
             ResultSet rs  = pstmt.executeQuery();
             
             if (rs.next()) {
-                category = new Category (rs.getInt("idCategory"), rs.getString("label"));
+                category = new Category (rs.getInt("idCategory"), rs.getString("label"), rs.getString("color"));
             }
 
         } catch (SQLException e) {

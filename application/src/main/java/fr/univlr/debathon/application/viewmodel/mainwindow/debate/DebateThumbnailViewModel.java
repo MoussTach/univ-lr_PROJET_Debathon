@@ -45,6 +45,8 @@ public class DebateThumbnailViewModel extends ViewModel_SceneCycle {
     /**
      * Default constructor
      *
+     * @param debate {@link Room} - the debate associated to this view.
+     *
      * @author Gaetan Brenckle
      */
     public DebateThumbnailViewModel(Room debate) {

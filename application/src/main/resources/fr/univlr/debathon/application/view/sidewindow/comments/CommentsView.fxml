@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.sidewindow.comments.CommentsView">
+   <children>
+      <Label fx:id="lblCommentary" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="lblCommentary">
+         <font>
+            <Font name="Calibri" size="15.0" />
+         </font></Label>
+   </children>
+</StackPane>

@@ -5,9 +5,13 @@ import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewTuple;
+import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.mainwindow.debate.question.ResponseView;
+import fr.univlr.debathon.application.view.sidewindow.comments.CommentsView;
+import fr.univlr.debathon.application.view.sidewindow.comments.CommentsWindowsView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
+import fr.univlr.debathon.application.viewmodel.sidewindow.comments.CommentsWindowsViewModel;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.log.generate.CustomLogger;
@@ -18,6 +22,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 @ScopeProvider(scopes= {ResponseScope.class})
 public class QuestionViewModel extends ViewModel_SceneCycle {
@@ -139,7 +147,36 @@ public class QuestionViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[public][method] usage of QuestionViewModel.actvm_btnComments().");
         }
 
-        //TODO window comments
+        try {
+            CommentsWindowsViewModel commentsWindowsViewModel = new CommentsWindowsViewModel(this.question);
+            final ViewTuple<CommentsWindowsView, CommentsWindowsViewModel> commentsViewTuple = FluentViewLoader.fxmlView(CommentsWindowsView.class)
+                    .viewModel(commentsWindowsViewModel)
+                    .load();
+            final Scene scene = new Scene(commentsViewTuple.getView());
+            final Stage stage = new Stage();
+
+            if (this.question.getRoom() != null) {
+                stage.titleProperty().set(this.question.getRoom().getLabel());
+            }
+            stage.initModality(Modality.NONE);
+            stage.initOwner(Launch.PRIMARYSTAGE);
+
+            final Image ico = new Image(this.getClass().getResourceAsStream("/img/logo/debathon_512.png"));
+            stage.getIcons().add(ico);
+            stage.setScene(scene);
+
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("JavaFX information correctly loaded");
+            }
+
+            stage.show();
+
+        } catch (Exception e) {
+            if (LOGGER.isFatalEnabled()) {
+                LOGGER.fatal("FATAL ERROR - commentswindows can't be loaded", e);
+            }
+
+        }
     }
 
 

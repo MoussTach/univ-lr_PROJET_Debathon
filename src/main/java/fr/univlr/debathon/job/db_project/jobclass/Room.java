@@ -16,7 +16,6 @@ public class Room {
     private final StringProperty label = new SimpleStringProperty("/");
     private final StringProperty description = new SimpleStringProperty("/");
     private final StringProperty key = new SimpleStringProperty("/");
-    private final StringProperty mail = new SimpleStringProperty("/");
 
     private final BooleanProperty is_open = new SimpleBooleanProperty(false);
 
@@ -33,14 +32,13 @@ public class Room {
     public Room(){
 
     }
-    public Room(int id, String label, String description, String key, String mail,
+    public Room(int id, String label, String description, String key,
                 boolean is_open, LocalDate date_start, LocalDate date_end,
                 Category category, List<Tag> listTag, List<Question> questionList) {
         this.id.set(id);
         this.label.set(label);
         this.description.set(description);
         this.key.set(key);
-        this.mail.set(mail);
         this.is_open.set(is_open);
         this.date_start.set(date_start);
         this.date_end.set(date_end);
@@ -49,13 +47,12 @@ public class Room {
         this.listQuestions.addAll(questionList);
     }
 
-    public Room(String label, String description, String key, String mail,
+    public Room(String label, String description, String key,
                 Category category, List<Tag> listTag) {
         this.id.set(1);
         this.label.set(label);
         this.description.set(description);
         this.key.set(key);
-        this.mail.set(mail);
         this.is_open.set(true);
         this.date_start.set(null);
         this.date_end.set(null);
@@ -69,7 +66,6 @@ public class Room {
         this.label.set(clone.getLabel());
         this.description.set(clone.getDescription());
         this.key.set(clone.getKey());
-        this.mail.set(clone.getMail());
         this.is_open.set(clone.getIs_open());
         this.date_start.set(clone.getDate_start());
         this.date_end.set(clone.getDate_end());
@@ -93,10 +89,6 @@ public class Room {
 
     public String getKey() {
         return this.key.get();
-    }
-
-    public String getMail() {
-        return this.mail.get();
     }
 
     public boolean getIs_open() {
@@ -142,10 +134,6 @@ public class Room {
 
     public void setKey(String key) {
         this.key.set(key);
-    }
-
-    public void setMail(String mail) {
-        this.mail.set(mail);
     }
 
     public void setIs_open(boolean is_open) {
@@ -233,10 +221,6 @@ public class Room {
 
     public StringProperty keyProperty() {
         return key;
-    }
-
-    public StringProperty mailProperty() {
-        return mail;
     }
 
     public boolean isIs_open() {

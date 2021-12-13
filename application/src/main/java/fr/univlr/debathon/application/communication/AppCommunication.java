@@ -252,8 +252,7 @@ public class AppCommunication extends Thread implements Runnable {
         List<Tag> listTag = new ArrayList<>();
         listTag.add(new Tag(1, "Oui", "couleur"));
         listTag.add(new Tag(2, "Tag", "couelurur"));
-        Room room = new Room("Salon de Julien", "Ceci est un nouveau salon", key,
-                "mail@mail.mail", category, listTag);
+        Room room = new Room("Salon de Julien", "Ceci est un nouveau salon", key,  category, listTag);
 
         this.requestInsertNewRoom(room);
     }

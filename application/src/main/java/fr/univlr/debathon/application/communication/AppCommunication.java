@@ -352,7 +352,21 @@ public class AppCommunication extends Thread implements Runnable {
 
     }
 
+    public void sendEmail(int id_room, String email) throws  JsonProcessingException{
 
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+
+        //GET pour recup donnees au client
+        root.put("methods","MAIL");
+        //ROOM pour preciser la recup d'une room precise
+        root.put("request","NEW");
+        //id pour preciser l'id de la room
+        root.put("id",id_room);
+        root.put("email",email);
+        this.sendData(mapper, root);
+
+    }
 
     public void uselessFonction () {
         System.out.println("I'm useless");

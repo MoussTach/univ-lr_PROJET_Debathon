@@ -122,4 +122,26 @@ public class PDFdata {
 
     }
 
+
+
+    public static void insertNewEmail (int id_debate, String email) {
+
+        String sql = "INSERT INTO EMAIL_ROOM (id_room, email) VALUES (?,?)";
+
+
+
+        try {
+            PreparedStatement pstmt = Server.c.prepareStatement(sql);
+
+            pstmt.setInt(1, id_debate);
+            pstmt.setString(2, email);
+
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

@@ -89,13 +89,26 @@ public class UserInstance extends Thread implements Runnable {
             case "INSERT":
                 methodsINSERT (dataJson, data);
                 break;
-
+            case "MAIL":
+                methodsMAIL (dataJson, data);
+                break;
         }
 
     }
 
 
-    private void methodsUPDATE(Map dataJson, String data) throws SQLException, JsonProcessingException {
+    private void methodsMAIL(Map dataJson, String data) throws SQLException, JsonProcessingException {
+
+        switch ((String) dataJson.get("request")) {
+            case "NEW":
+                this.caseNEW_MAIL(data);
+                break;
+
+        }
+
+    }
+
+    private void methodsUPDATE (Map dataJson, String data) throws SQLException, JsonProcessingException {
 
         switch ((String) dataJson.get("request")) {
             case "HOME":
@@ -115,8 +128,6 @@ public class UserInstance extends Thread implements Runnable {
         }
 
     }
-
-
 
     public void methodsINSERT (Map dataJson, String data) throws SQLException, JsonProcessingException {
         switch ((String) dataJson.get("request")) {
@@ -271,6 +282,22 @@ public class UserInstance extends Thread implements Runnable {
 
         McqDAO mcqDAO = new McqDAO(Server.c);
         mcqDAO.updateNewLike(id);
+
+    }
+
+
+    // CASE MAIL
+
+    private void caseNEW_MAIL (String data) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode dataJson = objectMapper.readTree(data);
+
+        int id = dataJson.get("id").asInt();
+        String email = dataJson.get("email").asText();
+
+        PDFdata.insertNewEmail(id, email);
+
+        System.out.println("ceci est un test" + id + "   " + email);
 
     }
 

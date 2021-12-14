@@ -6,7 +6,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.web.*?>
 
-<TitledPane fx:id="titledCreate" alignment="CENTER" animated="false" collapsible="false" text="titledCreate" textAlignment="CENTER" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.debate.CreateDebateView">
+<TitledPane fx:id="titledCreate" alignment="CENTER" animated="false" collapsible="false" text="titledCreate" textAlignment="CENTER" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.CreateDebateView">
     <font>
         <Font name="Calibri" size="14.0" />
     </font>
@@ -51,6 +51,9 @@
                             <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                         </HBox.margin>
                     </Button>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
                 </HBox>
                 <VBox maxWidth="1.7976931348623157E308" spacing="5.0">
                     <Label fx:id="lblDescription" maxWidth="1.7976931348623157E308" text="lblDescription">
@@ -64,6 +67,20 @@
                         </VBox.margin>
                     </HTMLEditor>
                 </VBox>
+            <VBox layoutX="10.0" layoutY="11.0" maxWidth="1.7976931348623157E308" spacing="5.0">
+               <children>
+                  <Label fx:id="lblKey" maxWidth="1.7976931348623157E308" text="lblKey">
+                     <font>
+                        <Font name="Calibri" size="13.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="tfKey" maxWidth="1.7976931348623157E308">
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </TextField>
+               </children>
+            </VBox>
             </VBox>
         </center>
     </BorderPane>

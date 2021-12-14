@@ -33,7 +33,6 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
 
     //Header organizer
     @FXML private Label lblOrganizer;
-    @FXML private CheckBox chkShowCreatedDebate;
     @FXML private Button btnCreateNewDebate;
 
     //Header parameters
@@ -56,6 +55,8 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
     @FXML
     private void act_btnCreateNewDebate() {
         LOGGER.input(String.format("Press the button %s", btnCreateNewDebate.getId()));
+
+        this.homePageViewModel.actvm_CreateNewDebate(btnCreateNewDebate);
     }
 
     @FXML
@@ -76,14 +77,11 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
         tPaneParameters.textProperty().bind(this.homePageViewModel.tPaneParameters_labelProperty());
 
         lblOrganizer.textProperty().bind(this.homePageViewModel.lblOrganizer_labelProperty());
-        chkShowCreatedDebate.textProperty().bind(this.homePageViewModel.chkShowCreatedDebate_labelProperty());
         btnCreateNewDebate.textProperty().bind(this.homePageViewModel.btnCreateNewDebate_labelProperty());
 
         btnAddItem.textProperty().bind(this.homePageViewModel.btnAddTag_labelProperty());
 
         //Value
-        chkShowCreatedDebate.selectedProperty().bindBidirectional(this.homePageViewModel.chkShowCreatedDebate_valueProperty());
-
         this.changeListener_category = (observableValue, oldValue, newValue) -> {
             if (oldValue != null)
                 flowCategory.getChildren().remove(oldValue.getView());
@@ -149,14 +147,11 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
         tPaneParameters.textProperty().unbind();
 
         lblOrganizer.textProperty().unbind();
-        chkShowCreatedDebate.textProperty().unbind();
         btnCreateNewDebate.textProperty().unbind();
 
         btnAddItem.textProperty().unbind();
 
         //Value
-        chkShowCreatedDebate.selectedProperty().unbindBidirectional(this.homePageViewModel.chkShowCreatedDebate_valueProperty());
-
         tfSearch.textProperty().unbindBidirectional(this.homePageViewModel.tfSearch_valueProperty());
     }
 }

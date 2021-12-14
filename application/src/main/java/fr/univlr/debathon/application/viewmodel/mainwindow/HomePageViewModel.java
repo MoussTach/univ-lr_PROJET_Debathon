@@ -13,6 +13,7 @@ import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.mainwindow.SelectWindowView;
+import fr.univlr.debathon.application.view.mainwindow.CreateDebateView;
 import fr.univlr.debathon.application.view.mainwindow.debate.DebateThumbnailView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
@@ -35,7 +36,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
@@ -67,8 +67,6 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
 
     //Value
-    private final BooleanProperty chkShowCreatedDebate_value = new SimpleBooleanProperty(false);
-
     private final ObjectProperty<ViewTuple<CategoryView, CategoryViewModel> > category_selected_value = new SimpleObjectProperty<>();
     private final ListProperty<ViewTuple<TagView, TagViewModel> > listTag_selected_value = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final StringProperty tfSearch_value = new SimpleStringProperty();
@@ -118,6 +116,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     @InjectScope
     private SelectTagScope selectTagScope;
 
+    private PopOver popOver_createDebate;
     private PopOver popOver_selectItems;
 
 
@@ -142,6 +141,11 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     }
 
     public void initialize() {
+        popOver_createDebate = new PopOver(FluentViewLoader.fxmlView(CreateDebateView.class)
+                .load().getView());
+        popOver_createDebate.setDetachable(false);
+        popOver_createDebate.setArrowLocation(PopOver.ArrowLocation.TOP_CENTER);
+
         popOver_selectItems = new PopOver(FluentViewLoader.fxmlView(SelectWindowView.class)
                 .providedScopes(selectCategoryScope, selectTagScope)
                 .load().getView());
@@ -151,6 +155,10 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         Launch.APPLICATION_STOP.addListener(new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (popOver_createDebate != null) {
+                    popOver_createDebate.hide(Duration.millis(0));
+                }
+
                 if (popOver_selectItems != null) {
                     popOver_selectItems.hide(Duration.millis(0));
                 }
@@ -341,6 +349,25 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
 
     /**
+     * Show a popover to create debate.
+     *
+     * @author Gaetan Brenckle
+     * @param node - {@link Node} - node used to show the popover
+     */
+    public void actvm_CreateNewDebate(Node node) {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the HomePageViewModel.actvm_CreateNewDebate()");
+        }
+
+        if (popOver_createDebate.isShowing()) {
+            popOver_createDebate.hide();
+        } else {
+            popOver_createDebate.show(node);
+        }
+    }
+
+
+    /**
      * Show a popover to select categories and tags.
      *
      * @author Gaetan Brenckle
@@ -438,17 +465,6 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
 
     //Value
-    /**
-     * Property of the variable chkShowCreatedDebate_value.
-     *
-     * @author Gaetan Brenckle
-     *
-     * @return {@link BooleanProperty} - return the property of the variable chkShowCreatedDebate_value.
-     */
-    public BooleanProperty chkShowCreatedDebate_valueProperty() {
-        return chkShowCreatedDebate_value;
-    }
-
     /**
      * Property of the variable category_selected_value.
      *

@@ -141,7 +141,7 @@ public class Launch extends Application {
         PRIMARYSTAGE = primaryStage;
 
         final ViewTuple<MainWindowView, MainWindowViewModel> MainWindowViewTuple = FluentViewLoader.fxmlView(MainWindowView.class).load();
-        final Scene scene = new Scene(MainWindowViewTuple.getView(), 800.0D, 600.0D);
+        final Scene scene = new Scene(MainWindowViewTuple.getView(), 1100.0D, 900.0D);
 
         primaryStage.setTitle("Debathon - application");
         final Image ico = new Image(getClass().getResourceAsStream("/img/logo/debathon_512.png"));

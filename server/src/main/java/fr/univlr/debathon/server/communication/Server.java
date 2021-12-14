@@ -1,5 +1,7 @@
 package fr.univlr.debathon.server;
 
+import fr.univlr.debathon.server.communication.UserInstance;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
@@ -14,7 +16,7 @@ public class Server {
     static final int taille = 8192;
     static final byte buffer[] = new byte[taille];
 
-    public static Connection c = null;
+    public static Connection CONNECTION = null;
     static String db_name = "server/db_debathon.db";
     protected static List<UserInstance> userInstanceList = new ArrayList<>();
 
@@ -25,8 +27,8 @@ public class Server {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:" + db_name); //Creation connection on db
-            c.setAutoCommit(true);
+            CONNECTION = DriverManager.getConnection("jdbc:sqlite:" + db_name); //Creation connection on db
+            CONNECTION.setAutoCommit(true);
             System.out.println("Opened database successfully");
 
             serverSocket = new ServerSocket(9878);

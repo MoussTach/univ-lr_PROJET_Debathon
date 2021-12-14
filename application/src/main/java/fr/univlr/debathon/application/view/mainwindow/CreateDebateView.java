@@ -43,17 +43,19 @@ public class CreateDebateView extends FxmlView_SceneCycle<CreateDebateViewModel>
     private void act_btnAddItem() {
         LOGGER.input(String.format("Press the button %s", btnAddItem.getId()));
 
-        //TODO addItem
+        this.createDebateViewModel.actvm_AddItem(btnAddItem);
     }
 
     @FXML
     private void act_btnValid() {
         LOGGER.input(String.format("Press the button %s", btnValid.getId()));
 
-        //TODO valid
-
         //htmlEditor doesn't have a binding
         this.createDebateViewModel.htmlEditorDescription_valueProperty().set(this.htmlEditorDescription.getHtmlText());
+
+        this.createDebateViewModel.actvm_ValidCreateDebate();
+
+        this.createDebateViewModel.htmlEditorDescription_valueProperty().set("");
     }
 
 

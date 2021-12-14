@@ -2,8 +2,6 @@ package fr.univlr.debathon.application.view.sidewindow.comments;
 
 import de.saxsys.mvvmfx.InjectViewModel;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
-import fr.univlr.debathon.application.view.mainwindow.debate.InscriptionStatView;
-import fr.univlr.debathon.application.viewmodel.mainwindow.debate.DebateThumbnailViewModel;
 import fr.univlr.debathon.application.viewmodel.sidewindow.comments.CommentsWindowsViewModel;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.fxml.FXML;

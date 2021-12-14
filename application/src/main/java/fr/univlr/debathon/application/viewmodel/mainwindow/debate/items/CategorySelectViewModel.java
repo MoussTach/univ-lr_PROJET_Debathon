@@ -71,7 +71,8 @@ public class CategorySelectViewModel extends ViewModel_SceneCycle {
         if (value) {
             this.selectCategoryScope.selectedCategoryProperty().set(this.category);
         } else {
-            if (this.selectCategoryScope.selectedCategoryProperty().get().equals(this.category)) {
+            if (this.selectCategoryScope.selectedCategoryProperty().get() != null
+                    && this.selectCategoryScope.selectedCategoryProperty().get().equals(this.category)) {
                 this.selectCategoryScope.selectedCategoryProperty().set(null);
             }
         }

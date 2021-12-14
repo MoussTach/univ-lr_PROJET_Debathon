@@ -1,8 +1,8 @@
-package fr.univlr.debathon.application.communication;
+package fr.univlr.debathon.tools;
 
-class AlphaNumericStringGenerator {
+public class AlphaNumericStringGenerator {
 
-    static String getRandomString(int i) {
+    public static String getRandomString(int i) {
         String theAlphaNumericS;
         StringBuilder builder;
 

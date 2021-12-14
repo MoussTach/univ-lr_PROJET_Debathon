@@ -1,4 +1,4 @@
-package fr.univlr.debathon.server;
+package fr.univlr.debathon.server.pdf;
 
 import java.util.HashMap;
 import java.util.Map;

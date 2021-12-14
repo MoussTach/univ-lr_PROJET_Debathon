@@ -1,6 +1,6 @@
 package com.sun.javafx.scene.control.skin;
 
-import fr.univlr.debathon.application.taskmanager.Task_Custom;
+import fr.univlr.debathon.taskmanager.Task_Custom;
 import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;

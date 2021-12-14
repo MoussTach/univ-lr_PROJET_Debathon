@@ -38,10 +38,25 @@
             <artifactId>itextpdf</artifactId>
             <version>5.3.4</version>
         </dependency>
+
         <dependency>
             <groupId>jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.13</version>
+        </dependency>
+
+        <!-- ********************************************************
+                            Mails
+        ******************************************************** -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
+            <version>2.0.1</version>
         </dependency>
 
     </dependencies>
@@ -84,7 +99,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>fr.univlr.debathon.server.Server</mainClass>
+                    <mainClass>fr.univlr.debathon.server.communication.Server</mainClass>
                 </configuration>
             </plugin-->
             <plugin>
@@ -97,7 +112,7 @@
                     </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>fr.univlr.debathon.server.Server</mainClass>
+                            <mainClass>fr.univlr.debathon.server.communication.Server</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -120,7 +135,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>fr.univlr.debathon.server.Server</mainClass>
+                            <mainClass>fr.univlr.debathon.server.communication.Server</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Class-Path>. ${dll-directory}</Class-Path>
@@ -135,7 +150,7 @@
                 <version>8.8.3</version>
                 <configuration>
                     <launcherArguments>${arg-java-config}</launcherArguments>
-                    <mainClass>fr.univlr.debathon.server.Server</mainClass>
+                    <mainClass>fr.univlr.debathon.server.communication.Server</mainClass>
                 </configuration>
             </plugin>
 
@@ -175,7 +190,7 @@
                             <dontWrapJar>false</dontWrapJar>
                             <errTitle>Error in launch4j plugin</errTitle>
                             <classPath>
-                                <mainClass>fr.univlr.debathon.server.Server</mainClass>
+                                <mainClass>fr.univlr.debathon.server.communication.Server</mainClass>
                             </classPath>
                             <icon>../src/main/resources/img/logo/debathon_256.ico</icon>
                             <jre>

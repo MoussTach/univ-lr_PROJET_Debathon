@@ -1,4 +1,4 @@
-package fr.univlr.debathon.server;
+package fr.univlr.debathon.server.communication;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -15,17 +15,16 @@ import fr.univlr.debathon.job.db_project.jobclass.Comment;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
+import fr.univlr.debathon.server.pdf.PDFdata;
 import org.hildan.fxgson.FxGson;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -164,7 +163,7 @@ public class UserInstance extends Thread implements Runnable {
     private void caseGetHOME(Map data) throws SQLException, JsonProcessingException {
         this.whereIam = -1;
         try {
-            RoomDAO roomDAO = new RoomDAO(Server.c);
+            RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
             List<Room> list = roomDAO.selectAll();
 
             ObjectNode root = objectMapper.createObjectNode();
@@ -191,12 +190,12 @@ public class UserInstance extends Thread implements Runnable {
         ArrayNode room = rootRoom.putArray("room_selected");
         ArrayNode mcq = rootRoom.putArray("mcq");
 
-        RoomDAO roomDAO = new RoomDAO(Server.c);
+        RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
         //Selection de la room avec son id
         Room roomSelected = roomDAO.select((int) data.get("id"));
         room.addPOJO(roomSelected);
 
-        McqDAO mcqDAO = new McqDAO(Server.c);
+        McqDAO mcqDAO = new McqDAO(Server.CONNECTION);
         List<Mcq> mcqList = mcqDAO.selectMcqByIdSalon(roomSelected.getId());
         mcq.addPOJO(mcqList);
 
@@ -213,7 +212,7 @@ public class UserInstance extends Thread implements Runnable {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
-        RoomDAO roomDAO = new RoomDAO(Server.c);
+        RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
 
         Room room = this.getUnserialisation(dataJson.get("new_room").get(0).toString(), Room.class);
 
@@ -230,7 +229,7 @@ public class UserInstance extends Thread implements Runnable {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
 
-        QuestionDAO questionDAO = new QuestionDAO(Server.c);
+        QuestionDAO questionDAO = new QuestionDAO(Server.CONNECTION);
 
         Question question = this.getUnserialisation(dataJson.get("new_question").get(0).toString(), Question.class);
 
@@ -244,7 +243,7 @@ public class UserInstance extends Thread implements Runnable {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
 
-        CommentDAO commentDAO = new CommentDAO(Server.c);
+        CommentDAO commentDAO = new CommentDAO(Server.CONNECTION);
 
         Comment comment = this.getUnserialisation(dataJson.get("new_comment").get(0).toString(), Comment.class);
 
@@ -259,7 +258,7 @@ public class UserInstance extends Thread implements Runnable {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
 
-        McqDAO mcqDAO = new McqDAO(Server.c);
+        McqDAO mcqDAO = new McqDAO(Server.CONNECTION);
 
         Mcq mcq = this.getUnserialisation(dataJson.get("new_mcq").get(0).toString(), Mcq.class);
 
@@ -280,7 +279,7 @@ public class UserInstance extends Thread implements Runnable {
 
         int id = dataJson.get("id").asInt();
 
-        McqDAO mcqDAO = new McqDAO(Server.c);
+        McqDAO mcqDAO = new McqDAO(Server.CONNECTION);
         mcqDAO.updateNewLike(id);
 
     }
@@ -327,39 +326,39 @@ public class UserInstance extends Thread implements Runnable {
 
 
     public void sendNewComment (Comment comment) throws JsonProcessingException {
-        for (UserInstance ui : Server.userInstanceList) {
+        for (UserInstance ui : Server.USERINSTANCELIST) {
             if (ui != null && ui.getWhereIam() == comment.getRoom().getId()) {
                 ui.sendData(this.getObjetNode("NEWCOMMENT", "new_comment", comment));
             }
         }
     }
     private void testSendNewComment() throws SQLException, JsonProcessingException {
-        CommentDAO commentDAO = new CommentDAO(Server.c);
+        CommentDAO commentDAO = new CommentDAO(Server.CONNECTION);
         this.sendNewComment(commentDAO.select(1));
     }
 
 
     public void sendNewQuestion (Question question) throws JsonProcessingException {
-        for (UserInstance ui : Server.userInstanceList) {
+        for (UserInstance ui : Server.USERINSTANCELIST) {
             if (ui != null && ui.getWhereIam() == question.getRoom().getId()) {
                 ui.sendData(this.getObjetNode("NEWQUESTION", "new_question", question));
             }
         }
     }
     private void testSendNewQuestion () throws SQLException, JsonProcessingException {
-        QuestionDAO questionDAO = new QuestionDAO(Server.c);
+        QuestionDAO questionDAO = new QuestionDAO(Server.CONNECTION);
         this.sendNewQuestion(questionDAO.select(1));
     }
 
     public void sendNewRoom (Room room) throws JsonProcessingException {
-        for (UserInstance ui : Server.userInstanceList) {
+        for (UserInstance ui : Server.USERINSTANCELIST) {
             if (ui != null && ui.getWhereIam() == -1)
                 System.out.println("------> " + ui.getName());
                 ui.sendData(this.getObjetNode("NEWROOM", "new_room", room));
         }
     }
     private void testSendNewRoom () throws SQLException, JsonProcessingException {
-        RoomDAO roomDAO = new RoomDAO(Server.c);
+        RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
         this.sendNewRoom(roomDAO.select(1));
     }
 
@@ -398,7 +397,7 @@ public class UserInstance extends Thread implements Runnable {
                 data = in.readLine();
             }
             System.out.println("Server out of service");
-            Server.userInstanceList.remove(this);
+            Server.USERINSTANCELIST.remove(this);
             // out.close();
         } catch (IOException | SQLException e) {
             e.printStackTrace();

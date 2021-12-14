@@ -38,8 +38,6 @@ public class MainWindowView extends FxmlView_SceneCycle<MainWindowViewModel> imp
 
     @FXML
     public StatusBar statusBarMainView;
-    @FXML
-    public Button btnExternalTask_MainView;
 
     @InjectViewModel
     private MainWindowViewModel mainWindowViewModel;
@@ -69,18 +67,6 @@ public class MainWindowView extends FxmlView_SceneCycle<MainWindowViewModel> imp
         LOGGER.input(String.format("Press the button %s", btnHome.getId()));
 
         this.mainWindowViewModel.actvm_btnHome();
-    }
-
-    /**
-     * action of the button btnExternalTask_MainView when pressed.
-     *
-     * @author Gaetan Brenckle
-     */
-    @FXML
-    public void act_btnExternalTask_MainView() {
-        LOGGER.input(String.format("Press the button %s", btnExternalTask_MainView.getId()));
-
-        mainWindowViewModel.actvm_openTaskExternal();
     }
 
 

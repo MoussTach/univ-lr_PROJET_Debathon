@@ -1,4 +1,4 @@
-package fr.univlr.debathon.server;
+package fr.univlr.debathon.server.pdf;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfContentByte;

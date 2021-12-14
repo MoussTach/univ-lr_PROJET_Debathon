@@ -1,15 +1,12 @@
-package fr.univlr.debathon.server;
+package fr.univlr.debathon.server.pdf;
 
-import javafx.scene.chart.PieChart;
-import org.jfree.data.general.PieDataset;
+import fr.univlr.debathon.server.pdf.PDFGenerator;
+import fr.univlr.debathon.server.pdf.PDFdata;
+import fr.univlr.debathon.server.pdf.PDFquestion;
 
-import java.awt.*;
 import java.io.FileNotFoundException;
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import java.util.List;
 public class TestPdf {

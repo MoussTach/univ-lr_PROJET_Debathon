@@ -1,4 +1,4 @@
-package fr.univlr.debathon.server;
+package fr.univlr.debathon.server.communication;
 
 import java.util.ArrayList;
 import java.util.HashMap;

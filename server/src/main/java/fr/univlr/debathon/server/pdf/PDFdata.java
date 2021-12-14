@@ -1,4 +1,6 @@
-package fr.univlr.debathon.server;
+package fr.univlr.debathon.server.pdf;
+
+import fr.univlr.debathon.server.communication.Server;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -129,7 +131,7 @@ public class PDFdata {
         String sql = "INSERT INTO EMAIL_ROOM (id_room, email) VALUES (?,?)";
 
         try {
-            PreparedStatement pstmt = Server.c.prepareStatement(sql);
+            PreparedStatement pstmt = Server.CONNECTION.prepareStatement(sql);
 
             pstmt.setInt(1, id_debate);
             pstmt.setString(2, email);

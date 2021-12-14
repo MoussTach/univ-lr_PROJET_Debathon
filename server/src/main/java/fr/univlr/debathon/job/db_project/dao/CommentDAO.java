@@ -4,6 +4,7 @@ import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.Comment;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
+import fr.univlr.debathon.log.generate.CustomLogger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +17,9 @@ import java.util.Map;
 public class CommentDAO implements DAO<Comment> {
 
 	private Connection connection;
-	
+
+	private static final CustomLogger LOGGER = CustomLogger.create(CategoryDAO.class.getName());
+
 	public CommentDAO(Connection conn) {
 		this.connection = conn;
 	}
@@ -66,9 +69,11 @@ public class CommentDAO implements DAO<Comment> {
 		    	);
 		    }
 			
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		
 		return commentList;
@@ -115,10 +120,12 @@ public class CommentDAO implements DAO<Comment> {
 		    		)
 		    	);
 		    }
-			
+			pstmt.close();
 			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		
 		return commentList;
@@ -168,10 +175,12 @@ public class CommentDAO implements DAO<Comment> {
 						)
 				);
 			}
-
+			pstmt.close();
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 
 		return commentList;
@@ -200,9 +209,12 @@ public class CommentDAO implements DAO<Comment> {
 			pstmt.setInt(5, comment.getUser().getId());
 			
 			pstmt.executeUpdate();
-			
+
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -232,11 +244,13 @@ public class CommentDAO implements DAO<Comment> {
 			pstmt.setInt(5, comment.getUser().getId());
 
 			pstmt.executeUpdate();
-
+			pstmt.close();
 			return this.selectByCommentAndUser(comment.getComment(), comment.getUser().getId());
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return -1;
 		}
 
@@ -263,9 +277,11 @@ public class CommentDAO implements DAO<Comment> {
 			pstmt.setInt(8, comment.getId());
 			
 			pstmt.executeUpdate();
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -283,8 +299,12 @@ public class CommentDAO implements DAO<Comment> {
 			pstmt.setInt(1, comment.getId());
 			
 			pstmt.executeUpdate();
+
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -293,7 +313,6 @@ public class CommentDAO implements DAO<Comment> {
 
 	@Override
 	public List<Comment> selectByMultiCondition(Map<String, String> map) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -335,10 +354,12 @@ public class CommentDAO implements DAO<Comment> {
 		   			userDAO.select(rs.getInt("id_user"))
 		   		);
 		    }
-			
+			pstmt.close();
 			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		
 		return comment;
@@ -362,10 +383,11 @@ public class CommentDAO implements DAO<Comment> {
 
 				return rs.getInt("idComment");
 			}
-
-
+			pstmt.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return -1;
 		}
 

@@ -5,22 +5,28 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.Objects;
+
 public class Category {
     private final IntegerProperty id = new SimpleIntegerProperty(-1);
     private final StringProperty label = new SimpleStringProperty("/");
+    private final StringProperty color = new SimpleStringProperty("#ffffff");
+
 
     public Category(){
 
     }
 
-    public Category(int id, String label) {
+    public Category(int id, String label, String color) {
         this.id.set(id);
         this.label.set(label);
+        this.color.set(color);
     }
 
     public Category (Category clone) {
         this.id.set(clone.getId ());
         this.label.set(clone.getLabel ());
+        this.color.set(clone.getColor());
     }
 
 
@@ -32,6 +38,8 @@ public class Category {
     public int getId() {
         return this.id.get();
     }
+
+    public String getColor () { return this.color.get(); }
 
 
     //Setter
@@ -54,11 +62,24 @@ public class Category {
     }
 
 
+    public StringProperty colorProperty() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color.set(color);
+    }
+
     @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", label=" + label +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return Objects.equals(id, category.id) && Objects.equals(label, category.label) && Objects.equals(color, category.color);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, label, color);
     }
 }

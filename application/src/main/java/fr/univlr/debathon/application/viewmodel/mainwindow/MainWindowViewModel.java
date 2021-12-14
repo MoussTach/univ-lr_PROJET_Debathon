@@ -93,7 +93,7 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
                 stage.titleProperty().bind(this.taskWindow_title_);
                 stage.initOwner(Launch.PRIMARYSTAGE);
 
-                final Image ico = new Image(this.getClass().getResourceAsStream("/img/logo/Logo_univLR_64.png"));
+                final Image ico = new Image(this.getClass().getResourceAsStream("/img/logo/debathon_512.png"));
                 stage.getIcons().add(ico);
                 stage.setScene(scene);
 

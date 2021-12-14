@@ -7,22 +7,33 @@ import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
 import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
+import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.communication.Debathon;
+import fr.univlr.debathon.application.view.mainwindow.SelectWindowView;
+import fr.univlr.debathon.application.view.mainwindow.debate.InscriptionStatView;
+import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
 import fr.univlr.debathon.application.view.mainwindow.debate.question.QuestionView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.MainViewScope;
+import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.CategoryViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.QuestionViewModel;
+import fr.univlr.debathon.job.db_project.jobclass.Category;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
 import fr.univlr.debathon.job.db_project.jobclass.Tag;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
+import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
 
 public class DebateViewModel extends ViewModel_SceneCycle {
 
@@ -34,8 +45,10 @@ public class DebateViewModel extends ViewModel_SceneCycle {
 
     //Text
     private final StringProperty lblTitle_label = new SimpleStringProperty("/");
+    private final StringProperty description_htmlText = new SimpleStringProperty("/");
 
     //Value
+    private final ObjectProperty<ViewTuple<CategoryView, CategoryViewModel> > category_value = new SimpleObjectProperty<>();
     private final ListProperty<ViewTuple<TagView, TagViewModel> > listTag_value = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     private final ListProperty<ViewTuple<QuestionView, QuestionViewModel> > listQuestion_value = new SimpleListProperty<>(FXCollections.observableArrayList());
@@ -52,11 +65,15 @@ public class DebateViewModel extends ViewModel_SceneCycle {
         }
     }, true);
 
+    private ChangeListener<Category> changeListener_category = null;
     private ListChangeListener<Tag> listChangeListener_tag = null;
     private ListChangeListener<Question> listChangeListener_question = null;
 
     @InjectScope
     private MainViewScope mainViewScope;
+
+    private PopOver popOver_statMail;
+
 
     /**
      * Default constructor
@@ -69,9 +86,24 @@ public class DebateViewModel extends ViewModel_SceneCycle {
         }
 
         this.debate = debate;
+
+        popOver_statMail = new PopOver(FluentViewLoader.fxmlView(InscriptionStatView.class)
+                .load().getView());
+        popOver_statMail.setDetachable(false);
+        popOver_statMail.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
+
+        Launch.APPLICATION_STOP.addListener(new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (popOver_statMail != null) {
+                    popOver_statMail.hide(Duration.millis(0));
+                }
+                Launch.APPLICATION_STOP.removeListener(this);
+            }
+        });
+
         this.bindDebate();
     }
-
 
     private void bindDebate() {
         if (LOGGER.isTraceEnabled()) {
@@ -79,7 +111,28 @@ public class DebateViewModel extends ViewModel_SceneCycle {
         }
 
         if (this.debate != null) {
-            this.lblTitle_label.bind(debate.labelProperty());
+            this.lblTitle_label.bind(this.debate.labelProperty());
+            this.description_htmlText.bind(this.debate.descriptionProperty());
+
+            if (this.debate.getCategory() != null) {
+                CategoryViewModel categoryViewModel = new CategoryViewModel(this.debate.getCategory());
+                final ViewTuple<CategoryView, CategoryViewModel> categoryViewTuple = FluentViewLoader.fxmlView(CategoryView.class)
+                        .viewModel(categoryViewModel)
+                        .load();
+                this.category_value.set(categoryViewTuple);
+            }
+            this.changeListener_category = (observableValue, oldValue, newValue) -> {
+                if (newValue != null) {
+                    CategoryViewModel categoryViewModel = new CategoryViewModel(newValue);
+                    final ViewTuple<CategoryView, CategoryViewModel> categoryViewTuple = FluentViewLoader.fxmlView(CategoryView.class)
+                            .viewModel(categoryViewModel)
+                            .load();
+                    this.category_value.set(categoryViewTuple);
+                } else {
+                    this.category_value.set(null);
+                }
+            };
+            this.debate.categoryProperty().addListener(this.changeListener_category);
 
             this.debate.getListTag().forEach(tag ->
                     Platform.runLater(() -> {
@@ -165,6 +218,12 @@ public class DebateViewModel extends ViewModel_SceneCycle {
         if (this.debate != null) {
 
             this.lblTitle_label.unbind();
+            this.description_htmlText.unbind();
+
+            if (this.changeListener_category != null) {
+                this.debate.categoryProperty().removeListener(this.changeListener_category);
+                this.changeListener_category = null;
+            }
 
             if (this.listChangeListener_tag != null) {
                 this.debate.listTagProperty().removeListener(this.listChangeListener_tag);
@@ -175,6 +234,25 @@ public class DebateViewModel extends ViewModel_SceneCycle {
                 this.debate.listQuestionsProperty().removeListener(this.listChangeListener_question);
                 this.listChangeListener_question = null;
             }
+        }
+    }
+
+
+    /**
+     * Show a popover to select categories and tags.
+     *
+     * @author Gaetan Brenckle
+     * @param node - {@link Node} - node used to show the popover
+     */
+    public void actvm_showStatMail(Node node) {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the HomePageViewModel.actvm_createAddItem()");
+        }
+
+        if (popOver_statMail.isShowing()) {
+            popOver_statMail.hide();
+        } else {
+            popOver_statMail.show(node);
         }
     }
 
@@ -201,6 +279,28 @@ public class DebateViewModel extends ViewModel_SceneCycle {
         return lblTitle_label;
     }
 
+    /**
+     * Property of the variable description_htmlText.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link StringProperty} - return the property of the variable description_htmlText.
+     */
+    public StringProperty description_htmlTextProperty() {
+        return description_htmlText;
+    }
+
+
+    /**
+     * Property of the variable category_value.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link ObjectProperty} - return the property of the variable category_value.
+     */
+    public ObjectProperty<ViewTuple<CategoryView, CategoryViewModel>> category_valueProperty() {
+        return category_value;
+    }
 
     /**
      * Property of the variable listTag_value.
@@ -240,8 +340,6 @@ public class DebateViewModel extends ViewModel_SceneCycle {
     @Override
     public void onViewAdded_Cycle() {
 
-        //TODO
-        System.out.println("OnView debate");
         this.mainViewScope.prevCommandProperty().set(this.mainViewScope.currentCommandProperty().get());
         this.mainViewScope.currentCommandProperty().set(new CompositeCommand());
         this.mainViewScope.currentCommandProperty().get().register(this.prevCommand);

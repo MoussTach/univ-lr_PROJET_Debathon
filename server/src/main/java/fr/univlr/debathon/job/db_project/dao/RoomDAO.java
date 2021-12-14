@@ -3,6 +3,7 @@ package fr.univlr.debathon.job.db_project.dao;
 import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
+import fr.univlr.debathon.log.generate.CustomLogger;
 import fr.univlr.debathon.server.Server;
 
 import java.sql.Connection;
@@ -18,7 +19,9 @@ import java.util.Map;
 public class RoomDAO implements DAO<Room> {
 
 	private Connection connection;
-	
+
+	private static final CustomLogger LOGGER = CustomLogger.create(RoomDAO.class.getName());
+
 	public RoomDAO(Connection conn) {
 		this.connection = conn;
 	}
@@ -47,13 +50,15 @@ public class RoomDAO implements DAO<Room> {
 			while (rs.next()) {
 
 				listRoom.add(new Room(rs.getInt("idRoom"), rs.getString("label"), rs.getString("description"),
-										rs.getString("key"), rs.getString("mail"), rs.getBoolean("is_open"), 
+										rs.getString("key"), rs.getBoolean("is_open"),
 										null, null, categoryDAO.select(rs.getInt("id_category")),
 										tagDAO.selectByIdRoom(rs.getInt("idRoom")), questionDAO.selectByIdSalon(rs.getInt("idRoom"))));
 			}
-			
+			pstmt.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 
 		return listRoom;
@@ -64,7 +69,7 @@ public class RoomDAO implements DAO<Room> {
 	@Override
 	public boolean insert(Room room) throws SQLException {
 
-		String sql = "INSERT INTO Room values (?,?,?,?,?)";
+		String sql = "INSERT INTO Room values (?,?,?,?)";
 		
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -72,15 +77,16 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setString(1, room.getLabel());
 			pstmt.setString(2, room.getDescription());
 			pstmt.setString(3, room.getKey());
-			pstmt.setString(4, room.getMail());
-			pstmt.setInt(5, room.getCategory().getId());
+			pstmt.setInt(4, room.getCategory().getId());
 
 			pstmt.executeUpdate();
 
-
+			pstmt.close();
 			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -90,7 +96,7 @@ public class RoomDAO implements DAO<Room> {
 
 	public Room insertAndGetId(Room room) throws SQLException {
 
-		String sql = "INSERT INTO Room (label, description, key, mail, id_category) values (?,?,?,?,?)";
+		String sql = "INSERT INTO Room (label, description, key, id_category) values (?,?,?,?)";
 
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -98,16 +104,16 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setString(1, room.getLabel());
 			pstmt.setString(2, room.getDescription());
 			pstmt.setString(3, room.getKey());
-			pstmt.setString(4, room.getMail());
-			pstmt.setInt(5, room.getCategory().getId());
+			pstmt.setInt(4, room.getCategory().getId());
 
 			pstmt.executeUpdate();
-
+			pstmt.close();
 			return this.selectByKey(room.getKey());
 
-
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return null;
 		}
 
@@ -116,7 +122,7 @@ public class RoomDAO implements DAO<Room> {
 	@Override
 	public boolean update(Room room) throws SQLException {
 
-		String sql = "UPDATE Room SET label=?, description=?, key=?, mail=?, is_open=?, date_start=?, date_end=?, id_category=? WHERE idRoom=?";
+		String sql = "UPDATE Room SET label=?, description=?, key=?, is_open=?, date_start=?, date_end=?, id_category=? WHERE idRoom=?";
 		
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -124,17 +130,18 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setString(1, room.getLabel());
 			pstmt.setString(2, room.getDescription());
 			pstmt.setString(3, room.getKey());
-			pstmt.setString(4, room.getMail());
-			pstmt.setBoolean(5, room.getIs_open());
-			pstmt.setDate(6, Date.valueOf(room.getDate_start()));
-			pstmt.setDate(7, Date.valueOf(room.getDate_end()));
-			pstmt.setInt(8, room.getCategory().getId());
-			pstmt.setInt(9, room.getId());
+			pstmt.setBoolean(4, room.getIs_open());
+			pstmt.setDate(5, Date.valueOf(room.getDate_start()));
+			pstmt.setDate(6, Date.valueOf(room.getDate_end()));
+			pstmt.setInt(7, room.getCategory().getId());
+			pstmt.setInt(8, room.getId());
 			
 			pstmt.execute();
-
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 
@@ -153,9 +160,11 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setInt(1, room.getId());
 			
 			pstmt.executeUpdate();
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -164,7 +173,6 @@ public class RoomDAO implements DAO<Room> {
 
 	@Override
 	public List<Room> selectByMultiCondition(Map<String, String> map) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -190,13 +198,15 @@ public class RoomDAO implements DAO<Room> {
 				room = new Room();
 				room.setId(rs.getInt("idRoom"));
 				room = new Room(rs.getInt("idRoom"), rs.getString("label"), rs.getString("description"), 
-						rs.getString("key"), rs.getString("mail"), rs.getBoolean("is_open"), 
+						rs.getString("key"), rs.getBoolean("is_open"),
 						null, null, categoryDAO.select(rs.getInt("id_category")),
 						tagDAO.selectByIdRoom(rs.getInt("idRoom")), questionDAO.selectBySalon(room));
 			}
-			
+			pstmt.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		return room;
 	}
@@ -218,10 +228,11 @@ public class RoomDAO implements DAO<Room> {
 			if (rs.next()) {
 				id = rs.getInt("idRoom");
 			}
-
+		pstmt.close();
 		} catch (Exception e) {
-			System.out.println("oauis prb selectbykey");
-			e.printStackTrace();
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		return this.select(id);
 	}

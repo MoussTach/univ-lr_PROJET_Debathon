@@ -3,6 +3,7 @@ package fr.univlr.debathon.job.db_project.dao;
 import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
+import fr.univlr.debathon.log.generate.CustomLogger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +16,9 @@ import java.util.Map;
 public class QuestionDAO implements DAO<Question> {
 
 	private Connection connection;
-	
+
+	private static final CustomLogger LOGGER = CustomLogger.create(QuestionDAO.class.getName());
+
 	public QuestionDAO(Connection conn) {
 		this.connection = conn;
 	}
@@ -50,9 +53,11 @@ public class QuestionDAO implements DAO<Question> {
 				
 			}
 			
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		
 		return listQuestion;
@@ -74,9 +79,11 @@ public class QuestionDAO implements DAO<Question> {
 			pstmt.setInt(5, question.getUser().getId());
 			
 			pstmt.executeUpdate();
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -98,11 +105,13 @@ public class QuestionDAO implements DAO<Question> {
 			pstmt.setInt(5, question.getUser().getId());
 
 			pstmt.executeUpdate();
-
+			pstmt.close();
 			return this.selectByContextAndLabel(question.getLabel(), question.getContext());
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return -2;
 		}
 	}
@@ -124,9 +133,11 @@ public class QuestionDAO implements DAO<Question> {
 			pstmt.setInt(6, question.getId());
 			
 			pstmt.executeUpdate();
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -145,9 +156,11 @@ public class QuestionDAO implements DAO<Question> {
 			pstmt.setInt(1, question.getId());
 			
 			pstmt.executeUpdate();
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -156,7 +169,6 @@ public class QuestionDAO implements DAO<Question> {
 
 	@Override
 	public List<Question> selectByMultiCondition(Map<String, String> map) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -186,9 +198,11 @@ public class QuestionDAO implements DAO<Question> {
 				
 			}
 			
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		
 		return question;
@@ -207,14 +221,16 @@ public class QuestionDAO implements DAO<Question> {
 			pstmt.setString(2, context);
 
 			ResultSet rs = pstmt.executeQuery();
-
+			pstmt.close();
 			if (rs.next()) {
 				return rs.getInt("idQuestion");
 			}
 
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return -1;
 		}
 
@@ -247,9 +263,11 @@ public class QuestionDAO implements DAO<Question> {
 				
 			}
 			
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		
 		return listQuestion;
@@ -279,10 +297,11 @@ public class QuestionDAO implements DAO<Question> {
 						commentDAO.selectCommentByIdQuestion(rs.getInt("idQuestion"), null), userDAO.select(rs.getInt("id_user"))));
 
 			}
-
-
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 
 		return listQuestion;

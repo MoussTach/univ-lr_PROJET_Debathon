@@ -2,6 +2,7 @@ package fr.univlr.debathon.job.db_project.dao;
 
 import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.User;
+import fr.univlr.debathon.log.generate.CustomLogger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,7 +15,9 @@ import java.util.Map;
 public class UserDAO implements DAO<User> {
 
 	private Connection connection;
-	
+
+	private static final CustomLogger LOGGER = CustomLogger.create(UserDAO.class.getName());
+
 	public UserDAO(Connection conn) {
 		this.connection = conn;
 	}
@@ -38,9 +41,11 @@ public class UserDAO implements DAO<User> {
             while (rs.next()) {
                 userList.add(new User(rs.getInt("idUser"), rs.getString("label")));
             }
-
+		pstmt.close();
 		} catch (Exception e) {
-            System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		
 		
@@ -59,8 +64,11 @@ public class UserDAO implements DAO<User> {
 			pstmt.setString(2, user.getLabel());
 			
 			pstmt.executeUpdate();
+			pstmt.close();
 		} catch (Exception e) {
-            System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
             return false;
 		}
 		
@@ -81,8 +89,11 @@ public class UserDAO implements DAO<User> {
 			pstmt.setInt(2, user.getId());
 			
 			pstmt.executeUpdate();
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -101,8 +112,11 @@ public class UserDAO implements DAO<User> {
 			pstmt.setInt(1, user.getId());
 			
 			pstmt.executeUpdate();
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -111,7 +125,6 @@ public class UserDAO implements DAO<User> {
 
 	@Override
 	public List<User> selectByMultiCondition(Map<String, String> map) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -135,9 +148,11 @@ public class UserDAO implements DAO<User> {
 				user = new User(rs.getInt("idUser"), rs.getString("label"));
 			}
 			
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		
 		return user;

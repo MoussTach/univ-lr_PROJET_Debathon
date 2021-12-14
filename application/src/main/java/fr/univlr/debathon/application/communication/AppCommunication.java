@@ -86,10 +86,45 @@ public class AppCommunication extends Thread implements Runnable {
     public void methodsRESPONSE(JsonNode dataJson, ObjectMapper objectMapper) throws IOException {
 
         //Boucle affetant chaque salon dans la list de salon
-        for(int i = 0;i<dataJson.get("rooms").size();i++){
+        for(int i = 0; i < dataJson.get("rooms").size(); i++){
 
             Room room = this.getUnserialisation(dataJson.get("rooms").get(i).toString(), Room.class);
-            System.out.println("---" + room);
+
+            List<Tag> shadowListTag = new ArrayList<>(room.getListTag());
+            for (Tag currentTag : room.getListTag()) {
+                boolean exist = false;
+
+                for (Tag tag : Debathon.getInstance().getTags()) {
+                    if (tag.getLabel().equals(currentTag.getLabel())) {
+
+                        if (!tag.equals(currentTag)) {
+                            shadowListTag.remove(currentTag);
+                            shadowListTag.add(tag);
+                        }
+
+                        exist = true;
+                    }
+                }
+                if (!exist) {
+                    Debathon.getInstance().getTags().add(currentTag);
+                }
+            }
+            room.setListTag(shadowListTag);
+
+            boolean exist = false;
+            for (Category category : Debathon.getInstance().getCategories()) {
+                if (room.getCategory() != null && category.getLabel().equals(room.getCategory().getLabel())) {
+
+                    if (!room.getCategory().equals(category)) {
+                        room.setCategory(category);
+                    }
+
+                    exist = true;
+                }
+            }
+            if (!exist)
+                Debathon.getInstance().getCategories().add(room.getCategory());
+
             Debathon.getInstance().getDebates().add(room);
         }
     }
@@ -227,12 +262,11 @@ public class AppCommunication extends Thread implements Runnable {
     }
     public void testRequestInsertNewRoom () throws JsonProcessingException {
         String key = AlphaNumericStringGenerator.getRandomString(6);
-        Category category = new Category(1, "Catégorie");
+        Category category = new Category(1, "Catégorie", "#000");
         List<Tag> listTag = new ArrayList<>();
         listTag.add(new Tag(1, "Oui", "couleur"));
         listTag.add(new Tag(2, "Tag", "couelurur"));
-        Room room = new Room("Salon de Julien", "Ceci est un nouveau salon", key,
-                "mail@mail.mail", category, listTag);
+        Room room = new Room("Salon de Julien", "Ceci est un nouveau salon", key,  category, listTag);
 
         this.requestInsertNewRoom(room);
     }
@@ -331,7 +365,21 @@ public class AppCommunication extends Thread implements Runnable {
 
     }
 
+    public void sendEmail(int id_room, String email) throws  JsonProcessingException{
 
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+
+        //GET pour recup donnees au client
+        root.put("methods","MAIL");
+        //ROOM pour preciser la recup d'une room precise
+        root.put("request","NEW");
+        //id pour preciser l'id de la room
+        root.put("id",id_room);
+        root.put("email",email);
+        this.sendData(mapper, root);
+
+    }
 
     public void uselessFonction () {
         System.out.println("I'm useless");

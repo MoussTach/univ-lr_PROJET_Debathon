@@ -6,6 +6,7 @@ import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ToggleGroup;
@@ -13,7 +14,7 @@ import javafx.scene.control.ToggleGroup;
 public class SelectCategoryScope implements Scope {
 
     private final ToggleGroup tGroup = new ToggleGroup();
-    private ListProperty<Category> selectedCategories = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private ObjectProperty<Category> selectedCategory = new SimpleObjectProperty<>();
 
     public ToggleGroup gettGroup() {
         return tGroup;
@@ -21,13 +22,13 @@ public class SelectCategoryScope implements Scope {
 
 
     /**
-     * Property of the variable selectedCategories.
+     * Property of the variable selectedCategory.
      *
      * @author Gaetan Brenckle
      *
-     * @return {@link ListProperty} - return the property of the variable selectedCategories.
+     * @return {@link ObjectProperty} - return the property of the variable selectedCategory.
      */
-    public ListProperty<Category> selectedCategoriesProperty() {
-        return selectedCategories;
+    public ObjectProperty<Category> selectedCategoryProperty() {
+        return selectedCategory;
     }
 }

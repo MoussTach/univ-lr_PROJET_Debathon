@@ -2,6 +2,7 @@ package fr.univlr.debathon.application;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
+import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.mainwindow.MainWindowView;
 import fr.univlr.debathon.application.viewmodel.mainwindow.MainWindowViewModel;
 import fr.univlr.debathon.dataconnection.bdd.DbProperties_postgres;
@@ -140,10 +141,10 @@ public class Launch extends Application {
         PRIMARYSTAGE = primaryStage;
 
         final ViewTuple<MainWindowView, MainWindowViewModel> MainWindowViewTuple = FluentViewLoader.fxmlView(MainWindowView.class).load();
-        final Scene scene = new Scene(MainWindowViewTuple.getView(), 800.0D, 600.0D);
+        final Scene scene = new Scene(MainWindowViewTuple.getView(), 1100.0D, 900.0D);
 
         primaryStage.setTitle("Debathon - application");
-        final Image ico = new Image(getClass().getResourceAsStream("/img/logo/Logo_univLR_64.png"));
+        final Image ico = new Image(getClass().getResourceAsStream("/img/logo/debathon_512.png"));
         primaryStage.getIcons().add(ico);
 
         if (LOGGER.isInfoEnabled()) {

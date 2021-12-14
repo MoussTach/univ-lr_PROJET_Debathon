@@ -2,6 +2,7 @@ package fr.univlr.debathon.job.db_project.dao;
 
 import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.Category;
+import fr.univlr.debathon.log.generate.CustomLogger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +17,7 @@ public class CategoryDAO implements DAO<Category> {
 
     private Connection connection = null;
 
+    private static final CustomLogger LOGGER = CustomLogger.create(CommentDAO.class.getName());
 
     public CategoryDAO(Connection connection) {
         this.connection = connection;
@@ -40,7 +42,7 @@ public class CategoryDAO implements DAO<Category> {
     public List<Category> selectAll() throws SQLException {
         List<Category> categoryList = new ArrayList<>();
 
-        String sql = "SELECT idCategory, label FROM Category";
+        String sql = "SELECT idCategory, label, color FROM Category";
 
         try {
             PreparedStatement pstmt  = connection.prepareStatement(sql);
@@ -48,12 +50,15 @@ public class CategoryDAO implements DAO<Category> {
             ResultSet rs  = pstmt.executeQuery();
             
             while (rs.next()) {
-                categoryList.add(new Category(rs.getInt("idCategory"), rs.getString("label")));
+                categoryList.add(new Category(rs.getInt("idCategory"), rs.getString("label"), rs.getString("color")));
             }
-
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
         }
+
 
         return categoryList;    
     }
@@ -66,15 +71,19 @@ public class CategoryDAO implements DAO<Category> {
      * @throws SQLException - throw the exception to force a try catch when used.
      */
     public boolean insert(Category category) throws SQLException {
-        String sql = "INSERT INTO Category (idCategory, label) VALUES(?,?)";
+        String sql = "INSERT INTO Category (idCategory, label, color) VALUES(?,?,?)";
 
         try {
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, category.getId());
             pstmt.setString(2, category.getLabel());
+            pstmt.setString(3, category.getColor());
             pstmt.executeUpdate();
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
             return false;
         }    
         
@@ -90,18 +99,21 @@ public class CategoryDAO implements DAO<Category> {
      * @throws SQLException - throw the exception to force a try catch when used.
      */
     public boolean update(Category category) throws SQLException {
-        String sql = "UPDATE Category SET label = ? WHERE idCategory = ?";
+        String sql = "UPDATE Category SET label = ?, color = ? WHERE idCategory = ?";
         
         try {
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setInt(2, category.getId());
+            pstmt.setInt(3, category.getId());
             pstmt.setString(1, category.getLabel());
+            pstmt.setString(2, category.getColor());
             pstmt.executeUpdate();
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
             return false;
-        }    
-        
+        }
         return true;
     }
 
@@ -119,8 +131,11 @@ public class CategoryDAO implements DAO<Category> {
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, category.getId());
             pstmt.executeUpdate();
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
             return false;
         }    
         
@@ -149,8 +164,8 @@ public class CategoryDAO implements DAO<Category> {
      */
     public Category select (int id) throws SQLException {
         Category category = null;
-        
-        String sql = "SELECT idCategory, label FROM Category WHERE idCategory = ?";
+
+        String sql = "SELECT idCategory, label, color FROM Category WHERE idCategory = ?";
 
         try {
              PreparedStatement pstmt  = connection.prepareStatement(sql);
@@ -158,13 +173,16 @@ public class CategoryDAO implements DAO<Category> {
             pstmt.setInt(1, id);
 
             ResultSet rs  = pstmt.executeQuery();
-            
+
+            pstmt.close();
             if (rs.next()) {
-                category = new Category (rs.getInt("idCategory"), rs.getString("label"));
+                category = new Category (rs.getInt("idCategory"), rs.getString("label"), rs.getString("color"));
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
         }
 
         return category;

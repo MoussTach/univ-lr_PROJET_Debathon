@@ -29,8 +29,8 @@ import java.util.ResourceBundle;
 
 public class SelectWindowViewModel extends ViewModel_SceneCycle {
 
-    private final ObjectProperty<ResourceBundle> resBundle_ = LanguageBundle.getInstance().bindResourceBundle("properties.language.mainwindow.lg_homePage");
     private static final CustomLogger LOGGER = CustomLogger.create(SelectWindowViewModel.class.getName());
+    private final ObjectProperty<ResourceBundle> resBundle_ = LanguageBundle.getInstance().bindResourceBundle("properties.language.mainwindow.lg_homePage");
 
     //Text
     private final StringProperty lblCategory_label = new SimpleStringProperty(this.resBundle_.get().getString("lblCategory"));
@@ -72,7 +72,7 @@ public class SelectWindowViewModel extends ViewModel_SceneCycle {
 
     private void bindSelectedItems() {
         if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("[public][method] Usage of the TagSelectWindowViewModel.bindSelectedItems()");
+            LOGGER.trace("[private][method] Usage of the TagSelectWindowViewModel.bindSelectedItems()");
         }
 
         Debathon.getInstance().getCategories().forEach(category ->

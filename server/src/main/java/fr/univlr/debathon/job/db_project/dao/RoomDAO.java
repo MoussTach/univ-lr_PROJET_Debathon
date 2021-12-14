@@ -47,7 +47,7 @@ public class RoomDAO implements DAO<Room> {
 			while (rs.next()) {
 
 				listRoom.add(new Room(rs.getInt("idRoom"), rs.getString("label"), rs.getString("description"),
-										rs.getString("key"), rs.getString("mail"), rs.getBoolean("is_open"), 
+										rs.getString("key"), rs.getBoolean("is_open"),
 										null, null, categoryDAO.select(rs.getInt("id_category")),
 										tagDAO.selectByIdRoom(rs.getInt("idRoom")), questionDAO.selectByIdSalon(rs.getInt("idRoom"))));
 			}
@@ -64,7 +64,7 @@ public class RoomDAO implements DAO<Room> {
 	@Override
 	public boolean insert(Room room) throws SQLException {
 
-		String sql = "INSERT INTO Room values (?,?,?,?,?)";
+		String sql = "INSERT INTO Room values (?,?,?,?)";
 		
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -72,8 +72,7 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setString(1, room.getLabel());
 			pstmt.setString(2, room.getDescription());
 			pstmt.setString(3, room.getKey());
-			pstmt.setString(4, room.getMail());
-			pstmt.setInt(5, room.getCategory().getId());
+			pstmt.setInt(4, room.getCategory().getId());
 
 			pstmt.executeUpdate();
 
@@ -90,7 +89,7 @@ public class RoomDAO implements DAO<Room> {
 
 	public Room insertAndGetId(Room room) throws SQLException {
 
-		String sql = "INSERT INTO Room (label, description, key, mail, id_category) values (?,?,?,?,?)";
+		String sql = "INSERT INTO Room (label, description, key, id_category) values (?,?,?,?)";
 
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -98,8 +97,7 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setString(1, room.getLabel());
 			pstmt.setString(2, room.getDescription());
 			pstmt.setString(3, room.getKey());
-			pstmt.setString(4, room.getMail());
-			pstmt.setInt(5, room.getCategory().getId());
+			pstmt.setInt(4, room.getCategory().getId());
 
 			pstmt.executeUpdate();
 
@@ -116,7 +114,7 @@ public class RoomDAO implements DAO<Room> {
 	@Override
 	public boolean update(Room room) throws SQLException {
 
-		String sql = "UPDATE Room SET label=?, description=?, key=?, mail=?, is_open=?, date_start=?, date_end=?, id_category=? WHERE idRoom=?";
+		String sql = "UPDATE Room SET label=?, description=?, key=?, is_open=?, date_start=?, date_end=?, id_category=? WHERE idRoom=?";
 		
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -124,12 +122,11 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setString(1, room.getLabel());
 			pstmt.setString(2, room.getDescription());
 			pstmt.setString(3, room.getKey());
-			pstmt.setString(4, room.getMail());
-			pstmt.setBoolean(5, room.getIs_open());
-			pstmt.setDate(6, Date.valueOf(room.getDate_start()));
-			pstmt.setDate(7, Date.valueOf(room.getDate_end()));
-			pstmt.setInt(8, room.getCategory().getId());
-			pstmt.setInt(9, room.getId());
+			pstmt.setBoolean(4, room.getIs_open());
+			pstmt.setDate(5, Date.valueOf(room.getDate_start()));
+			pstmt.setDate(6, Date.valueOf(room.getDate_end()));
+			pstmt.setInt(7, room.getCategory().getId());
+			pstmt.setInt(8, room.getId());
 			
 			pstmt.execute();
 
@@ -189,7 +186,7 @@ public class RoomDAO implements DAO<Room> {
 				room = new Room();
 				room.setId(rs.getInt("idRoom"));
 				room = new Room(rs.getInt("idRoom"), rs.getString("label"), rs.getString("description"), 
-						rs.getString("key"), rs.getString("mail"), rs.getBoolean("is_open"), 
+						rs.getString("key"), rs.getBoolean("is_open"),
 						null, null, categoryDAO.select(rs.getInt("id_category")),
 						tagDAO.selectByIdRoom(rs.getInt("idRoom")), questionDAO.selectBySalon(room));
 			}
@@ -219,7 +216,6 @@ public class RoomDAO implements DAO<Room> {
 			}
 
 		} catch (Exception e) {
-			System.out.println("oauis prb selectbykey");
 			e.printStackTrace();
 		}
 		return this.select(id);

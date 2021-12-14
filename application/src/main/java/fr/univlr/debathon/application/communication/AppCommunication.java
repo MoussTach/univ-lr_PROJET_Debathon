@@ -266,8 +266,7 @@ public class AppCommunication extends Thread implements Runnable {
         List<Tag> listTag = new ArrayList<>();
         listTag.add(new Tag(1, "Oui", "couleur"));
         listTag.add(new Tag(2, "Tag", "couelurur"));
-        Room room = new Room("Salon de Julien", "Ceci est un nouveau salon", key,
-                "mail@mail.mail", category, listTag);
+        Room room = new Room("Salon de Julien", "Ceci est un nouveau salon", key,  category, listTag);
 
         this.requestInsertNewRoom(room);
     }
@@ -366,7 +365,21 @@ public class AppCommunication extends Thread implements Runnable {
 
     }
 
+    public void sendEmail(int id_room, String email) throws  JsonProcessingException{
 
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+
+        //GET pour recup donnees au client
+        root.put("methods","MAIL");
+        //ROOM pour preciser la recup d'une room precise
+        root.put("request","NEW");
+        //id pour preciser l'id de la room
+        root.put("id",id_room);
+        root.put("email",email);
+        this.sendData(mapper, root);
+
+    }
 
     public void uselessFonction () {
         System.out.println("I'm useless");

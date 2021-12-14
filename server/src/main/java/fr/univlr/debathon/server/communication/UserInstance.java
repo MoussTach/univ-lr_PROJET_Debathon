@@ -7,14 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonDeserializer;
-import fr.univlr.debathon.job.db_project.dao.CommentDAO;
-import fr.univlr.debathon.job.db_project.dao.McqDAO;
-import fr.univlr.debathon.job.db_project.dao.QuestionDAO;
-import fr.univlr.debathon.job.db_project.dao.RoomDAO;
-import fr.univlr.debathon.job.db_project.jobclass.Comment;
-import fr.univlr.debathon.job.db_project.jobclass.Mcq;
-import fr.univlr.debathon.job.db_project.jobclass.Question;
-import fr.univlr.debathon.job.db_project.jobclass.Room;
+import fr.univlr.debathon.job.db_project.dao.*;
+import fr.univlr.debathon.job.db_project.jobclass.*;
 import fr.univlr.debathon.server.pdf.PDFdata;
 import org.hildan.fxgson.FxGson;
 
@@ -213,8 +207,18 @@ public class UserInstance extends Thread implements Runnable {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
         RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
+        TagDAO tagDAO = new TagDAO(Server.CONNECTION);
 
         Room room = this.getUnserialisation(dataJson.get("new_room").get(0).toString(), Room.class);
+
+
+        for (Tag tag : room.getListTag())
+        {
+            if (tag.getId() == -1) {
+                int id = tagDAO.insertAndReturnId(tag);
+                tag.setId(id);
+            }
+        }
 
         Room roomRes = roomDAO.insertAndGetId(room);
         System.out.println("Nouveau salon d'id : " + roomRes.getId());
@@ -361,7 +365,6 @@ public class UserInstance extends Thread implements Runnable {
         RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
         this.sendNewRoom(roomDAO.select(1));
     }
-
 
 
 

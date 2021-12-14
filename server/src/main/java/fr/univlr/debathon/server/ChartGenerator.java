@@ -16,31 +16,34 @@ import java.util.Map;
 
 public class ChartGenerator {
     public static ChartGenerator instance;
+
     public ChartGenerator() {
     }
 
+    public static ChartGenerator getInstance(){
+        if(instance == null){
+            instance = new ChartGenerator();
+        }
+        return instance;
+    }
+
+    //Creation PieDatasat avec map
     public PieDataset getPieDataset(Map<String, Float> data) {
         DefaultPieDataset dataset = new DefaultPieDataset();
+        //Boucle sur chaque element du Map
         for (Map.Entry entry : data.entrySet()) {
             dataset.setValue(entry.getKey().toString(), Float.parseFloat(entry.getValue().toString()));
         }
         return dataset;
     }
 
-    public JFreeChart genPieChart(String question_label, Map<String, Float> data) {
-        PieDataset dataset = getPieDataset(data);
-        JFreeChart chartPie = ChartFactory.createPieChart(
-                question_label,   // chart title
-                dataset,          // data
-                true,             // include legend
-                true,
-                false);
-        return chartPie;
-    }
-
+    //Generation pie chart avec une question
     public JFreeChart genPieChart(PDFquestion question) {
+        //Recuperation Map
         Map<String,Float> data = question.getMapResponse();
+        //Recuperation dataset avec map
         PieDataset dataset = getPieDataset(data);
+        //Cration piechart avec Factory
         JFreeChart chartPie = ChartFactory.createPieChart(
                 question.getLabelQuestion(),   // chart title
                 dataset,          // data
@@ -50,70 +53,15 @@ public class ChartGenerator {
         return chartPie;
     }
 
+    //generation et recuperation list de chart
     public List<JFreeChart> genAllPieCharts(List<PDFquestion> questions){
         List<JFreeChart> charts = new ArrayList<JFreeChart>();
+        //boucle sur chaque question de la liste
         for (PDFquestion q : questions) {
+            //Ajout d'un chart a la list avec generation
             charts.add(genPieChart(q));
         }
         return charts;
     }
 
-    public void savePieAsPng(int id,String label, Map<String, Float> data){
-        JFreeChart pie = genPieChart(label,data);
-        File out = null;
-        try {
-            out = new File(("question_"+id+".png"));
-            ChartUtilities.saveChartAsPNG(out,
-                    pie,
-                    1000,
-                    600);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void genPieQuestion(PDFquestion question){
-        String label = question.getLabelQuestion();
-        Map<String,Float> data = question.getMapResponse();
-        savePieAsPng(question.getIdQuestion(),label,data);
-    }
-
-    public static ChartGenerator getInstance(){
-        if(instance != null){
-            return instance;
-        }
-        else{
-            instance = new ChartGenerator();
-            return instance;
-        }
-    }
-/*
-    public JFreeChart genChartBar(Map<String,Float> data){
-        JFreeChart barChart = ChartFactory.createBarChart(
-                "Oui / Non",
-                "",
-                "pourcentage votant",
-                getBarDataset(data),
-                PlotOrientation.VERTICAL,
-                false,true,false
-        );
-        return barChart;
-    }
-
- */
-/*
-    public void saveAsPng(){
-        JFreeChart bar = genChartBar("test");
-        File out = null;
-        try {
-            out = new File("testPng.png");
-            ChartUtilities.saveChartAsPNG(out,
-                    bar,
-                    1000,
-                    600);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }*/
 }

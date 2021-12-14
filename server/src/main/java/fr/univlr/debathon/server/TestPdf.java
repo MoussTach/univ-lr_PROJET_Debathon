@@ -4,6 +4,7 @@ import javafx.scene.chart.PieChart;
 import org.jfree.data.general.PieDataset;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -30,7 +31,7 @@ public class TestPdf {
     */
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         try {
             PDFGenerator.c = DriverManager.getConnection("jdbc:sqlite:server/db_debathon.db"); //Creation connection on db
         } catch (SQLException e) {
@@ -39,8 +40,7 @@ public class TestPdf {
         }
 
         List<PDFquestion> questions = PDFdata.getRequest1(1);
-        PDFGenerator generator = new PDFGenerator();
-        generator.getPDF(questions.get(0));
+        PDFGenerator.getInstance().getPDF(questions,1);
         /*
         for (PDFquestion question:questions) {
             ChartGenerator.getInstance().genPieQuestion(question);

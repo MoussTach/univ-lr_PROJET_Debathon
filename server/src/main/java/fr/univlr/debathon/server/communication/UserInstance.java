@@ -238,6 +238,11 @@ public class UserInstance extends Thread implements Runnable {
         Question question = this.getUnserialisation(dataJson.get("new_question").get(0).toString(), Question.class);
 
         int id = questionDAO.insertAndGetId(question);
+        Question q = questionDAO.select(id);
+
+        if (q != null) {
+            this.sendNewQuestion(q);
+        }
 
         System.out.println("Nouvelle question d'id : " + id);
         
@@ -252,6 +257,12 @@ public class UserInstance extends Thread implements Runnable {
         Comment comment = this.getUnserialisation(dataJson.get("new_comment").get(0).toString(), Comment.class);
 
         int id = commentDAO.insertAndGetId(comment);
+
+        Comment c = commentDAO.select(id);
+
+        if (c != null) {
+            this.sendNewComment(c);
+        }
 
         System.out.println("Nouveau commentaire d'id : " + id);
 
@@ -299,8 +310,6 @@ public class UserInstance extends Thread implements Runnable {
         String email = dataJson.get("email").asText();
 
         PDFdata.insertNewEmail(id, email);
-
-        System.out.println("ceci est un test" + id + "   " + email);
 
     }
 
@@ -356,9 +365,10 @@ public class UserInstance extends Thread implements Runnable {
 
     public void sendNewRoom (Room room) throws JsonProcessingException {
         for (UserInstance ui : Server.USERINSTANCELIST) {
-            if (ui != null && ui.getWhereIam() == -1)
+            if (ui != null && ui.getWhereIam() == -1) {
                 System.out.println("------> " + ui.getName());
                 ui.sendData(this.getObjetNode("NEWROOM", "new_room", room));
+            }
         }
     }
     private void testSendNewRoom () throws SQLException, JsonProcessingException {

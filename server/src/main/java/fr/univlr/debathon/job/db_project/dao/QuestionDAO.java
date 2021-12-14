@@ -92,7 +92,7 @@ public class QuestionDAO implements DAO<Question> {
 
 	public int insertAndGetId(Question question) throws SQLException {
 
-		String sql = "INSERT INTO Question (label, context, type, id_room, id_user) values (?,?,?,?,?)";
+		String sql = "INSERT INTO Question (label, context, type, id_room, id_user) values (?,?,?,?,?) returning idQuestion";
 
 		try {
 
@@ -104,9 +104,13 @@ public class QuestionDAO implements DAO<Question> {
 			pstmt.setInt(4, question.getRoom().getId());
 			pstmt.setInt(5, question.getUser().getId());
 
-			pstmt.executeUpdate();
+			ResultSet rs = pstmt.executeQuery();
 			pstmt.close();
-			return this.selectByContextAndLabel(question.getLabel(), question.getContext());
+
+			if (rs.next())
+				return rs.getInt("idQuestion");
+
+
 
 		} catch (Exception e) {
 			if (LOGGER.isErrorEnabled()) {
@@ -114,6 +118,7 @@ public class QuestionDAO implements DAO<Question> {
 			}
 			return -2;
 		}
+		return -2;
 	}
 
 	@Override

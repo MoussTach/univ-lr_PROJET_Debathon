@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 public class AppCommunication extends Thread implements Runnable {
 
@@ -417,8 +418,16 @@ public class AppCommunication extends Thread implements Runnable {
         System.out.println("------");
     }
 
+    private boolean end = false;
 
-
+    public void end () {
+        end = true;
+        try {
+            userSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     @Override
@@ -431,7 +440,7 @@ public class AppCommunication extends Thread implements Runnable {
 
             String dataReceveid = "";
 
-            while(data!=null){
+            while(!end && data!=null){
                 dataReceveid += data;
 
                 if (data.equals("}")) {
@@ -439,11 +448,15 @@ public class AppCommunication extends Thread implements Runnable {
                     dataReceveid = "";
                 }
 
-                data = in.readLine();
+                try {
+                    data = in.readLine();
+                } catch (Exception e) {
+                    LOGGER.info("Application stop.");
+                }
             }
-            System.out.println("Server out of service");
-            //out.close();
-            //userSocket.close();
+            in.close();
+            out.close();
+            userSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

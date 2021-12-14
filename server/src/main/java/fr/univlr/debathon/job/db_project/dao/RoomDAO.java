@@ -3,6 +3,7 @@ package fr.univlr.debathon.job.db_project.dao;
 import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
+import fr.univlr.debathon.log.generate.CustomLogger;
 import fr.univlr.debathon.server.Server;
 
 import java.sql.Connection;
@@ -18,7 +19,9 @@ import java.util.Map;
 public class RoomDAO implements DAO<Room> {
 
 	private Connection connection;
-	
+
+	private static final CustomLogger LOGGER = CustomLogger.create(RoomDAO.class.getName());
+
 	public RoomDAO(Connection conn) {
 		this.connection = conn;
 	}
@@ -51,9 +54,11 @@ public class RoomDAO implements DAO<Room> {
 										null, null, categoryDAO.select(rs.getInt("id_category")),
 										tagDAO.selectByIdRoom(rs.getInt("idRoom")), questionDAO.selectByIdSalon(rs.getInt("idRoom"))));
 			}
-			
+			pstmt.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 
 		return listRoom;
@@ -76,10 +81,12 @@ public class RoomDAO implements DAO<Room> {
 
 			pstmt.executeUpdate();
 
-
+			pstmt.close();
 			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -100,12 +107,13 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setInt(4, room.getCategory().getId());
 
 			pstmt.executeUpdate();
-
+			pstmt.close();
 			return this.selectByKey(room.getKey());
 
-
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return null;
 		}
 
@@ -129,9 +137,11 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setInt(8, room.getId());
 			
 			pstmt.execute();
-
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 
@@ -150,9 +160,11 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setInt(1, room.getId());
 			
 			pstmt.executeUpdate();
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -190,9 +202,11 @@ public class RoomDAO implements DAO<Room> {
 						null, null, categoryDAO.select(rs.getInt("id_category")),
 						tagDAO.selectByIdRoom(rs.getInt("idRoom")), questionDAO.selectBySalon(room));
 			}
-			
+			pstmt.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		return room;
 	}
@@ -214,9 +228,11 @@ public class RoomDAO implements DAO<Room> {
 			if (rs.next()) {
 				id = rs.getInt("idRoom");
 			}
-
+		pstmt.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		return this.select(id);
 	}

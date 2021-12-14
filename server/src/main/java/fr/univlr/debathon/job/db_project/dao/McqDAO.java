@@ -2,6 +2,7 @@ package fr.univlr.debathon.job.db_project.dao;
 
 import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
+import fr.univlr.debathon.log.generate.CustomLogger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,6 +15,8 @@ import java.util.Map;
 public class McqDAO implements DAO<Mcq> {
 
 	private Connection connection;
+
+	private static final CustomLogger LOGGER = CustomLogger.create(McqDAO.class.getName());
 
 	public McqDAO(Connection conn) {
 			this.connection = conn;
@@ -43,8 +46,11 @@ public class McqDAO implements DAO<Mcq> {
                qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("id_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
             }
 
+			pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
         }
 
         return qcmList;  	
@@ -67,9 +73,11 @@ public class McqDAO implements DAO<Mcq> {
 			pstmt.setInt(4, mcq.getId_room());
 			
 			pstmt.executeUpdate();
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -91,11 +99,14 @@ public class McqDAO implements DAO<Mcq> {
 
 			pstmt.executeUpdate();
 
+			pstmt.close();
 			return this.select(mcq.getLabel(), mcq.getId_question());
 
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return -1;
 		}
 
@@ -119,9 +130,11 @@ public class McqDAO implements DAO<Mcq> {
 			
 			pstmt.executeUpdate();
 			
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -141,9 +154,11 @@ public class McqDAO implements DAO<Mcq> {
 
 			pstmt.executeUpdate();
 
-
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 
@@ -163,9 +178,13 @@ public class McqDAO implements DAO<Mcq> {
 			pstmt.setInt(1, mcq.getId());
 			
 			pstmt.executeUpdate();
-			
+
+			pstmt.close();
+
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -197,9 +216,11 @@ public class McqDAO implements DAO<Mcq> {
             	
                mcq = new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("id_votes"), rs.getInt("id_question"), rs.getInt("id_room"));
             }
-
+			pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
         }
 
         return mcq;  	
@@ -221,11 +242,12 @@ public class McqDAO implements DAO<Mcq> {
 			if (rs.next()) {
 				return rs.getInt("idMcq");
 			}
-
+		pstmt.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
-
 		return -1;
 	}
 
@@ -249,9 +271,11 @@ public class McqDAO implements DAO<Mcq> {
             	
                qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
             }
-
+		pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
         }
 
         return qcmList;  	
@@ -277,9 +301,11 @@ public class McqDAO implements DAO<Mcq> {
 
 				qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
 			}
-
+		pstmt.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 
 		return qcmList;

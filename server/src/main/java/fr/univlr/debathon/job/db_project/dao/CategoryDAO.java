@@ -2,6 +2,7 @@ package fr.univlr.debathon.job.db_project.dao;
 
 import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.Category;
+import fr.univlr.debathon.log.generate.CustomLogger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +17,7 @@ public class CategoryDAO implements DAO<Category> {
 
     private Connection connection = null;
 
+    private static final CustomLogger LOGGER = CustomLogger.create(CommentDAO.class.getName());
 
     public CategoryDAO(Connection connection) {
         this.connection = connection;
@@ -50,10 +52,13 @@ public class CategoryDAO implements DAO<Category> {
             while (rs.next()) {
                 categoryList.add(new Category(rs.getInt("idCategory"), rs.getString("label"), rs.getString("color")));
             }
-
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
         }
+
 
         return categoryList;    
     }
@@ -74,8 +79,11 @@ public class CategoryDAO implements DAO<Category> {
             pstmt.setString(2, category.getLabel());
             pstmt.setString(3, category.getColor());
             pstmt.executeUpdate();
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
             return false;
         }    
         
@@ -99,11 +107,13 @@ public class CategoryDAO implements DAO<Category> {
             pstmt.setString(1, category.getLabel());
             pstmt.setString(2, category.getColor());
             pstmt.executeUpdate();
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
             return false;
-        }    
-        
+        }
         return true;
     }
 
@@ -121,8 +131,11 @@ public class CategoryDAO implements DAO<Category> {
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, category.getId());
             pstmt.executeUpdate();
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
             return false;
         }    
         
@@ -160,13 +173,16 @@ public class CategoryDAO implements DAO<Category> {
             pstmt.setInt(1, id);
 
             ResultSet rs  = pstmt.executeQuery();
-            
+
+            pstmt.close();
             if (rs.next()) {
                 category = new Category (rs.getInt("idCategory"), rs.getString("label"), rs.getString("color"));
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
         }
 
         return category;

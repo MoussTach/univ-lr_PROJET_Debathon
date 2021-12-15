@@ -2,7 +2,9 @@ package fr.univlr.debathon.job.db_project.dao;
 
 import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
+import fr.univlr.debathon.job.db_project.jobclass.Tag;
 import fr.univlr.debathon.log.generate.CustomLogger;
+import fr.univlr.debathon.server.communication.Server;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -93,7 +95,7 @@ public class RoomDAO implements DAO<Room> {
 
 	public Room insertAndGetId(Room room) throws SQLException {
 
-		String sql = "INSERT INTO Room (label, description, key, id_category) values (?,?,?,?)";
+		String sql = "INSERT INTO Room (label, description, key, id_category) values (?,?,?,?) returning idRoom";
 
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -103,9 +105,22 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setString(3, room.getKey());
 			pstmt.setInt(4, room.getCategory().getId());
 
-			pstmt.executeUpdate();
+			ResultSet rs = pstmt.executeQuery();
+
+			int id_room = -1;
+			if (rs.next()) {
+				id_room = rs.getInt("idRoom");
+			}
+
 			pstmt.close();
-			return this.selectByKey(room.getKey());
+
+			TagDAO tagDAO = new TagDAO(Server.CONNECTION);
+
+			for (Tag tag : room.getListTag()) {
+				tagDAO.insertNewRelation(id_room, tag.getId());
+			}
+
+			return this.select(id_room);
 
 		} catch (Exception e) {
 			if (LOGGER.isErrorEnabled()) {

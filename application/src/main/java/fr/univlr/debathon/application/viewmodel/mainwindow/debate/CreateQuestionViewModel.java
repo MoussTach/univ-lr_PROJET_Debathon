@@ -1,5 +1,6 @@
 package fr.univlr.debathon.application.viewmodel.mainwindow.debate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ScopeProvider;
@@ -9,6 +10,7 @@ import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import fr.univlr.debathon.application.Launch;
+import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.mainwindow.SelectWindowView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
@@ -21,6 +23,7 @@ import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewM
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
+import fr.univlr.debathon.job.db_project.jobclass.User;
 import fr.univlr.debathon.language.LanguageBundle;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Platform;
@@ -186,7 +189,33 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
 
         //TODO valid Create
         //TODO set questions
+        Question newQuestion = new Question(
+                this.taQuestion_value.get(),
+                "",
+                this.selectedQuestionType_valueProperty().get().text,
+                this.debate,
+                null
+        );
 
+        try {
+            for (Mcq mcq : this.listResponses_value) {
+                mcq.setId_question(newQuestion.getId());
+                newQuestion.listMcqProperty().add(mcq);
+            }
+            Debathon.getInstance().getAppCommunication().requestInsertNewQuestion(newQuestion);
+
+        } catch (JsonProcessingException e) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("Error when the user want to create a question", e);
+            }
+
+            Notifications.create()
+                    .position(Pos.BOTTOM_RIGHT)
+                    .title(this.resBundle_.get().getString("createQuestion_title_error"))
+                    .text(this.resBundle_.get().getString("createQuestion_text_error"))
+                    .showInformation();
+            return;
+        }
 
         //Reset fields
         this.taQuestion_value.set("");
@@ -195,8 +224,8 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
 
         Notifications.create()
                 .position(Pos.BOTTOM_RIGHT)
-                .title(this.resBundle_.get().getString("createDebate_title"))
-                .text(this.resBundle_.get().getString("createDebate_text"))
+                .title(this.resBundle_.get().getString("createQuestion_title"))
+                .text(this.resBundle_.get().getString("createQuestion_text"))
                 .showInformation();
     }
 

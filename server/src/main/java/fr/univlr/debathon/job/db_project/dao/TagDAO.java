@@ -90,6 +90,35 @@ public class TagDAO implements DAO<Tag> {
         
     }
 
+    public int insertAndReturnId(Tag tag) throws SQLException {
+        String sql = "INSERT INTO Tag (label, color) VALUES(?,?) returning idTag";
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, tag.getLabel());
+            pstmt.setString(2, tag.getColor());
+
+
+            ResultSet rs  = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return (rs.getInt("idTag"));
+            }
+
+
+
+
+            pstmt.close();
+        } catch (SQLException e) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
+        }
+
+        return -1;
+
+    }
+
     /**
      * UPDATE the class.
      *

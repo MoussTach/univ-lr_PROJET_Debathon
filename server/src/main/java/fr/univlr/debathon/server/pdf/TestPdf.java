@@ -37,7 +37,7 @@ public class TestPdf {
         }
 
         List<PDFquestion> questions = PDFdata.getRequest1(1);
-        PDFGenerator.getInstance().getPDF(questions,1);
+        PDFGenerator.getInstance().getPDF(questions,1,"Debat 1");
         /*
         for (PDFquestion question:questions) {
             ChartGenerator.getInstance().genPieQuestion(question);

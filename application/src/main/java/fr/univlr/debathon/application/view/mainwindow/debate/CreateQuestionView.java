@@ -41,8 +41,10 @@ public class CreateQuestionView extends FxmlView_SceneCycle<CreateQuestionViewMo
 
     @FXML private VBox vboxReponses;
     @FXML private Label lblReponses;
-    @FXML private CustomTableView<Mcq> tableResponses;
+    @FXML private TableView<Mcq> tableResponses;
     @FXML private TableColumn<Mcq, String> tabResponse;
+    @FXML private Button btnResponsesAdd;
+    @FXML private Button btnResponsesDelete;
 
     @FXML private Button btnValid;
 
@@ -50,6 +52,39 @@ public class CreateQuestionView extends FxmlView_SceneCycle<CreateQuestionViewMo
     private CreateQuestionViewModel createQuestionViewModel;
 
     private ChangeListener<Question.Type> listenerQuestion = null;
+
+
+    @FXML
+    private void act_btnResponsesAdd() {
+        LOGGER.input(String.format("Press the button %s", btnResponsesAdd.getId()));
+
+        //Verify if the last response is completed or not.
+        if (!tableResponses.getItems().isEmpty()) {
+            Mcq lastMcq = this.tableResponses.getItems().get(tableResponses.getItems().size() - 1);
+            if (lastMcq.getLabel() == null || lastMcq.getLabel().isEmpty()) {
+                if (LOGGER.isWarnEnabled()) {
+                    LOGGER.warn("Unable to add a response row: the last row is not completed");
+                }
+                return;
+            }
+        }
+
+        this.createQuestionViewModel.actvm_ResponsesAdd();
+        this.tableResponses.getSelectionModel().selectLast();
+    }
+
+    @FXML
+    private void act_btnResponsesDelete() {
+        LOGGER.input(String.format("Press the button %s", btnResponsesDelete.getId()));
+
+        if (!tableResponses.getItems().isEmpty()) {
+            Mcq selectedMcq = tableResponses.getSelectionModel().getSelectedItem();
+            if (selectedMcq != null) {
+                this.createQuestionViewModel.actvm_ResponsesDelete(selectedMcq);
+                this.tableResponses.refresh();
+            }
+        }
+    }
 
     @FXML
     private void act_btnValid() {
@@ -95,9 +130,11 @@ public class CreateQuestionView extends FxmlView_SceneCycle<CreateQuestionViewMo
 
         this.listenerQuestion = (observableValue, oldValue, newValue) -> {
             if (newValue != null && newValue.equals(Question.Type.LIBRE)) {
+                this.createQuestionViewModel.isShowedResponsesProperty().set(false);
                 vboxReponses.setManaged(false);
                 vboxReponses.setVisible(false);
             } else {
+                this.createQuestionViewModel.isShowedResponsesProperty().set(true);
                 vboxReponses.setManaged(true);
                 vboxReponses.setVisible(true);
             }

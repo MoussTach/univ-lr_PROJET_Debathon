@@ -20,9 +20,11 @@ import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.SelectTa
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
+import fr.univlr.debathon.job.db_project.jobclass.Room;
 import fr.univlr.debathon.language.LanguageBundle;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
@@ -32,6 +34,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.util.Callback;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
@@ -43,6 +46,8 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
 
     private final ObjectProperty<ResourceBundle> resBundle_ = LanguageBundle.getInstance().bindResourceBundle("properties.language.mainwindow.debate.lg_createQuestion");
     private static final CustomLogger LOGGER = CustomLogger.create(HomePageViewModel.class.getName());
+
+    private final Room debate;
 
     //Text
     private final StringProperty titledCreate_label = new SimpleStringProperty(this.resBundle_.get().getString("titledCreate"));
@@ -60,7 +65,8 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
     private final ListProperty<Question.Type> cbQuestionType_value = new SimpleListProperty<>(FXCollections.observableArrayList());
     private final ObjectProperty<Question.Type> SelectedQuestionType_value = new SimpleObjectProperty<>(Question.Type.MULTIPLE);
     private final BooleanProperty isShowedResponses = new SimpleBooleanProperty(true);
-    private final ListProperty<Mcq> listResponses_value = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<Mcq> listResponses_value = new SimpleListProperty<>(FXCollections.observableArrayList(
+            param -> new Observable[]{param.labelProperty()}));
 
     private final ObservableRuleBasedValidator rule_Question = new ObservableRuleBasedValidator();
     private final ObservableRuleBasedValidator rule_QuestionType = new ObservableRuleBasedValidator();
@@ -75,10 +81,12 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
      *
      * @author Gaetan Brenckle
      */
-    public CreateQuestionViewModel() {
+    public CreateQuestionViewModel(Room debate) {
         if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("[public][constructor] Creation of the HomePageViewModel() object.");
+            LOGGER.trace("[public][constructor] Creation of the CreateQuestionViewModel() object.");
         }
+
+        this.debate = debate;
 
         rule_Question.addRule(createRule_Question());
         rule_QuestionType.addRule(createRule_QuestionType());
@@ -136,30 +144,49 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
     private ObjectBinding<ValidationMessage> createRule_Responses() {
 
         return Bindings.createObjectBinding(() -> {
-            if (this.listResponses_value.get() == null || this.listResponses_value.isEmpty()) {
-                return ValidationMessage.error(this.resBundle_.get().getString("rule_null"));
-            }
-            if (this.listResponses_value.size() < 2) {
-                return ValidationMessage.error(this.resBundle_.get().getString("rule_inferior"));
-            }
+            if (this.isShowedResponses.get()) {
+                if (this.listResponses_value.get() == null || this.listResponses_value.isEmpty()) {
+                    return ValidationMessage.error(this.resBundle_.get().getString("rule_null"));
+                }
 
-            for (Mcq mcq : listResponses_value) {
-                if (mcq.getLabel() == null || mcq.getLabel().isEmpty()) {
-                    return ValidationMessage.error(this.resBundle_.get().getString("rule_ResponsesEmpty"));
+                if (this.listResponses_value.size() < 2) {
+                    return ValidationMessage.error(this.resBundle_.get().getString("rule_inferior"));
+                }
+
+                for (Mcq mcq : listResponses_value) {
+                    if (mcq.getLabel() == null || mcq.getLabel().isEmpty()) {
+                        return ValidationMessage.error(this.resBundle_.get().getString("rule_ResponsesEmpty"));
+                    }
                 }
             }
-
             return null;
-        }, this.listResponses_value);
+        }, this.listResponses_value, this.isShowedResponses);
     }
 
+    public void actvm_ResponsesAdd() {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the CreateQuestionViewModel.actvm_ResponsesAdd()");
+        }
+
+        this.listResponses_valueProperty().add(new Mcq("", -1, this.debate));
+    }
+
+    public void actvm_ResponsesDelete(Mcq mcq) {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the CreateQuestionViewModel.actvm_ResponsesDelete()");
+        }
+
+        this.listResponses_valueProperty().remove(mcq);
+    }
 
     public void actvm_ValidCreateDebate() {
         if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("[public][method] Usage of the CreateDebateViewModel.actvm_ValidCreateDebate()");
+            LOGGER.trace("[public][method] Usage of the CreateQuestionViewModel.actvm_ValidCreateDebate()");
         }
 
         //TODO valid Create
+        //TODO set questions
+
 
         //Reset fields
         this.taQuestion_value.set("");
@@ -270,6 +297,17 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
      */
     public ObjectProperty<Question.Type> selectedQuestionType_valueProperty() {
         return SelectedQuestionType_value;
+    }
+
+    /**
+     * Property of the variable isShowedResponses.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link BooleanProperty} - return the property of the variable isShowedResponses.
+     */
+    public BooleanProperty isShowedResponsesProperty() {
+        return isShowedResponses;
     }
 
     /**

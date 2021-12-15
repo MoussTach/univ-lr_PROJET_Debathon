@@ -337,7 +337,7 @@ public class AppCommunication extends Thread implements Runnable {
         Question question = new Question();
         question.setId(6);
 
-        Mcq mcq = new Mcq("Mcq texte", question, room);
+        Mcq mcq = new Mcq("Mcq texte", question.getId(), room);
 
         this.requestInsertNewMcq(mcq);
 

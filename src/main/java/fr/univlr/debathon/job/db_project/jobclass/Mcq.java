@@ -23,16 +23,16 @@ public class Mcq {
         this.id_room = id_room;
     }
 
-    public Mcq(String label, Question question, Room room) {
+    public Mcq(String label, int id_question, Room room) {
         this.id.set(-1);
         this.label.set(label);
         this.nb_votes.set(0);
-        this.id_question = question.getId();
+        this.id_question = id_question;
         this.id_room = room.getId();
     }
 
-    public Mcq(int id, String label, Question question, Room room) {
-        this(id, label, 0, question.getId(), room.getId());
+    public Mcq(int id, String label, int id_question, Room room) {
+        this(id, label, 0,id_question, room.getId());
     }
 
     public Mcq(Mcq clone) {

@@ -89,7 +89,9 @@ public class DebateViewModel extends ViewModel_SceneCycle {
 
         this.debate = debate;
 
+        CreateQuestionViewModel createQuestionViewModel = new CreateQuestionViewModel(this.debate);
         popOver_createQuestion = new PopOver(FluentViewLoader.fxmlView(CreateQuestionView.class)
+                .viewModel(createQuestionViewModel)
                 .load().getView());
         popOver_createQuestion.setDetachable(false);
         popOver_createQuestion.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);

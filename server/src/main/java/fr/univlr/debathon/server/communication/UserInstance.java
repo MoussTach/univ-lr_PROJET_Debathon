@@ -133,9 +133,6 @@ public class UserInstance extends Thread implements Runnable {
             case "COMMENT": //Cas ROOM souhaite
                 this.caseInsertCOMMENT(dataJson, data);
                 break;
-            case "MCQ": //Cas ROOM souhaite
-                this.caseInsertMCQ(dataJson, data);
-                break;
         }
     }
 
@@ -234,11 +231,18 @@ public class UserInstance extends Thread implements Runnable {
         JsonNode dataJson = objectMapper.readTree(data);
 
         QuestionDAO questionDAO = new QuestionDAO(Server.CONNECTION);
+        McqDAO mcqDAO = new McqDAO(Server.CONNECTION);
 
         Question question = this.getUnserialisation(dataJson.get("new_question").get(0).toString(), Question.class);
 
         int id = questionDAO.insertAndGetId(question);
         Question q = questionDAO.select(id);
+
+        for (Mcq mcq : question.getListMcq()) {
+            mcq.setId_question(q.getId());
+            Mcq r = mcqDAO.insertAndGetId(mcq);
+            q.addMcq(r);
+        }
 
         if (q != null) {
             this.sendNewQuestion(q);
@@ -265,21 +269,6 @@ public class UserInstance extends Thread implements Runnable {
         }
 
         System.out.println("Nouveau commentaire d'id : " + id);
-
-    }
-
-
-    private void caseInsertMCQ(Map dataMap, String data) throws JsonProcessingException, SQLException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode dataJson = objectMapper.readTree(data);
-
-        McqDAO mcqDAO = new McqDAO(Server.CONNECTION);
-
-        Mcq mcq = this.getUnserialisation(dataJson.get("new_mcq").get(0).toString(), Mcq.class);
-
-        int id = mcqDAO.insertAndGetId(mcq);
-
-        System.out.println("Nouveau mcq d'id : " + id);
 
     }
 

@@ -1,5 +1,6 @@
 package fr.univlr.debathon.server.pdf;
 
+import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.server.communication.Server;
 
 import java.sql.PreparedStatement;
@@ -23,13 +24,13 @@ public class PDFdata {
 
             if (rs.next()) {
                 fquestion.setLabelQuestion(rs.getString("label"));
-                String choice = rs.getString("type");
+                Question.Type choice = Question.Type.valueOf(rs.getString("type").toUpperCase());
 
                 switch (choice) {
-                    case "unique":
+                    case UNIQUE:
                         fquestion.setUniqueChoice(true);
                         break;
-                    case "multiple":
+                    case MULTIPLE:
                         fquestion.setUniqueChoice(false);
                         break;
                     default:

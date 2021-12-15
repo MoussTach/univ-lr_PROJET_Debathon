@@ -10,6 +10,7 @@ import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.mainwindow.SelectWindowView;
+import fr.univlr.debathon.application.view.mainwindow.debate.CreateQuestionView;
 import fr.univlr.debathon.application.view.mainwindow.debate.InscriptionStatView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
@@ -73,6 +74,7 @@ public class DebateViewModel extends ViewModel_SceneCycle {
     private MainViewScope mainViewScope;
 
     private PopOver popOver_statMail;
+    private PopOver popOver_createQuestion;
 
 
     /**
@@ -87,6 +89,13 @@ public class DebateViewModel extends ViewModel_SceneCycle {
 
         this.debate = debate;
 
+        CreateQuestionViewModel createQuestionViewModel = new CreateQuestionViewModel(this.debate);
+        popOver_createQuestion = new PopOver(FluentViewLoader.fxmlView(CreateQuestionView.class)
+                .viewModel(createQuestionViewModel)
+                .load().getView());
+        popOver_createQuestion.setDetachable(false);
+        popOver_createQuestion.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
+
         popOver_statMail = new PopOver(FluentViewLoader.fxmlView(InscriptionStatView.class)
                 .load().getView());
         popOver_statMail.setDetachable(false);
@@ -95,6 +104,9 @@ public class DebateViewModel extends ViewModel_SceneCycle {
         Launch.APPLICATION_STOP.addListener(new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (popOver_createQuestion != null) {
+                    popOver_createQuestion.hide(Duration.millis(0));
+                }
                 if (popOver_statMail != null) {
                     popOver_statMail.hide(Duration.millis(0));
                 }
@@ -234,6 +246,24 @@ public class DebateViewModel extends ViewModel_SceneCycle {
                 this.debate.listQuestionsProperty().removeListener(this.listChangeListener_question);
                 this.listChangeListener_question = null;
             }
+        }
+    }
+
+    /**
+     * Show a popover to create new questions.
+     *
+     * @author Gaetan Brenckle
+     * @param node - {@link Node} - node used to show the popover
+     */
+    public void actvm_showCreateQuestion(Node node) {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the HomePageViewModel.actvm_showCreateQuestion()");
+        }
+
+        if (popOver_createQuestion.isShowing()) {
+            popOver_createQuestion.hide();
+        } else {
+            popOver_createQuestion.show(node);
         }
     }
 

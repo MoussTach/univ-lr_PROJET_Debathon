@@ -3,6 +3,7 @@ package fr.univlr.debathon.application.view.mainwindow.debate.question;
 import de.saxsys.mvvmfx.InjectViewModel;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.ResponseViewModel;
+import fr.univlr.debathon.job.db_project.jobclass.Question;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -31,12 +32,12 @@ public class ResponseView extends FxmlView_SceneCycle<ResponseViewModel> impleme
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.setViewModel(responseViewModel);
 
-        if (this.responseViewModel.getQuestionView().getQuestion().getType().equals("unique")) {
+        if (this.responseViewModel.getQuestionView().getQuestion().getType().equals(Question.Type.UNIQUE.text)) {
             nodeResponse = new RadioButton();
             ((RadioButton) nodeResponse).setToggleGroup(this.responseViewModel.getGroup());
             this.responseViewModel.responseValueProperty().bind(((RadioButton) nodeResponse).selectedProperty());
 
-        } else if (this.responseViewModel.getQuestionView().getQuestion().getType().equals("multiple")) {
+        } else if (this.responseViewModel.getQuestionView().getQuestion().getType().equals(Question.Type.MULTIPLE.text)) {
             nodeResponse = new CheckBox();
             this.responseViewModel.responseValueProperty().bind(((CheckBox) nodeResponse).selectedProperty());
         } //Libre

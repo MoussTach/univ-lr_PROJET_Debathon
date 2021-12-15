@@ -174,10 +174,11 @@ public class CategoryDAO implements DAO<Category> {
 
             ResultSet rs  = pstmt.executeQuery();
 
-            pstmt.close();
             if (rs.next()) {
                 category = new Category (rs.getInt("idCategory"), rs.getString("label"), rs.getString("color"));
             }
+            pstmt.close();
+
 
         } catch (SQLException e) {
             if (LOGGER.isErrorEnabled()) {

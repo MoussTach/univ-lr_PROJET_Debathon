@@ -176,7 +176,7 @@ public class Question {
     }
 
 
-
+    public void addMcq (Mcq mcq) {this.listMcq.add(mcq);}
     public void addComment (Comment comment) {
         this.listComment.add(comment);
     }
@@ -193,4 +193,19 @@ public class Question {
         this.listMcq.set(listMcq);
     }
 
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "id=" + id +
+                ", label=" + label +
+                ", context=" + context +
+                ", type=" + type +
+                ", is_active=" + is_active +
+                ", room=" + room +
+                ", listComment===============" + listComment +
+                ", listMcq=" + listMcq +
+                ", user=" + user +
+                '}';
+    }
 }

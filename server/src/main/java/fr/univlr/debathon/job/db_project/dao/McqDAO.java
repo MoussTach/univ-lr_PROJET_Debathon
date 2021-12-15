@@ -85,9 +85,9 @@ public class McqDAO implements DAO<Mcq> {
 		
 	}
 
-	public int insertAndGetId(Mcq mcq) throws SQLException {
+	public Mcq insertAndGetId(Mcq mcq) throws SQLException {
 
-		String sql = "INSERT INTO MCQ (label, id_question, id_room) values (?,?,?)";
+		String sql = "INSERT INTO MCQ (label, id_question, id_room) values (?,?,?) returning idMcq";
 
 		try {
 
@@ -97,17 +97,20 @@ public class McqDAO implements DAO<Mcq> {
 			pstmt.setInt(2, mcq.getId_question());
 			pstmt.setInt(3, mcq.getId_room());
 
-			pstmt.executeUpdate();
-
+			ResultSet rs = pstmt.executeQuery();
+			int id = -1;
+			if (rs.next()) {
+				id = rs.getInt("idMcq");
+			}
 			pstmt.close();
-			return this.select(mcq.getLabel(), mcq.getId_question());
+			return this.select(id);
 
 
 		} catch (Exception e) {
 			if (LOGGER.isErrorEnabled()) {
 				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
 			}
-			return -1;
+			return null;
 		}
 
 	}

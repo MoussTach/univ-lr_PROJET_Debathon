@@ -293,7 +293,7 @@ public class AppCommunication extends Thread implements Runnable {
         Room room = new Room();
         room.setId(2);
         Question question = new Question("Comment ça va ?", "Il est 3h du mat et ca te casse les couilles",
-                "unique", room, user);
+                Question.Type.UNIQUE.text, room, user);
         this.requestInsertNewQuestion(question);
     }
 

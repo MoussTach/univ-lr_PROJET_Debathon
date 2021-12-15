@@ -34,6 +34,7 @@ public class DebateView extends FxmlView_SceneCycle<DebateViewModel> implements 
     @FXML private BorderPane borderPane;
 
     @FXML private Label lblTitle;
+    @FXML private Button btnShowCreateQuestion;
     @FXML private Button btnShowStatMail;
 
     @FXML private FlowPane flowCategory;
@@ -50,6 +51,14 @@ public class DebateView extends FxmlView_SceneCycle<DebateViewModel> implements 
     private ListChangeListener<ViewTuple<TagView, TagViewModel>> listChangeListener_tag;
 
     private ListChangeListener<ViewTuple<QuestionView, QuestionViewModel>> listChangeListener_question;
+
+
+    @FXML
+    public void act_btnShowCreateQuestion() {
+        LOGGER.input(String.format("Press the button %s", btnShowCreateQuestion.getId()));
+
+        this.debateViewModel.actvm_showCreateQuestion(btnShowCreateQuestion);
+    }
 
     @FXML
     public void act_btnShowStatMail() {

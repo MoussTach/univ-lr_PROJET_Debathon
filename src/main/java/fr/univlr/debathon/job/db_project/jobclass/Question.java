@@ -7,7 +7,19 @@ import javafx.collections.ObservableList;
 import java.util.List;
 
 public class Question {
-    
+
+    public enum Type {
+        MULTIPLE("multiple"),
+        UNIQUE("unique"),
+        LIBRE("libre");
+
+        public final String text;
+
+        Type(String text) {
+            this.text = text;
+        }
+    }
+
     private final IntegerProperty id = new SimpleIntegerProperty(-1);
 
     private final StringProperty label = new SimpleStringProperty("/");

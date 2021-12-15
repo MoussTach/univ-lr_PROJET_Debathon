@@ -53,6 +53,15 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
     private final Room debate;
 
     //Text
+    private final StringProperty lblKey_label = new SimpleStringProperty(this.resBundle_.get().getString("lblKey"));
+
+    //Value
+    private final StringProperty tfKey_value = new SimpleStringProperty();
+    //--------------------
+
+    private final BooleanProperty canCreateQuestion = new SimpleBooleanProperty(false);
+
+    //Text
     private final StringProperty titledCreate_label = new SimpleStringProperty(this.resBundle_.get().getString("titledCreate"));
     private final StringProperty lblQuestion_label = new SimpleStringProperty(this.resBundle_.get().getString("lblQuestion"));
 
@@ -90,6 +99,9 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
         }
 
         this.debate = debate;
+        if (debate.getKey() == null || debate.getKey().isEmpty()) {
+            this.canCreateQuestion.set(true);
+        }
 
         rule_Question.addRule(createRule_Question());
         rule_QuestionType.addRule(createRule_QuestionType());
@@ -166,6 +178,31 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
         }, this.listResponses_value, this.isShowedResponses);
     }
 
+    public void actvm_btnValidKey() {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the CreateQuestionViewModel.actvm_btnValidKey()");
+        }
+
+        if (this.tfKey_value.get().equals(this.debate.getKey())) {
+            this.debate.setKey("");
+            this.canCreateQuestion.set(true);
+
+
+            Notifications.create()
+                    .position(Pos.BOTTOM_RIGHT)
+                    .title(this.resBundle_.get().getString("key_title"))
+                    .text(this.resBundle_.get().getString("key_text"))
+                    .showInformation();
+        } else {
+
+            Notifications.create()
+                    .position(Pos.BOTTOM_RIGHT)
+                    .title(this.resBundle_.get().getString("key_title_bad"))
+                    .text(this.resBundle_.get().getString("key_text_bad"))
+                    .showWarning();
+        }
+    }
+
     public void actvm_ResponsesAdd() {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[public][method] Usage of the CreateQuestionViewModel.actvm_ResponsesAdd()");
@@ -187,8 +224,6 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[public][method] Usage of the CreateQuestionViewModel.actvm_ValidCreateDebate()");
         }
 
-        //TODO valid Create
-        //TODO set questions
         Question newQuestion = new Question(
                 this.taQuestion_value.get(),
                 "",
@@ -213,7 +248,7 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
                     .position(Pos.BOTTOM_RIGHT)
                     .title(this.resBundle_.get().getString("createQuestion_title_error"))
                     .text(this.resBundle_.get().getString("createQuestion_text_error"))
-                    .showInformation();
+                    .showError();
             return;
         }
 
@@ -227,6 +262,39 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
                 .title(this.resBundle_.get().getString("createQuestion_title"))
                 .text(this.resBundle_.get().getString("createQuestion_text"))
                 .showInformation();
+    }
+
+    /**
+     * Property of the variable lblKey_label.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link StringProperty} - return the property of the variable lblKey_label.
+     */
+    public StringProperty lblKey_labelProperty() {
+        return lblKey_label;
+    }
+
+    /**
+     * Property of the variable tfKey_value.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link StringProperty} - return the property of the variable tfKey_value.
+     */
+    public StringProperty tfKey_valueProperty() {
+        return tfKey_value;
+    }
+
+    /**
+     * Property of the variable canCreateQuestion.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link BooleanProperty} - return the property of the variable canCreateQuestion.
+     */
+    public BooleanProperty canCreateQuestionProperty() {
+        return canCreateQuestion;
     }
 
     /**

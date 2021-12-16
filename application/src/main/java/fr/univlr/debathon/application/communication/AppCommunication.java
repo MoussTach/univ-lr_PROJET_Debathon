@@ -164,10 +164,6 @@ public class AppCommunication extends Thread implements Runnable {
             Debathon.getInstance().getCurrent_debate().listQuestionsProperty().addAll(questionList);
         }
 
-        // TODO room in comment
-        for (Question question : questionList)
-            System.out.println(question + "@@@@@@@@@@@@@@@@@@@@@@@@@");
-
         if (dataJson.get("mcq") != null) {
             for (int i = 0; i < dataJson.get("mcq").get(0).size(); i++) {
 

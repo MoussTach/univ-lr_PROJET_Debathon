@@ -15,8 +15,6 @@ public class Main {
         AppCommunication comm = new AppCommunication();
         comm.start();
 
-        comm.requestKey();
-
         //comm.requestHome(); //TEST TO GET ALL ROOMS INFOS
 
         //comm.requestRoom(1); //TEST TO GET ROOM INFO WITH ID : 1

@@ -19,6 +19,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -185,15 +186,22 @@ public class UserInstance extends Thread implements Runnable {
         ArrayNode mcq = rootRoom.putArray("mcq");
 
         RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
+        CommentDAO commentDAO = new CommentDAO(Server.CONNECTION);
+
         //Selection de la room avec son id
         Room roomSelected = roomDAO.select((int) data.get("id"));
+
+        for (Question question : roomSelected.getListQuestion()) {
+            List<Comment> list = commentDAO.selectCommentByIdQuestion(question.getId());
+            question.getListComment().addAll(list);
+        }
+
         room.addPOJO(roomSelected);
 
         McqDAO mcqDAO = new McqDAO(Server.CONNECTION);
         List<Mcq> mcqList = mcqDAO.selectMcqByIdSalon(roomSelected.getId());
         mcq.addPOJO(mcqList);
 
-        System.out.println(rootRoom);
 
         this.sendData(rootRoom);
     }

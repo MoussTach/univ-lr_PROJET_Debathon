@@ -224,29 +224,25 @@ public class RoomDAO implements DAO<Room> {
 	}
 
 
-	public Room selectByKey(String key) throws SQLException {
+	public boolean endDebate(int id) {
 
-		int id = -1;
-
-		String sql = "SELECT * from Room where key=?";
+		String sql = "UPDATE Room SET is_open=false WHERE idRoom=?";
 
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);
 
-			pstmt.setString(1, key);
-
-			ResultSet rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				id = rs.getInt("idRoom");
-			}
-		pstmt.close();
+			pstmt.setInt(1, id);
+			pstmt.execute();
+			pstmt.close();
 		} catch (Exception e) {
 			if (LOGGER.isErrorEnabled()) {
 				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
 			}
+			return false;
 		}
-		return this.select(id);
+
+
+		return true;
 	}
 
 }

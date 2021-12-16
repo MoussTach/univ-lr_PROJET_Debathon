@@ -173,7 +173,20 @@ public class UserInstance extends Thread implements Runnable {
     private void caseEndDebate(Map data) throws JsonProcessingException {
 
         int id_debate = (int) data.get("id_debate");
+        RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
+        roomDAO.endDebate(id_debate);
         PDFGenerator.getInstance().requestPDF(id_debate);
+
+
+        ObjectNode root = objectMapper.createObjectNode();
+        root.put("methods", "ENDDEBATE");
+        root.put("id_debate", id_debate);
+
+        for (UserInstance ui : Server.USERINSTANCELIST) {
+            if (ui != null)
+                ui.sendData(root);
+        }
+
     }
 
 
@@ -184,6 +197,14 @@ public class UserInstance extends Thread implements Runnable {
         try {
             RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
             List<Room> list = roomDAO.selectAll();
+            List<Room> listDelete = new ArrayList<>();
+
+            for (Room room : list) {
+                if (!room.isIs_open())
+                    listDelete.add(room);
+            }
+            for (Room room : listDelete)
+                list.remove(room);
 
             ObjectNode root = objectMapper.createObjectNode();
             root.put("methods", "RESPONSE");

@@ -83,6 +83,9 @@ public class AppCommunication extends Thread implements Runnable {
             case "KEY_HOME":
                 methodsGETKEY (dataJson);
                 break;
+            case "ENDDEBATE":
+                methodsENDDEBATE (dataJson);
+                break;
         }
     }
 
@@ -237,7 +240,23 @@ public class AppCommunication extends Thread implements Runnable {
         Debathon.getInstance().setKey(key);
     }
 
+    public void methodsENDDEBATE(JsonNode dataJson) {
 
+        int id_debate = dataJson.get("id_debate").asInt();
+        System.out.println("CIIIII");
+        int i = 0;
+        boolean ok = false;
+        while (!ok || i < Debathon.getInstance().getDebates().size()) {
+
+            if (Debathon.getInstance().getDebates().get(i).getId() == id_debate) {
+                Debathon.getInstance().getDebates().remove(i);
+                ok = true;
+            }
+
+            i++;
+        }
+
+    }
 
 
 

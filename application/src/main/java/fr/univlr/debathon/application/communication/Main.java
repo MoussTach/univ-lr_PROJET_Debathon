@@ -16,7 +16,7 @@ public class Main {
         comm.start();
 
         comm.requestHome(); //TEST TO GET ALL ROOMS INFOS
-        comm.requestEndDebate(2);
+        comm.requestKey();
 
         //comm.requestRoom(1); //TEST TO GET ROOM INFO WITH ID : 1
 

@@ -331,7 +331,7 @@ public class CommentDAO implements DAO<Comment> {
 
 				Question question = null;
 				if ("" + rs.getInt("id_question") != "") {
-					question = questionDAO.select(rs.getInt("id_parent"));
+					question = questionDAO.select(rs.getInt("id_question"));
 				}
 
 				comment = new Comment(

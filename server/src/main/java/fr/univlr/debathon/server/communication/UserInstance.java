@@ -270,15 +270,11 @@ public class UserInstance extends Thread implements Runnable {
         ArrayNode mcq = rootRoom.putArray("mcq");
 
         RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
-        CommentDAO commentDAO = new CommentDAO(Server.CONNECTION);
 
         //Selection de la room avec son id
         Room roomSelected = roomDAO.select((int) data.get("id"));
 
-        for (Question question : roomSelected.getListQuestion()) {
-            List<Comment> list = commentDAO.selectCommentByIdQuestion(question.getId());
-            question.getListComment().addAll(list);
-        }
+
 
         room.addPOJO(roomSelected);
 
@@ -368,10 +364,10 @@ public class UserInstance extends Thread implements Runnable {
         CommentDAO commentDAO = new CommentDAO(Server.CONNECTION);
 
         Comment comment = this.getUnserialisation(dataJson.get("new_comment").get(0).toString(), Comment.class);
-
         int id = commentDAO.insertAndGetId(comment);
 
         Comment c = commentDAO.select(id);
+        System.out.println(c);
 
         if (c != null) {
             this.sendNewComment(c);

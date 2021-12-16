@@ -6,6 +6,7 @@ import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.QuestionViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.ResponseViewModel;
+import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -44,8 +45,9 @@ public class QuestionView extends FxmlView_SceneCycle<QuestionViewModel> impleme
     public void act_btnValid() {
         LOGGER.input(String.format("Press the button %s", btnValid.getId()));
 
-        vBoxQuestions.setDisable(true);
-        this.questionViewModel.actvm_btnValid();
+        if (this.questionViewModel.actvm_btnValid()) {
+            vBoxQuestions.setDisable(true);
+        }
     }
 
     @Override
@@ -56,6 +58,17 @@ public class QuestionView extends FxmlView_SceneCycle<QuestionViewModel> impleme
         this.lblQuestion.textProperty().bind(this.questionViewModel.lblQuestion_labelProperty());
 
         //Value
+
+        //Check if a mcq already have a check
+        boolean alreadyAnwser = false;
+        for (Mcq mcq : this.questionViewModel.getQuestion().listMcqProperty()) {
+            if (mcq.getNb_votes() < 0) {
+                alreadyAnwser = true;
+                break;
+            }
+        }
+        this.vBoxQuestions.setDisable(alreadyAnwser);
+
         this.questionViewModel.listResponsesProperty().forEach(item -> vBoxQuestions.getChildren().add(item.getView()));
         this.listChangeListener_Responses = change -> {
             while (change.next()) {

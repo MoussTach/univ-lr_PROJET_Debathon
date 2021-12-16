@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:id="bPaneCategory" style="-fx-background-color: #FFA07A; -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-width: 2; -fx-border-color: LIGHTGRAY;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView">
+   <center>
+       <StackPane BorderPane.alignment="CENTER">
+           <BorderPane.margin>
+               <Insets bottom="3.0" left="4.0" right="4.0" top="3.0" />
+           </BorderPane.margin>
+           <Label fx:id="lblCategory" style="-fx-background-color: WHITE; -fx-background-radius: 10;" text="lblCategory">
+              <font>
+                  <Font name="Calibri Bold" size="14.0" />
+              </font>
+            <padding>
+               <Insets bottom="2.0" left="3.0" right="3.0" top="2.0" />
+            </padding>
+           </Label>
+       </StackPane>
+   </center>
+</BorderPane>

@@ -23,7 +23,7 @@ import java.util.Comparator;
 public class CustomComboBox_R<T> extends ComboBox<T> {
 
     private final StringProperty typedText = new SimpleStringProperty("");
-    private final ListProperty<T> listItems = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<T> listItems = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
     private final ListProperty<T> sortedList = new SimpleListProperty<>(
             new SortedList<>(
                     filter_ComboBox(),

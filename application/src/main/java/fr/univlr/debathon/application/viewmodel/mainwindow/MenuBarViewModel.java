@@ -91,7 +91,7 @@ public class MenuBarViewModel extends ViewModel_SceneCycle {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(Launch.PRIMARYSTAGE);
 
-            final Image ico = new Image(this.getClass().getResourceAsStream("/img/logo/Logo_univLR_64.png"));
+            final Image ico = new Image(this.getClass().getResourceAsStream("/img/logo/debathon_512.png"));
             stage.getIcons().add(ico);
             stage.setScene(scene);
 

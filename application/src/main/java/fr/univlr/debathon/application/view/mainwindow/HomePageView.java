@@ -10,6 +10,8 @@ import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.Category
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import org.controlsfx.control.textfield.CustomTextField;
 
 import java.net.URL;
@@ -28,10 +31,11 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
 
     @FXML private BorderPane borderPane;
     @FXML private TitledPane tPaneParameters;
+    @FXML private Button btnShowKey;
 
     //Header organizer
+    @FXML private StackPane stackCreateDebate;
     @FXML private Label lblOrganizer;
-    @FXML private CheckBox chkShowCreatedDebate;
     @FXML private Button btnCreateNewDebate;
 
     //Header parameters
@@ -43,17 +47,26 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
     @FXML private ScrollPane scrollPane;
     @FXML private FlowPane flowDebate;
 
-    private ListChangeListener<ViewTuple<CategoryView, CategoryViewModel> > listChangeListener_category;
+    private ChangeListener<String> changeListener_key;
+    private ChangeListener<ViewTuple<CategoryView, CategoryViewModel> > changeListener_category;
     private ListChangeListener<ViewTuple<TagView, TagViewModel> > listChangeListener_tag;
     private ListChangeListener<Node> listChangeListener_DebateThumbnail;
 
     @InjectViewModel
     private HomePageViewModel homePageViewModel;
 
+    @FXML
+    private void act_showKey() {
+        LOGGER.input(String.format("Press the button %s", btnShowKey.getId()));
+
+        this.homePageViewModel.actvm_showKeyWindow(btnShowKey);
+    }
 
     @FXML
     private void act_btnCreateNewDebate() {
         LOGGER.input(String.format("Press the button %s", btnCreateNewDebate.getId()));
+
+        this.homePageViewModel.actvm_CreateNewDebate(btnCreateNewDebate);
     }
 
     @FXML
@@ -74,25 +87,33 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
         tPaneParameters.textProperty().bind(this.homePageViewModel.tPaneParameters_labelProperty());
 
         lblOrganizer.textProperty().bind(this.homePageViewModel.lblOrganizer_labelProperty());
-        chkShowCreatedDebate.textProperty().bind(this.homePageViewModel.chkShowCreatedDebate_labelProperty());
         btnCreateNewDebate.textProperty().bind(this.homePageViewModel.btnCreateNewDebate_labelProperty());
 
         btnAddItem.textProperty().bind(this.homePageViewModel.btnAddTag_labelProperty());
 
         //Value
-        chkShowCreatedDebate.selectedProperty().bindBidirectional(this.homePageViewModel.chkShowCreatedDebate_valueProperty());
+        this.stackCreateDebate.setVisible(false);
+        this.stackCreateDebate.setManaged(false);
 
-        this.homePageViewModel.listCategory_selected_valueProperty().forEach(item -> flowCategory.getChildren().add(item.getView()));
-        this.listChangeListener_category = change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    change.getAddedSubList().stream().filter(item -> !flowCategory.getChildren().contains(item.getView())).forEach(item -> flowCategory.getChildren().add(item.getView()));
-                } else if (change.wasRemoved()) {
-                    change.getRemoved().forEach(item -> flowCategory.getChildren().remove(item.getView()));
-                }
-            }
+        this.btnShowKey.setVisible(true);
+        this.btnShowKey.setManaged(true);
+        this.changeListener_key = (observableValue, oldValue, newValue) -> {
+            boolean value = newValue == null || newValue.isEmpty();
+            this.stackCreateDebate.setVisible(value);
+            this.stackCreateDebate.setManaged(value);
+
+            this.btnShowKey.setVisible(!value);
+            this.btnShowKey.setManaged(!value);
         };
-        this.homePageViewModel.listCategory_selected_valueProperty().addListener(this.listChangeListener_category);
+        this.homePageViewModel.key_valueProperty().addListener(this.changeListener_key);
+
+        this.changeListener_category = (observableValue, oldValue, newValue) -> {
+            if (oldValue != null)
+                flowCategory.getChildren().remove(oldValue.getView());
+            if (newValue != null)
+                flowCategory.getChildren().add(newValue.getView());
+        };
+        this.homePageViewModel.category_selected_valueProperty().addListener(this.changeListener_category);
 
         this.homePageViewModel.listTag_selected_valueProperty().forEach(item -> flowTag.getChildren().add(item.getView()));
         this.listChangeListener_tag = change -> {
@@ -132,9 +153,9 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
 
     @Override
     public void onViewRemoved_Cycle() {
-        if (this.listChangeListener_category != null) {
-            this.homePageViewModel.listCategory_selected_valueProperty().removeListener(this.listChangeListener_category);
-            this.listChangeListener_category = null;
+        if (this.changeListener_category != null) {
+            this.homePageViewModel.category_selected_valueProperty().removeListener(this.changeListener_category);
+            this.changeListener_category = null;
         }
 
         if (this.listChangeListener_tag != null) {
@@ -151,14 +172,11 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
         tPaneParameters.textProperty().unbind();
 
         lblOrganizer.textProperty().unbind();
-        chkShowCreatedDebate.textProperty().unbind();
         btnCreateNewDebate.textProperty().unbind();
 
         btnAddItem.textProperty().unbind();
 
         //Value
-        chkShowCreatedDebate.selectedProperty().unbindBidirectional(this.homePageViewModel.chkShowCreatedDebate_valueProperty());
-
         tfSearch.textProperty().unbindBidirectional(this.homePageViewModel.tfSearch_valueProperty());
     }
 }

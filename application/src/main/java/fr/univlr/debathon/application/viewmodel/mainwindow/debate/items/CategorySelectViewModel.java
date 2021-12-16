@@ -44,12 +44,10 @@ public class CategorySelectViewModel extends ViewModel_SceneCycle {
         if (category != null) {
             tbtnCategory_label.bind(this.category.labelProperty());
 
-            /*TODO color
             Platform.runLater(() -> {
                 color.set(this.category.getColor());
                 color.bind(this.category.colorProperty());
             });
-             */
         }
     }
 
@@ -71,9 +69,12 @@ public class CategorySelectViewModel extends ViewModel_SceneCycle {
         }
 
         if (value) {
-            this.selectCategoryScope.selectedCategoriesProperty().add(this.category);
+            this.selectCategoryScope.selectedCategoryProperty().set(this.category);
         } else {
-            this.selectCategoryScope.selectedCategoriesProperty().remove(this.category);
+            if (this.selectCategoryScope.selectedCategoryProperty().get() != null
+                    && this.selectCategoryScope.selectedCategoryProperty().get().equals(this.category)) {
+                this.selectCategoryScope.selectedCategoryProperty().set(null);
+            }
         }
     }
 

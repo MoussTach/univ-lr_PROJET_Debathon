@@ -5,6 +5,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.Objects;
+
 public class Tag {
     
     private final IntegerProperty id = new SimpleIntegerProperty(-1);
@@ -68,12 +70,18 @@ public class Tag {
         return color;
     }
 
+
     @Override
-    public String toString() {
-        return "Tag{" +
-                "id=" + id +
-                ", label=" + label +
-                ", color=" + color +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tag tag = (Tag) o;
+        return Objects.equals(id, tag.id) && Objects.equals(label, tag.label) && Objects.equals(color, tag.color);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, label, color);
+    }
+
 }

@@ -3,6 +3,7 @@ package fr.univlr.debathon.job.db_project.dao;
 import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
+import fr.univlr.debathon.log.generate.CustomLogger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +16,9 @@ import java.util.Map;
 public class QuestionDAO implements DAO<Question> {
 
 	private Connection connection;
-	
+
+	private static final CustomLogger LOGGER = CustomLogger.create(QuestionDAO.class.getName());
+
 	public QuestionDAO(Connection conn) {
 		this.connection = conn;
 	}
@@ -32,8 +35,7 @@ public class QuestionDAO implements DAO<Question> {
 		
 		String sql = "SELECT * FROM Question";
 		
-		try {
-			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+		try (PreparedStatement pstmt = this.connection.prepareStatement(sql)) {
 			
 			ResultSet rs = pstmt.executeQuery();
 			
@@ -50,9 +52,10 @@ public class QuestionDAO implements DAO<Question> {
 				
 			}
 			
-			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		
 		return listQuestion;
@@ -63,9 +66,7 @@ public class QuestionDAO implements DAO<Question> {
 
 		String sql = "INSERT INTO Question (label, context, type, id_room, id_user) values (?,?,?,?,?)";
 		
-		try {
-			
-			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+		try (PreparedStatement pstmt = this.connection.prepareStatement(sql)) {
 			
 			pstmt.setString(1, question.getLabel());
 			pstmt.setString(2, question.getContext());
@@ -74,9 +75,10 @@ public class QuestionDAO implements DAO<Question> {
 			pstmt.setInt(5, question.getUser().getId());
 			
 			pstmt.executeUpdate();
-			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -85,26 +87,32 @@ public class QuestionDAO implements DAO<Question> {
 
 	public int insertAndGetId(Question question) throws SQLException {
 
-		String sql = "INSERT INTO Question (label, context, type, id_room, id_user) values (?,?,?,?,?)";
+		String sql = "INSERT INTO Question (label, context, type, id_room, id_user) values (?,?,?,?,?) returning idQuestion";
 
-		try {
-
-			PreparedStatement pstmt = this.connection.prepareStatement(sql);
-
+		try (PreparedStatement pstmt = this.connection.prepareStatement(sql)) {
 			pstmt.setString(1, question.getLabel());
 			pstmt.setString(2, question.getContext());
 			pstmt.setString(3, question.getType());
 			pstmt.setInt(4, question.getRoom().getId());
-			pstmt.setInt(5, question.getUser().getId());
+			if (question.getUser() != null) {
+				pstmt.setInt(5, question.getUser().getId());
+			} else {
+				pstmt.setInt(5, -1);
+			}
 
-			pstmt.executeUpdate();
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next())
+				return rs.getInt("idQuestion");
 
-			return this.selectByContextAndLabel(question.getLabel(), question.getContext());
+
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return -2;
 		}
+		return -2;
 	}
 
 	@Override
@@ -112,9 +120,7 @@ public class QuestionDAO implements DAO<Question> {
 
 		String sql = "UPDATE Question SET label = ?, context = ?, type = ?, id_room = ?, id_user = ? WHERE idQuestion = ?";
 		
-		try {
-			
-			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+		try (PreparedStatement pstmt = this.connection.prepareStatement(sql)) {
 			
 			pstmt.setString(1, question.getLabel());
 			pstmt.setString(2, question.getContext());
@@ -124,9 +130,10 @@ public class QuestionDAO implements DAO<Question> {
 			pstmt.setInt(6, question.getId());
 			
 			pstmt.executeUpdate();
-			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -138,16 +145,15 @@ public class QuestionDAO implements DAO<Question> {
 
 		String sql = "DELETE Question WHERE idQuestion = ?";
 		
-		try {
-			
-			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+		try (PreparedStatement pstmt = this.connection.prepareStatement(sql)) {
 			
 			pstmt.setInt(1, question.getId());
 			
 			pstmt.executeUpdate();
-			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -156,7 +162,6 @@ public class QuestionDAO implements DAO<Question> {
 
 	@Override
 	public List<Question> selectByMultiCondition(Map<String, String> map) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -166,8 +171,7 @@ public class QuestionDAO implements DAO<Question> {
 		
 		String sql = "SELECT * FROM Question WHERE idQuestion = ?";
 		
-		try {
-			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+		try (PreparedStatement pstmt = this.connection.prepareStatement(sql)) {
 			
 			pstmt.setInt(1, id);
 			
@@ -185,10 +189,11 @@ public class QuestionDAO implements DAO<Question> {
 						commentDAO.selectCommentByIdQuestion(rs.getInt("idQuestion")), userDAO.select(rs.getInt("id_user")));
 				
 			}
-			
-			
+
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		
 		return question;
@@ -200,8 +205,7 @@ public class QuestionDAO implements DAO<Question> {
 
 		String sql = "SELECT * FROM Question WHERE label = ? AND context = ?";
 
-		try {
-			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+		try (PreparedStatement pstmt = this.connection.prepareStatement(sql)) {
 
 			pstmt.setString(1, label);
 			pstmt.setString(2, context);
@@ -214,7 +218,9 @@ public class QuestionDAO implements DAO<Question> {
 
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return -1;
 		}
 
@@ -227,8 +233,7 @@ public class QuestionDAO implements DAO<Question> {
 		
 		String sql = "SELECT * FROM Question WHERE id_room = ?";
 		
-		try {
-			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+		try (PreparedStatement pstmt = this.connection.prepareStatement(sql)) {
 			
 			pstmt.setInt(1, id);
 			
@@ -246,10 +251,11 @@ public class QuestionDAO implements DAO<Question> {
 						commentDAO.selectCommentByIdQuestion(rs.getInt("idQuestion")), userDAO.select(rs.getInt("id_user"))));
 				
 			}
-			
-			
+
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 		
 		return listQuestion;
@@ -261,8 +267,7 @@ public class QuestionDAO implements DAO<Question> {
 
 		String sql = "SELECT idQuestion, label, context, type, is_active, id_room, id_user FROM Question WHERE id_room = ?";
 
-		try {
-			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+		try (PreparedStatement pstmt = this.connection.prepareStatement(sql)) {
 
 			pstmt.setInt(1, room.getId());
 
@@ -279,10 +284,10 @@ public class QuestionDAO implements DAO<Question> {
 						commentDAO.selectCommentByIdQuestion(rs.getInt("idQuestion"), null), userDAO.select(rs.getInt("id_user"))));
 
 			}
-
-
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 
 		return listQuestion;

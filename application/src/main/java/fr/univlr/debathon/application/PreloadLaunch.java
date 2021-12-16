@@ -31,7 +31,7 @@ public class PreloadLaunch extends javafx.application.Preloader {
         final ViewTuple<PreloadWindowView, PreloadWindowViewModel> preloadViewTuple = FluentViewLoader.fxmlView(PreloadWindowView.class).load();
         final Scene scene = new Scene(preloadViewTuple.getView());
 
-        final Image ico = new Image(getClass().getResourceAsStream("/img/logo/Logo_univLR_64.png"));
+        final Image ico = new Image(getClass().getResourceAsStream("/img/logo/debathon_512.png"));
         primaryStage.getIcons().add(ico);
 
         primaryStage.initStyle(StageStyle.TRANSPARENT);

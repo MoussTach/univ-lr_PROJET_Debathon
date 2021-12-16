@@ -6,16 +6,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonDeserializer;
-import fr.univlr.debathon.application.viewmodel.mainwindow.HomePageViewModel;
 import fr.univlr.debathon.job.db_project.jobclass.*;
 import fr.univlr.debathon.log.generate.CustomLogger;
+import fr.univlr.debathon.tools.AlphaNumericStringGenerator;
 import org.hildan.fxgson.FxGson;
 
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 public class AppCommunication extends Thread implements Runnable {
 
@@ -33,7 +38,6 @@ public class AppCommunication extends Thread implements Runnable {
         userSocket = new Socket("localhost",9878);
         out = new PrintWriter(userSocket.getOutputStream());
         in = new BufferedReader(new InputStreamReader(userSocket.getInputStream()));
-
     }
 
     private <T> T getUnserialisation(String objects, Class<T> classT) {
@@ -76,6 +80,15 @@ public class AppCommunication extends Thread implements Runnable {
             case "NEWMCQ":
                 methodsNEWMCQ (dataJson);
                 break;
+            case "KEY_HOME":
+                methodsGETKEY (dataJson);
+                break;
+            case "ENDDEBATE":
+                methodsENDDEBATE (dataJson);
+                break;
+            case "DELETEQUESTION":
+                methodsDELETEQUESTION (dataJson);
+                break;
         }
     }
 
@@ -86,10 +99,45 @@ public class AppCommunication extends Thread implements Runnable {
     public void methodsRESPONSE(JsonNode dataJson, ObjectMapper objectMapper) throws IOException {
 
         //Boucle affetant chaque salon dans la list de salon
-        for(int i = 0;i<dataJson.get("rooms").size();i++){
+        for(int i = 0; i < dataJson.get("rooms").size(); i++){
 
             Room room = this.getUnserialisation(dataJson.get("rooms").get(i).toString(), Room.class);
-            System.out.println("---" + room);
+
+            List<Tag> shadowListTag = new ArrayList<>(room.getListTag());
+            for (Tag currentTag : room.getListTag()) {
+                boolean exist = false;
+
+                for (Tag tag : Debathon.getInstance().getTags()) {
+                    if (tag.getLabel().equals(currentTag.getLabel())) {
+
+                        if (!tag.equals(currentTag)) {
+                            shadowListTag.remove(currentTag);
+                            shadowListTag.add(tag);
+                        }
+
+                        exist = true;
+                    }
+                }
+                if (!exist) {
+                    Debathon.getInstance().getTags().add(currentTag);
+                }
+            }
+            room.setListTag(shadowListTag);
+
+            boolean exist = false;
+            for (Category category : Debathon.getInstance().getCategories()) {
+                if (room.getCategory() != null && category.getLabel().equals(room.getCategory().getLabel())) {
+
+                    if (!room.getCategory().equals(category)) {
+                        room.setCategory(category);
+                    }
+
+                    exist = true;
+                }
+            }
+            if (!exist)
+                Debathon.getInstance().getCategories().add(room.getCategory());
+
             Debathon.getInstance().getDebates().add(room);
         }
     }
@@ -141,10 +189,10 @@ public class AppCommunication extends Thread implements Runnable {
     public void methodsNEWCOMMENT(JsonNode dataJson) throws IOException {
         Comment comment = this.getUnserialisation(dataJson.get("new_comment").get(0).toString(), Comment.class);
 
-
         for (Question question : Debathon.getInstance().getCurrent_debate().getListQuestion()) {
             if (question.getId() == comment.getQuestion().getId()) {
                 question.addComment(comment);
+                return;
             }
         }
 
@@ -160,15 +208,88 @@ public class AppCommunication extends Thread implements Runnable {
     public void methodsNEWROOM (JsonNode dataJson) throws IOException {
         Room room = this.getUnserialisation(dataJson.get("new_room").get(0).toString(), Room.class);
 
-        Debathon.getInstance().getDebates().add(room);
-        System.out.println(room);
+        List<Tag> shadowListTag = new ArrayList<>(room.getListTag());
+        for (Tag currentTag : room.getListTag()) {
+            boolean exist = false;
 
+            for (Tag tag : Debathon.getInstance().getTags()) {
+                if (tag.getLabel().equals(currentTag.getLabel())) {
+
+                    if (!tag.equals(currentTag)) {
+                        shadowListTag.remove(currentTag);
+                        shadowListTag.add(tag);
+                    }
+
+                    exist = true;
+                }
+            }
+            if (!exist) {
+                Debathon.getInstance().getTags().add(currentTag);
+            }
+        }
+
+        Debathon.getInstance().getDebates().add(room);
     }
 
     public void methodsNEWMCQ(JsonNode dataJson) throws IOException {
         Mcq mcq = this.getUnserialisation(dataJson.get("new_mcq").get(0).toString(), Mcq.class);
-        System.out.println(mcq);
+
         Debathon.getInstance().getMcq().add(mcq);
+    }
+
+
+    public void methodsGETKEY(JsonNode dataJson) {
+        String key = String.valueOf(dataJson.get("key"));
+        User user = this.getUnserialisation(dataJson.get("user").get(0).toString(), User.class);
+        Debathon.getInstance().setKey(key.replace("\"", ""));
+        Debathon.getInstance().userProperty().set(user);
+    }
+
+    public void methodsENDDEBATE(JsonNode dataJson) {
+        int id_debate = dataJson.get("id_debate").asInt();
+
+        int i = 0;
+        boolean ok = false;
+        while (!ok && i < Debathon.getInstance().getDebates().size()) {
+
+            if (Debathon.getInstance().getDebates().get(i).getId() == id_debate) {
+                Debathon.getInstance().getDebates().remove(i);
+                ok = true;
+            }
+
+            i++;
+        }
+    }
+
+    public void methodsDELETEQUESTION(JsonNode dataJson) {
+
+        int id_question = dataJson.get("id_question").asInt();
+        int id_room = dataJson.get("id_room").asInt();
+
+
+        int i = 0;
+        int j = 0;
+        boolean ok_room = false;
+        boolean ok_question = false;
+        while (!ok_room && i < Debathon.getInstance().getDebates().size()) {
+
+            if (Debathon.getInstance().getDebates().get(i).getId() == id_room) {
+
+                while (!ok_question && j < Debathon.getInstance().getDebates().get(i).getListQuestion().size()) {
+                    if (Debathon.getInstance().getDebates().get(i).getListQuestion().get(j).getId() == id_question) {
+
+                        Debathon.getInstance().getDebates().get(i).getListQuestion().remove(j);
+
+                        ok_question = true;
+                    }
+                }
+
+                ok_room = true;
+            }
+
+            i++;
+        }
+
     }
 
 
@@ -176,12 +297,20 @@ public class AppCommunication extends Thread implements Runnable {
 
 
 
+    public void requestKey () {
 
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+        all_rooms.clear();
+        root.put("methods", "GET");
+        root.put("request", "KEY_HOME");
 
-
-
-
-
+        try {
+            this.sendData(mapper, root);
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Demande de clé non envoyé.");
+        }
+    }
 
     public void requestHome () throws JsonProcessingException {
         System.out.println("TEST ALL ROOMS IN DB");
@@ -193,6 +322,41 @@ public class AppCommunication extends Thread implements Runnable {
 
         this.sendData(mapper, root);
     }
+
+
+    public void requestEndDebate (int id_debate)  {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+        all_rooms.clear(); //TODO a regarder
+        root.put("methods", "END");
+        root.put("request", "DEBATE");
+        root.put("id_debate", id_debate);
+
+        try {
+            this.sendData(mapper, root);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void requestDeleteQuestion (int id_question) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+        root.put("methods", "DELETE");
+        root.put("request", "QUESTION");
+        root.put("id_question", id_question);
+
+        try {
+            this.sendData(mapper, root);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
 
     //Fonction avec id en parametre pour recuperer info d'une room
@@ -208,7 +372,6 @@ public class AppCommunication extends Thread implements Runnable {
         //id pour preciser l'id de la room
         root.put("id",id);
         this.sendData(mapper, root);
-
     }
 
     public void requestInsertNewRoom (Room room) throws JsonProcessingException {
@@ -225,14 +388,14 @@ public class AppCommunication extends Thread implements Runnable {
         this.sendData(mapper, root);
 
     }
+
     public void testRequestInsertNewRoom () throws JsonProcessingException {
         String key = AlphaNumericStringGenerator.getRandomString(6);
-        Category category = new Category(1, "Catégorie");
+        Category category = new Category(1, "Catégorie", "#000");
         List<Tag> listTag = new ArrayList<>();
         listTag.add(new Tag(1, "Oui", "couleur"));
         listTag.add(new Tag(2, "Tag", "couelurur"));
-        Room room = new Room("Salon de Julien", "Ceci est un nouveau salon", key,
-                "mail@mail.mail", category, listTag);
+        Room room = new Room("Salon de Julien", "Ceci est un nouveau salon", key,  category, listTag);
 
         this.requestInsertNewRoom(room);
     }
@@ -254,7 +417,7 @@ public class AppCommunication extends Thread implements Runnable {
         Room room = new Room();
         room.setId(2);
         Question question = new Question("Comment ça va ?", "Il est 3h du mat et ca te casse les couilles",
-                "unique", room, user);
+                Question.Type.UNIQUE.text, room, user);
         this.requestInsertNewQuestion(question);
     }
 
@@ -269,6 +432,7 @@ public class AppCommunication extends Thread implements Runnable {
         c.addPOJO(comment);
         this.sendData(mapper, root);
     }
+
     public void testRequestInsertNewComment () throws JsonProcessingException {
         Room room = new Room();
         room.setId(2);
@@ -291,6 +455,7 @@ public class AppCommunication extends Thread implements Runnable {
         c.addPOJO(mcq);
         this.sendData(mapper, root);
     }
+
     public void testRequestInsertNewMcq () throws JsonProcessingException {
 
         Room room = new Room();
@@ -298,7 +463,7 @@ public class AppCommunication extends Thread implements Runnable {
         Question question = new Question();
         question.setId(6);
 
-        Mcq mcq = new Mcq("Mcq texte", question, room);
+        Mcq mcq = new Mcq("Mcq texte", question.getId(), room);
 
         this.requestInsertNewMcq(mcq);
 
@@ -322,16 +487,30 @@ public class AppCommunication extends Thread implements Runnable {
         ObjectNode root = mapper.createObjectNode();
 
         root.put("methods", "UPDATE");
-        root.put("request", "MCQ");
-        root.put("type", "VOTE");
+        root.put("request", "COMMENT");
+        root.put("type", "LIKE");
         root.put("id", id_mcq);
-        root.put("positif", positif);
+        root.put("positif", positif); // true for add a like and false for add a dislike
 
         this.sendData(mapper, root);
 
     }
 
+    public void sendEmail(int id_room, String email) throws  JsonProcessingException{
 
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+
+        //GET pour recup donnees au client
+        root.put("methods","MAIL");
+        //ROOM pour preciser la recup d'une room precise
+        root.put("request","NEW");
+        //id pour preciser l'id de la room
+        root.put("id",id_room);
+        root.put("email",email);
+        this.sendData(mapper, root);
+
+    }
 
     public void uselessFonction () {
         System.out.println("I'm useless");
@@ -369,6 +548,19 @@ public class AppCommunication extends Thread implements Runnable {
 
 
 
+
+    private boolean end = false;
+
+    public void end () {
+        end = true;
+        try {
+            userSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @Override
     public void run() {
 
@@ -379,7 +571,7 @@ public class AppCommunication extends Thread implements Runnable {
 
             String dataReceveid = "";
 
-            while(data!=null){
+            while(!end && data!=null){
                 dataReceveid += data;
 
                 if (data.equals("}")) {
@@ -387,11 +579,15 @@ public class AppCommunication extends Thread implements Runnable {
                     dataReceveid = "";
                 }
 
-                data = in.readLine();
+                try {
+                    data = in.readLine();
+                } catch (Exception e) {
+                    LOGGER.info("Application stop.");
+                }
             }
-            System.out.println("Server out of service");
-            //out.close();
-            //userSocket.close();
+            in.close();
+            out.close();
+            userSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

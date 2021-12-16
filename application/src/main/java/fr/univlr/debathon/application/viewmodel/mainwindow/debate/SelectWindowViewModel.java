@@ -29,16 +29,16 @@ import java.util.ResourceBundle;
 
 public class SelectWindowViewModel extends ViewModel_SceneCycle {
 
-    private final ObjectProperty<ResourceBundle> resBundle_ = LanguageBundle.getInstance().bindResourceBundle("properties.language.mainwindow.lg_homePage");
     private static final CustomLogger LOGGER = CustomLogger.create(SelectWindowViewModel.class.getName());
+    private final ObjectProperty<ResourceBundle> resBundle_ = LanguageBundle.getInstance().bindResourceBundle("properties.language.mainwindow.lg_homePage");
 
     //Text
     private final StringProperty lblCategory_label = new SimpleStringProperty(this.resBundle_.get().getString("lblCategory"));
     private final StringProperty lblTags_label = new SimpleStringProperty(this.resBundle_.get().getString("lblTags"));
 
     //Value
-    private final ListProperty<ViewTuple<CategorySelectView, CategorySelectViewModel>> listCategories_value = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final ListProperty<ViewTuple<TagSelectView, TagSelectViewModel>> listTags_value = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<ViewTuple<CategorySelectView, CategorySelectViewModel>> listCategories_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
+    private final ListProperty<ViewTuple<TagSelectView, TagSelectViewModel>> listTags_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
     private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_;
 
@@ -72,7 +72,7 @@ public class SelectWindowViewModel extends ViewModel_SceneCycle {
 
     private void bindSelectedItems() {
         if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("[public][method] Usage of the TagSelectWindowViewModel.bindSelectedItems()");
+            LOGGER.trace("[private][method] Usage of the TagSelectWindowViewModel.bindSelectedItems()");
         }
 
         Debathon.getInstance().getCategories().forEach(category ->

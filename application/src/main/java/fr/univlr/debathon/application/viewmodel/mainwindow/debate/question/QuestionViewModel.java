@@ -5,11 +5,16 @@ import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewTuple;
+import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.mainwindow.debate.question.ResponseView;
+import fr.univlr.debathon.application.view.sidewindow.comments.CommentsView;
+import fr.univlr.debathon.application.view.sidewindow.comments.CommentsWindowsView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
+import fr.univlr.debathon.application.viewmodel.sidewindow.comments.CommentsWindowsViewModel;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
+import fr.univlr.debathon.job.db_project.jobclass.Room;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
@@ -18,22 +23,26 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 @ScopeProvider(scopes= {ResponseScope.class})
 public class QuestionViewModel extends ViewModel_SceneCycle {
 
     private static final CustomLogger LOGGER = CustomLogger.create(QuestionViewModel.class.getName());
 
+    private final Room debate;
     private final Question question;
 
     //Text
     private final StringProperty lblQuestion_label = new SimpleStringProperty("/");
 
     //Value
-    private final ListProperty<ViewTuple<ResponseView, ResponseViewModel> > listResponses = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<ViewTuple<ResponseView, ResponseViewModel> > listResponses = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
-    private final ListProperty<Mcq> listSelected_mcq = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<Mcq> listSelected_mcq = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
     private ListChangeListener<Mcq> listChangeListener_response = null;
 
@@ -41,11 +50,12 @@ public class QuestionViewModel extends ViewModel_SceneCycle {
     private ResponseScope responseScope;
 
 
-    public QuestionViewModel(Question question) {
+    public QuestionViewModel(Room debate, Question question) {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[public][constructor] Creation of the QuestionViewModel() object.");
         }
 
+        this.debate = debate;
         this.question = question;
 
         bindQuestion();
@@ -112,24 +122,25 @@ public class QuestionViewModel extends ViewModel_SceneCycle {
         }
     }
 
-    public void actvm_btnValid() {
+    public boolean actvm_btnValid() {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[public][method] Usage of the QuestionViewModel.actvm_btnValid()");
         }
 
-        listSelected_mcq.forEach(mcq -> {
-            try {
-                //TODO print
-                System.out.println("response select : " + this.responseScope.selectedProperty().get().getLabel());
-                Debathon.getInstance().getAppCommunication().methodsUPDATE_VOTE_MCQ(this.responseScope.selectedProperty().get().getId());
-
-            } catch (JsonProcessingException e) {
-                if (LOGGER.isWarnEnabled()) {
-                    LOGGER.trace("The request to send the current vote of the client is interrupted.");
-                }
+        boolean added = false;
+        try {
+            for (Mcq mcq : listSelected_mcq) {
+                Debathon.getInstance().getAppCommunication().methodsUPDATE_VOTE_MCQ(mcq.getId());
+                mcq.setNb_votes(-1);
+                added = true;
             }
-        });
-
+        } catch (JsonProcessingException e) {
+            if (LOGGER.isWarnEnabled()) {
+                LOGGER.trace("The request to send the current vote of the client is interrupted.");
+            }
+            return false;
+        }
+        return added;
     }
 
     /**
@@ -142,7 +153,36 @@ public class QuestionViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[public][method] usage of QuestionViewModel.actvm_btnComments().");
         }
 
-        //TODO window comments
+        try {
+            CommentsWindowsViewModel commentsWindowsViewModel = new CommentsWindowsViewModel(this.debate, this.question);
+            final ViewTuple<CommentsWindowsView, CommentsWindowsViewModel> commentsViewTuple = FluentViewLoader.fxmlView(CommentsWindowsView.class)
+                    .viewModel(commentsWindowsViewModel)
+                    .load();
+            final Scene scene = new Scene(commentsViewTuple.getView());
+            final Stage stage = new Stage();
+
+            if (this.debate != null) {
+                stage.titleProperty().set(this.debate.getLabel());
+            }
+            stage.initModality(Modality.NONE);
+            stage.initOwner(Launch.PRIMARYSTAGE);
+
+            final Image ico = new Image(this.getClass().getResourceAsStream("/img/logo/debathon_512.png"));
+            stage.getIcons().add(ico);
+            stage.setScene(scene);
+
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("JavaFX information correctly loaded");
+            }
+
+            stage.show();
+
+        } catch (Exception e) {
+            if (LOGGER.isFatalEnabled()) {
+                LOGGER.fatal("FATAL ERROR - commentswindows can't be loaded", e);
+            }
+
+        }
     }
 
 

@@ -38,7 +38,6 @@ public class CustomTextField_R extends TextField {
     public CustomTextField_R() {
         super();
 
-        TooltipDefaultFixer.setTooltipTimers(100, 99999999, 200);
         focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (Boolean.TRUE.equals(newValue)) {
                 beforeEditing = getText();

@@ -30,7 +30,6 @@ public class MainWindowView extends FxmlView_SceneCycle<MainWindowViewModel> imp
     private final ObjectProperty<ResourceBundle> resBundleWindow_ = LanguageBundle.getInstance().bindResourceBundle("properties.language.lg_window");
     private static final CustomLogger LOGGER = CustomLogger.create(MainWindowView.class.getName());
 
-    @FXML private Button btnPrev;
     @FXML private Button btnHome;
 
     @FXML
@@ -38,25 +37,9 @@ public class MainWindowView extends FxmlView_SceneCycle<MainWindowViewModel> imp
 
     @FXML
     public StatusBar statusBarMainView;
-    @FXML
-    public Button btnExternalTask_MainView;
 
     @InjectViewModel
     private MainWindowViewModel mainWindowViewModel;
-
-
-    /**
-     * action of the button btnPrev when pressed.
-     * Charge to the previous view.
-     *
-     * @author Gaetan Brenckle
-     */
-    @FXML
-    public void act_btnPrev() {
-        LOGGER.input(String.format("Press the button %s", btnPrev.getId()));
-
-        this.mainWindowViewModel.actvm_btnPrev();
-    }
 
     /**
      * action of the button btnHome when pressed.
@@ -69,18 +52,6 @@ public class MainWindowView extends FxmlView_SceneCycle<MainWindowViewModel> imp
         LOGGER.input(String.format("Press the button %s", btnHome.getId()));
 
         this.mainWindowViewModel.actvm_btnHome();
-    }
-
-    /**
-     * action of the button btnExternalTask_MainView when pressed.
-     *
-     * @author Gaetan Brenckle
-     */
-    @FXML
-    public void act_btnExternalTask_MainView() {
-        LOGGER.input(String.format("Press the button %s", btnExternalTask_MainView.getId()));
-
-        mainWindowViewModel.actvm_openTaskExternal();
     }
 
 
@@ -109,7 +80,6 @@ public class MainWindowView extends FxmlView_SceneCycle<MainWindowViewModel> imp
             event.consume();
         });
 
-        this.btnPrev.disableProperty().bind(this.mainWindowViewModel.isPrevCommandExecutableProperty());
         this.btnHome.disableProperty().bind(this.mainWindowViewModel.isHomeCommandExecutableProperty());
     }
 
@@ -125,7 +95,6 @@ public class MainWindowView extends FxmlView_SceneCycle<MainWindowViewModel> imp
         statusBarMainView.progressProperty().unbind();
         statusBarMainView.textProperty().unbind();
 
-        this.btnPrev.disableProperty().unbind();
         this.btnHome.disableProperty().unbind();
     }
 }

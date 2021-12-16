@@ -12,6 +12,8 @@ import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.communication.Debathon;
+import fr.univlr.debathon.application.view.mainwindow.CreateDebateView;
+import fr.univlr.debathon.application.view.mainwindow.KeyWindowView;
 import fr.univlr.debathon.application.view.mainwindow.SelectWindowView;
 import fr.univlr.debathon.application.view.mainwindow.debate.DebateThumbnailView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
@@ -35,7 +37,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
@@ -43,6 +44,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -53,6 +56,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     private static final CustomLogger LOGGER = CustomLogger.create(HomePageViewModel.class.getName());
 
     private final ObjectProperty<BorderPane> borderPane = new SimpleObjectProperty<>(null);
+    private final StringProperty key_value = new SimpleStringProperty();
 
     //Text
     private final StringProperty tPaneParameters_label = new SimpleStringProperty(this.resBundle_.get().getString("tPaneParameters"));
@@ -65,34 +69,19 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
 
     //Value
-    private final BooleanProperty chkShowCreatedDebate_value = new SimpleBooleanProperty(false);
-
-    private final ListProperty<ViewTuple<CategoryView, CategoryViewModel> > listCategory_selected_value = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final ListProperty<ViewTuple<TagView, TagViewModel> > listTag_selected_value = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ObjectProperty<ViewTuple<CategoryView, CategoryViewModel> > category_selected_value = new SimpleObjectProperty<>();
+    private final ListProperty<ViewTuple<TagView, TagViewModel> > listTag_selected_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
     private final StringProperty tfSearch_value = new SimpleStringProperty();
 
-    private final ListProperty<ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> > listDebate_value = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final ListProperty<Node> listDebate_node_value = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> > listDebate_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
+    private final ListProperty<Node> listDebate_node_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
     private final FilteredList<Node> filteredData  = new FilteredList<>(listDebate_node_value, p -> true);
 
     private final ObservableRuleBasedValidator rule_changeFilter = new ObservableRuleBasedValidator();
 
-    private final Command prevCommand = new DelegateCommand(() -> new Action() {
-        @Override
-        protected void action() {
-            //TODO
-            System.out.println("act prev Home");
-            Platform.runLater(() -> {
-                BorderPane mainBorderPane = mainViewScope.basePaneProperty().get();
-                mainBorderPane.setCenter(borderPane.get());
-            });
-        }
-    }, true);
     private final Command homeCommand = new DelegateCommand(() -> new Action() {
         @Override
         protected void action() {
-            //TODO
-            System.out.println("act home Home");
             Platform.runLater(() -> {
                 BorderPane mainBorderPane = mainViewScope.basePaneProperty().get();
                 mainBorderPane.setCenter(borderPane.get());
@@ -100,8 +89,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         }
     }, true);
 
-
-    private ListChangeListener<Category> listChangeListener_Category;
+    private ChangeListener<Category> changeListener_Category;
     private ListChangeListener<Tag> listChangeListener_Tag;
 
     private ListChangeListener<Room> listChangeListener_Debate;
@@ -116,6 +104,8 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     @InjectScope
     private SelectTagScope selectTagScope;
 
+    private PopOver popOver_createDebate;
+    private PopOver popOver_keyWindow;
     private PopOver popOver_selectItems;
 
 
@@ -140,6 +130,19 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     }
 
     public void initialize() {
+        KeyWindowViewModel keyWindowViewModel = new KeyWindowViewModel();
+        keyWindowViewModel.keyProperty().bindBidirectional(Debathon.getInstance().keyProperty());
+        popOver_keyWindow = new PopOver(FluentViewLoader.fxmlView(KeyWindowView.class)
+                .viewModel(keyWindowViewModel)
+                .load().getView());
+        popOver_keyWindow.setDetachable(false);
+        popOver_keyWindow.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
+
+        popOver_createDebate = new PopOver(FluentViewLoader.fxmlView(CreateDebateView.class)
+                .load().getView());
+        popOver_createDebate.setDetachable(false);
+        popOver_createDebate.setArrowLocation(PopOver.ArrowLocation.TOP_CENTER);
+
         popOver_selectItems = new PopOver(FluentViewLoader.fxmlView(SelectWindowView.class)
                 .providedScopes(selectCategoryScope, selectTagScope)
                 .load().getView());
@@ -149,6 +152,10 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         Launch.APPLICATION_STOP.addListener(new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (popOver_createDebate != null) {
+                    popOver_createDebate.hide(Duration.millis(0));
+                }
+
                 if (popOver_selectItems != null) {
                     popOver_selectItems.hide(Duration.millis(0));
                 }
@@ -161,20 +168,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[public][method] Usage of the HomePageViewModel.bindDebate()");
         }
-
-        Debathon.getInstance().getDebates().forEach(room ->
-                Platform.runLater(() -> {
-                    if (room != null) {
-                        DebateThumbnailViewModel debateThumbnailViewModel = new DebateThumbnailViewModel(room);
-                        final ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> debateThumbViewTuple = FluentViewLoader.fxmlView(DebateThumbnailView.class)
-                                .providedScopes(mainViewScope)
-                                .viewModel(debateThumbnailViewModel)
-                                .load();
-
-                        listDebate_value.add(debateThumbViewTuple);
-                        listDebate_node_value.add(debateThumbViewTuple.getView());
-                    }
-                }));
+        this.key_value.bind(Debathon.getInstance().keyProperty());
 
         this.listChangeListener_Debate = change -> {
             while (change.next()) {
@@ -213,44 +207,19 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[private][method] Usage of the HomePageViewModel.bindSelectedItems()");
         }
-
-        this.selectCategoryScope.selectedCategoriesProperty().forEach(category -> {
-            if (category != null) {
-                CategoryViewModel categoryViewModel = new CategoryViewModel(category);
+        this.changeListener_Category = (observableValue, oldValue, newValue) -> {
+            if (newValue != null) {
+                CategoryViewModel categoryViewModel = new CategoryViewModel(newValue);
                 final ViewTuple<CategoryView, CategoryViewModel> categoryViewTuple = FluentViewLoader.fxmlView(CategoryView.class)
                         .viewModel(categoryViewModel)
                         .load();
 
-                listCategory_selected_value.add(categoryViewTuple);
-            }
-        });
-
-        this.listChangeListener_Category = change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    change.getAddedSubList().forEach(item ->
-                            Platform.runLater(() -> {
-                                if (item != null) {
-                                    CategoryViewModel categoryViewModel = new CategoryViewModel(item);
-                                    final ViewTuple<CategoryView, CategoryViewModel> categoryViewTuple = FluentViewLoader.fxmlView(CategoryView.class)
-                                            .viewModel(categoryViewModel)
-                                            .load();
-
-                                    listCategory_selected_value.add(categoryViewTuple);
-                                }
-                            })
-                    );
-                } else if (change.wasRemoved()) {
-                    change.getRemoved().forEach(item ->
-                            Platform.runLater(() -> {
-                                Optional<ViewTuple<CategoryView, CategoryViewModel>> optional = listCategory_selected_value.stream().filter(category -> category.getViewModel().getCategory().equals(item)).findAny();
-                                optional.ifPresent(listCategory_selected_value::remove);
-                            })
-                    );
-                }
+                this.category_selected_value.set(categoryViewTuple);
+            } else {
+                this.category_selected_value.set(null);
             }
         };
-        this.selectCategoryScope.selectedCategoriesProperty().addListener(this.listChangeListener_Category);
+        this.selectCategoryScope.selectedCategoryProperty().addListener(this.changeListener_Category);
 
         //-----------------------
 
@@ -298,9 +267,9 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[private][method] Usage of the HomePageViewModel.unbindSelectedItems()");
         }
 
-        if (this.listChangeListener_Category != null) {
-            this.selectCategoryScope.selectedCategoriesProperty().removeListener(this.listChangeListener_Category);
-            this.listChangeListener_Category = null;
+        if (this.changeListener_Category != null) {
+            this.selectCategoryScope.selectedCategoryProperty().removeListener(this.changeListener_Category);
+            this.changeListener_Category = null;
         }
 
         if (this.listChangeListener_Tag != null) {
@@ -313,6 +282,8 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[private][method] Usage of the HomePageViewModel.unbindDebate()");
         }
+
+        this.key_value.unbind();
 
         if (this.listChangeListener_Debate != null) {
             Debathon.getInstance().debatesProperty().removeListener(this.listChangeListener_Debate);
@@ -332,24 +303,20 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
                     debate -> {
                         //Select sort
                         boolean filterKeep = true;
-
                         Optional<ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> > optionalDebate = listDebate_value.stream().filter(debateModel -> debateModel.getView().equals(debate)).findFirst();
 
                         if (optionalDebate.isPresent()) {
-                            //TODO add categories
-                            if (!listTag_selected_value.isEmpty()) {
-                                filterKeep = false;
 
-                                for (ViewTuple<TagView, TagViewModel> itemView : optionalDebate.get().getViewModel().listTag_selected_valueProperty()) {
-                                    for (ViewTuple<TagView, TagViewModel> itemActual : this.listTag_selected_value) {
-                                        filterKeep = itemView.getViewModel().lblTag_labelProperty().get().equals(itemActual.getViewModel().lblTag_labelProperty().get());
-                                        if (filterKeep)
-                                            break;
-                                    }
+                            //Categories
+                            if (this.category_selected_value.get() != null) {
+                                filterKeep = this.category_selected_value.get().getViewModel().getCategory().equals(optionalDebate.get().getViewModel().getDebate().getCategory());
+                            }
 
-                                    if (!filterKeep)
-                                        break;
-                                }
+                            //Tags
+                            if (!listTag_selected_value.isEmpty() && filterKeep) {
+                                List<Tag> currentTags = new ArrayList<>();
+                                this.listTag_selected_value.forEach(tag -> currentTags.add(tag.getViewModel().getTag()));
+                                filterKeep = optionalDebate.get().getViewModel().getDebate().getListTag().containsAll(currentTags);
                             }
 
                             //Select search
@@ -362,7 +329,43 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
                         return filterKeep;
                     });
             return null;
-        }, this.tfSearch_value, this.listTag_selected_value, this.listDebate_value);
+        }, this.tfSearch_value, this.category_selected_value, this.listTag_selected_value, this.listDebate_value);
+    }
+
+    /**
+     * Show a popover to set the key to grant rights.
+     *
+     * @author Gaetan Brenckle
+     * @param node - {@link Node} - node used to show the popover
+     */
+    public void actvm_showKeyWindow(Node node) {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the HomePageViewModel.actvm_showKeyWindow()");
+        }
+
+        if (popOver_keyWindow.isShowing()) {
+            popOver_keyWindow.hide();
+        } else {
+            popOver_keyWindow.show(node);
+        }
+    }
+
+    /**
+     * Show a popover to create debate.
+     *
+     * @author Gaetan Brenckle
+     * @param node - {@link Node} - node used to show the popover
+     */
+    public void actvm_CreateNewDebate(Node node) {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the HomePageViewModel.actvm_CreateNewDebate()");
+        }
+
+        if (popOver_createDebate.isShowing()) {
+            popOver_createDebate.hide();
+        } else {
+            popOver_createDebate.show(node);
+        }
     }
 
 
@@ -384,6 +387,17 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         }
     }
 
+
+    /**
+     * Property of the variable key_value.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link StringProperty} - return the property of the variable key_value.
+     */
+    public StringProperty key_valueProperty() {
+        return key_value;
+    }
 
     /**
      * Getter for the list filtered of debate available
@@ -465,25 +479,14 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
     //Value
     /**
-     * Property of the variable chkShowCreatedDebate_value.
+     * Property of the variable category_selected_value.
      *
      * @author Gaetan Brenckle
      *
-     * @return {@link BooleanProperty} - return the property of the variable chkShowCreatedDebate_value.
+     * @return {@link ObjectProperty} - return the property of the variable category_selected_value.
      */
-    public BooleanProperty chkShowCreatedDebate_valueProperty() {
-        return chkShowCreatedDebate_value;
-    }
-
-    /**
-     * Property of the variable listCategory_selected_value.
-     *
-     * @author Gaetan Brenckle
-     *
-     * @return {@link ListProperty} - return the property of the variable listCategory_selected_value.
-     */
-    public ListProperty<ViewTuple<CategoryView, CategoryViewModel>> listCategory_selected_valueProperty() {
-        return listCategory_selected_value;
+    public ObjectProperty<ViewTuple<CategoryView, CategoryViewModel>> category_selected_valueProperty() {
+        return category_selected_value;
     }
 
     /**
@@ -551,11 +554,6 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
     @Override
     public void onViewAdded_Cycle() {
-        //TODO
-        System.out.println("OnView home");
-        this.mainViewScope.prevCommandProperty().set(this.mainViewScope.currentCommandProperty().get());
-        this.mainViewScope.currentCommandProperty().set(new CompositeCommand());
-        this.mainViewScope.currentCommandProperty().get().register(this.prevCommand);
         this.mainViewScope.homeCommandProperty().get().register(this.homeCommand);
     }
 

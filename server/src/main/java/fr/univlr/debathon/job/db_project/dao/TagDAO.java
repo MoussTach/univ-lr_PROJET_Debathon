@@ -2,6 +2,7 @@ package fr.univlr.debathon.job.db_project.dao;
 
 import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.Tag;
+import fr.univlr.debathon.log.generate.CustomLogger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,6 +15,8 @@ import java.util.Map;
 public class TagDAO implements DAO<Tag> {
 
     private Connection connection = null;
+
+    private static final CustomLogger LOGGER = CustomLogger.create(TagDAO.class.getName());
 
 
     public TagDAO(Connection connection) {
@@ -49,9 +52,11 @@ public class TagDAO implements DAO<Tag> {
             while (rs.next()) {
                 tagList.add(new Tag(rs.getInt("idTag"), rs.getString("label"), rs.getString("color")));
             }
-
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
         }
 
         return tagList;    
@@ -73,13 +78,45 @@ public class TagDAO implements DAO<Tag> {
             pstmt.setString(2, tag.getLabel());
             pstmt.setString(3, tag.getColor());
             pstmt.executeUpdate();
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
             return false;
         }    
         
         return true;
         
+    }
+
+    public int insertAndReturnId(Tag tag) throws SQLException {
+        String sql = "INSERT INTO Tag (label, color) VALUES(?,?) returning idTag";
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, tag.getLabel());
+            pstmt.setString(2, tag.getColor());
+
+
+            ResultSet rs  = pstmt.executeQuery();
+
+            int id = -1;
+            if (rs.next()) {
+                id =  (rs.getInt("idTag"));
+            }
+
+            pstmt.close();
+
+            return id;
+        } catch (SQLException e) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
+        }
+
+        return -1;
+
     }
 
     /**
@@ -99,8 +136,11 @@ public class TagDAO implements DAO<Tag> {
             pstmt.setString(1, tag.getLabel());
             pstmt.setString(2, tag.getColor());
             pstmt.executeUpdate();
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
             return false;
         }    
         
@@ -121,8 +161,11 @@ public class TagDAO implements DAO<Tag> {
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, tag.getId());
             pstmt.executeUpdate();
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
             return false;
         }    
         
@@ -162,8 +205,11 @@ public class TagDAO implements DAO<Tag> {
                 listIdTag.add(rs.getInt("id_tag"));
             }
 
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
         }
 
         
@@ -186,9 +232,11 @@ public class TagDAO implements DAO<Tag> {
                 while (rs.next()) {
                     tagList.add(new Tag(rs.getInt("idTag"), rs.getString("label"), rs.getString("color")));
                 }
-
+                pstmt.close();
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                if (LOGGER.isErrorEnabled()) {
+                    LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+                }
             }
         }
 
@@ -217,12 +265,38 @@ public class TagDAO implements DAO<Tag> {
             if (rs.next()) {
                 tag = new Tag (rs.getInt("idTag"), rs.getString("label"), rs.getString("color"));
             }
-
+            pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
         }
 
         return tag;
+    }
+
+
+    public boolean insertNewRelation (int id_room, int id_tag) {
+        String sql = "INSERT INTO Relation_room_tag (id_room, id_tag) VALUES (?,?)";
+
+        try {
+            PreparedStatement pstmt  = connection.prepareStatement(sql);
+
+            pstmt.setInt(1, id_room);
+            pstmt.setInt(2, id_tag);
+
+            pstmt.executeUpdate();
+
+            pstmt.close();
+        } catch (SQLException e) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
+            return false;
+        }
+
+        return true;
+
     }
 
 }

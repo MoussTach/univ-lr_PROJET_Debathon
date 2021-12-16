@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.*?>
+
+<BorderPane fx:id="bPaneMainView" minHeight="400.0" minWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.MainWindowView">
+    <top>
+        <VBox BorderPane.alignment="CENTER">
+            <fx:include source="MenuBarView.fxml" />
+            <StackPane>
+                <VBox.margin>
+                    <Insets />
+                </VBox.margin>
+                <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                    <StackPane.margin>
+                        <Insets />
+                    </StackPane.margin>
+                </ToolBar>
+                <BorderPane>
+                    <StackPane.margin>
+                        <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+                    </StackPane.margin>
+               <left>
+                        <Button fx:id="btnHome" mnemonicParsing="false" onAction="#act_btnHome" text="&lt;" BorderPane.alignment="CENTER" />
+               </left>
+                </BorderPane>
+            </StackPane>
+        </VBox>
+    </top>
+    <center>
+        <fx:include source="HomePageView.fxml" />
+    </center>
+    <bottom>
+        <StatusBar fx:id="statusBarMainView" BorderPane.alignment="CENTER" />
+    </bottom>
+    <stylesheets>
+        <URL value="@../../../../../../css/application.css" />
+    </stylesheets>
+</BorderPane>

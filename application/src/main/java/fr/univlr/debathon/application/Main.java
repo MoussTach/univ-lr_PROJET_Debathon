@@ -1,9 +1,8 @@
 package fr.univlr.debathon.application;
 
 import com.sun.javafx.application.LauncherImpl;
-import fr.univlr.debathon.application.taskmanager.TaskManager;
-import fr.univlr.debathon.dataconnection.bdd.DbProperties_postgres;
 import fr.univlr.debathon.log.generate.CustomLogger;
+import fr.univlr.debathon.taskmanager.TaskManager;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -18,7 +17,6 @@ public class Main {
 
     private static final CustomLogger LOGGER = CustomLogger.create(Main.class.getName());
 
-    public static DbProperties_postgres DB_CONNECTION;
     public static final TaskManager TASKMANAGER = new TaskManager();
 
 

@@ -2,6 +2,7 @@ package fr.univlr.debathon.job.db_project.dao;
 
 import fr.univlr.debathon.job.dao.DAO;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
+import fr.univlr.debathon.log.generate.CustomLogger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,6 +15,8 @@ import java.util.Map;
 public class McqDAO implements DAO<Mcq> {
 
 	private Connection connection;
+
+	private static final CustomLogger LOGGER = CustomLogger.create(McqDAO.class.getName());
 
 	public McqDAO(Connection conn) {
 			this.connection = conn;
@@ -40,11 +43,14 @@ public class McqDAO implements DAO<Mcq> {
             
             while (rs.next()) {
             	
-               qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("id_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
+               qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
             }
 
+			pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
         }
 
         return qcmList;  	
@@ -67,9 +73,11 @@ public class McqDAO implements DAO<Mcq> {
 			pstmt.setInt(4, mcq.getId_room());
 			
 			pstmt.executeUpdate();
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -77,9 +85,9 @@ public class McqDAO implements DAO<Mcq> {
 		
 	}
 
-	public int insertAndGetId(Mcq mcq) throws SQLException {
+	public Mcq insertAndGetId(Mcq mcq) throws SQLException {
 
-		String sql = "INSERT INTO MCQ (label, id_question, id_room) values (?,?,?)";
+		String sql = "INSERT INTO MCQ (label, id_question, id_room) values (?,?,?) returning idMcq";
 
 		try {
 
@@ -89,14 +97,20 @@ public class McqDAO implements DAO<Mcq> {
 			pstmt.setInt(2, mcq.getId_question());
 			pstmt.setInt(3, mcq.getId_room());
 
-			pstmt.executeUpdate();
-
-			return this.select(mcq.getLabel(), mcq.getId_question());
+			ResultSet rs = pstmt.executeQuery();
+			int id = -1;
+			if (rs.next()) {
+				id = rs.getInt("idMcq");
+			}
+			pstmt.close();
+			return this.select(id);
 
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return -1;
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
+			return null;
 		}
 
 	}
@@ -119,9 +133,11 @@ public class McqDAO implements DAO<Mcq> {
 			
 			pstmt.executeUpdate();
 			
-			
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -141,9 +157,11 @@ public class McqDAO implements DAO<Mcq> {
 
 			pstmt.executeUpdate();
 
-
+			pstmt.close();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 
@@ -163,9 +181,13 @@ public class McqDAO implements DAO<Mcq> {
 			pstmt.setInt(1, mcq.getId());
 			
 			pstmt.executeUpdate();
-			
+
+			pstmt.close();
+
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 			return false;
 		}
 		
@@ -174,7 +196,6 @@ public class McqDAO implements DAO<Mcq> {
 
 	@Override
 	public List<Mcq> selectByMultiCondition(Map<String, String> map) throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -196,11 +217,13 @@ public class McqDAO implements DAO<Mcq> {
             
             while (rs.next()) {
             	
-               mcq = new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("id_votes"), rs.getInt("id_question"), rs.getInt("id_room"));
+               mcq = new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), rs.getInt("id_question"), rs.getInt("id_room"));
             }
-
+			pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
         }
 
         return mcq;  	
@@ -222,11 +245,12 @@ public class McqDAO implements DAO<Mcq> {
 			if (rs.next()) {
 				return rs.getInt("idMcq");
 			}
-
+		pstmt.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
-
 		return -1;
 	}
 
@@ -250,9 +274,11 @@ public class McqDAO implements DAO<Mcq> {
             	
                qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
             }
-
+		pstmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
         }
 
         return qcmList;  	
@@ -278,9 +304,11 @@ public class McqDAO implements DAO<Mcq> {
 
 				qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
 			}
-
+		pstmt.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
 		}
 
 		return qcmList;

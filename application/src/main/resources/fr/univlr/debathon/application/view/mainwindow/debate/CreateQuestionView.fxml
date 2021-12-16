@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<TitledPane fx:id="titledCreate" animated="false" collapsible="false" text="titledCreate" textAlignment="CENTER" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.debate.CreateQuestionView">
+    <font>
+        <Font name="Calibri" size="14.0" />
+    </font>
+    <BorderPane>
+        <bottom>
+            <Button fx:id="btnValid" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#act_btnValid" text="btnValid" BorderPane.alignment="CENTER">
+                <font>
+                    <Font name="Calibri" size="13.0" />
+                </font>
+            </Button>
+        </bottom>
+        <center>
+            <VBox alignment="CENTER" spacing="20.0" BorderPane.alignment="CENTER">
+                <BorderPane.margin>
+                    <Insets bottom="15.0" left="10.0" right="10.0" top="10.0" />
+                </BorderPane.margin>
+                <VBox maxWidth="1.7976931348623157E308" spacing="5.0">
+                    <Label fx:id="lblQuestion" maxWidth="1.7976931348623157E308" text="lblQuestion">
+                        <font>
+                            <Font name="Calibri" size="13.0" />
+                        </font>
+                    </Label>
+                    <TextArea fx:id="taQuestion" maxHeight="75.0">
+                        <VBox.margin>
+                            <Insets left="10.0" />
+                        </VBox.margin>
+                    </TextArea>
+                </VBox>
+                <VBox layoutX="10.0" layoutY="11.0" maxWidth="1.7976931348623157E308" spacing="5.0">
+                    <children>
+                        <Label fx:id="lblQuestionType" maxWidth="1.7976931348623157E308" text="lblQuestionType">
+                            <font>
+                                <Font name="Calibri" size="13.0" />
+                            </font>
+                        </Label>
+                        <ComboBox fx:id="cbQuestionType" maxWidth="1.7976931348623157E308" prefHeight="30.0">
+                            <VBox.margin>
+                                <Insets left="10.0" />
+                            </VBox.margin>
+                        </ComboBox>
+                    </children>
+                </VBox>
+                <VBox fx:id="vboxReponses" layoutX="10.0" layoutY="128.0" maxWidth="1.7976931348623157E308" spacing="5.0">
+                    <children>
+                        <Label fx:id="lblReponses" maxWidth="1.7976931348623157E308" text="lblReponses">
+                            <font>
+                                <Font name="Calibri" size="13.0" />
+                            </font>
+                        </Label>
+                        <StackPane>
+                            <children>
+                                <TitledPane animated="false" collapsible="false">
+                                    <font>
+                                        <Font size="16.0" />
+                                    </font>
+                                </TitledPane>
+                                <TableView fx:id="tableResponses" editable="true" maxHeight="175.0">
+                                    <placeholder>
+                                        <Label />
+                                    </placeholder>
+                                    <columns>
+                                        <TableColumn fx:id="tabResponse" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="-1.0" sortable="false" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                </TableView>
+                                <BorderPane maxHeight="28.0" StackPane.alignment="TOP_LEFT">
+                                    <right>
+                                        <HBox alignment="CENTER_RIGHT" onDragDetected="#act_btnResponsesDelete" spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
+                                            <children>
+                                                <Button fx:id="btnResponsesAdd" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#act_btnResponsesAdd">
+                                                    <graphic>
+                                                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                                            <Image url="@../../../../../../../img/add_64.png" />
+                                                        </ImageView>
+                                                    </graphic>
+                                                </Button>
+                                                <Button fx:id="btnResponsesDelete" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#act_btnResponsesDelete">
+                                                    <graphic>
+                                                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                                            <Image url="@../../../../../../../img/delete_64.png" />
+                                                        </ImageView>
+                                                    </graphic>
+                                                </Button>
+                                            </children>
+                                            <BorderPane.margin>
+                                                <Insets right="10.0" />
+                                            </BorderPane.margin>
+                                        </HBox>
+                                    </right>
+                                </BorderPane>
+                            </children>
+                            <VBox.margin>
+                                <Insets left="10.0" />
+                            </VBox.margin>
+                        </StackPane>
+                    </children>
+                </VBox>
+            </VBox>
+        </center>
+    </BorderPane>
+</TitledPane>

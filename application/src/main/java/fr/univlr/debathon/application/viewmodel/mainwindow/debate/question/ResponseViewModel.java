@@ -3,8 +3,8 @@ package fr.univlr.debathon.application.viewmodel.mainwindow.debate.question;
 import de.saxsys.mvvmfx.InjectScope;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
-import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.log.generate.CustomLogger;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,7 +23,7 @@ public class ResponseViewModel extends ViewModel_SceneCycle {
     private final StringProperty lblResponse_label = new SimpleStringProperty("/");
 
     //Value
-    private final BooleanProperty responseValue = new SimpleBooleanProperty();
+    private final BooleanProperty responseValue = new SimpleBooleanProperty(false);
 
     private ChangeListener<Boolean> listener_ChangedValue_;
 
@@ -49,7 +49,8 @@ public class ResponseViewModel extends ViewModel_SceneCycle {
         if (this.response != null) {
             this.lblResponse_label.bind(this.response.labelProperty());
 
-            this.listener_ChangedValue_ = (observableValue, newValue, oldValue) -> {
+            //Init
+            this.listener_ChangedValue_ = (observableValue, oldValue, newValue) -> {
                 if (Boolean.TRUE.equals(newValue)) {
                     this.questionView.listSelected_mcqProperty().add(this.response);
                 } else {

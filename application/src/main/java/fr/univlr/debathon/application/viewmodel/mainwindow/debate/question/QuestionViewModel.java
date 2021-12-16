@@ -40,9 +40,9 @@ public class QuestionViewModel extends ViewModel_SceneCycle {
     private final StringProperty lblQuestion_label = new SimpleStringProperty("/");
 
     //Value
-    private final ListProperty<ViewTuple<ResponseView, ResponseViewModel> > listResponses = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<ViewTuple<ResponseView, ResponseViewModel> > listResponses = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
-    private final ListProperty<Mcq> listSelected_mcq = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<Mcq> listSelected_mcq = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
     private ListChangeListener<Mcq> listChangeListener_response = null;
 
@@ -122,22 +122,25 @@ public class QuestionViewModel extends ViewModel_SceneCycle {
         }
     }
 
-    public void actvm_btnValid() {
+    public boolean actvm_btnValid() {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[public][method] Usage of the QuestionViewModel.actvm_btnValid()");
         }
 
-        listSelected_mcq.forEach(mcq -> {
-            try {
-                Debathon.getInstance().getAppCommunication().methodsUPDATE_VOTE_MCQ(this.responseScope.selectedProperty().get().getId());
-
-            } catch (JsonProcessingException e) {
-                if (LOGGER.isWarnEnabled()) {
-                    LOGGER.trace("The request to send the current vote of the client is interrupted.");
-                }
+        boolean added = false;
+        try {
+            for (Mcq mcq : listSelected_mcq) {
+                Debathon.getInstance().getAppCommunication().methodsUPDATE_VOTE_MCQ(mcq.getId());
+                mcq.setNb_votes(-1);
+                added = true;
             }
-        });
-
+        } catch (JsonProcessingException e) {
+            if (LOGGER.isWarnEnabled()) {
+                LOGGER.trace("The request to send the current vote of the client is interrupted.");
+            }
+            return false;
+        }
+        return added;
     }
 
     /**
@@ -158,8 +161,8 @@ public class QuestionViewModel extends ViewModel_SceneCycle {
             final Scene scene = new Scene(commentsViewTuple.getView());
             final Stage stage = new Stage();
 
-            if (this.question.getRoom() != null) {
-                stage.titleProperty().set(this.question.getRoom().getLabel());
+            if (this.debate != null) {
+                stage.titleProperty().set(this.debate.getLabel());
             }
             stage.initModality(Modality.NONE);
             stage.initOwner(Launch.PRIMARYSTAGE);

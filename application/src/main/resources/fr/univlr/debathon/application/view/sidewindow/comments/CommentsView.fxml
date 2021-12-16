@@ -1,14 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.sidewindow.comments.CommentsView">
+<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.sidewindow.comments.CommentsView">
    <children>
-      <Label fx:id="lblCommentary" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="lblCommentary">
-         <font>
-            <Font name="Calibri" size="15.0" />
-         </font></Label>
+      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-radius: 40; -fx-border-color: GREEN; -fx-border-radius: 40;" StackPane.alignment="TOP_CENTER">
+         <center>
+            <Label fx:id="lblCommentary" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="lblCommentary" wrapText="true" BorderPane.alignment="CENTER">
+               <font>
+                  <Font name="Calibri" size="15.0" />
+               </font>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+               <padding>
+                  <Insets bottom="5.0" top="5.0" />
+               </padding>
+            </Label>
+         </center>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
+         </padding>
+         <StackPane.margin>
+            <Insets bottom="15.0" />
+         </StackPane.margin>
+      </BorderPane>
+      <HBox alignment="BOTTOM_LEFT" spacing="5.0" style="-fx-background-color: TRANSPARENT;" StackPane.alignment="BOTTOM_LEFT">
+         <children>
+            <Button fx:id="btnLike" onAction="#act_btnLike" mnemonicParsing="false" style="-fx-background-radius: 40; -fx-background-color: LIGHTGREY; -fx-border-color: GREY; -fx-border-radius: 40;">
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <Image url="@../../../../../../../img/like_32.png" />
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font size="2.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnDislike" onAction="#act_btnDislike" mnemonicParsing="false" style="-fx-background-radius: 40; -fx-background-color: LIGHTGREY; -fx-border-color: GREY; -fx-border-radius: 40;">
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <Image url="@../../../../../../../img/dislike_32.png" />
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font size="2.0" />
+               </font>
+            </Button>
+         </children>
+         <StackPane.margin>
+            <Insets />
+         </StackPane.margin>
+         <padding>
+            <Insets left="25.0" />
+         </padding>
+      </HBox>
    </children>
+   <padding>
+      <Insets left="5.0" right="5.0" top="3.0" />
+   </padding>
 </StackPane>

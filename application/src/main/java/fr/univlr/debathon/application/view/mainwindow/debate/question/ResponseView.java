@@ -36,12 +36,13 @@ public class ResponseView extends FxmlView_SceneCycle<ResponseViewModel> impleme
             nodeResponse = new RadioButton();
             ((RadioButton) nodeResponse).setToggleGroup(this.responseViewModel.getGroup());
             this.responseViewModel.responseValueProperty().bind(((RadioButton) nodeResponse).selectedProperty());
+            ((RadioButton) nodeResponse).setSelected(this.responseViewModel.getResponse().getNb_votes() < 0);
 
         } else if (this.responseViewModel.getQuestionView().getQuestion().getType().equals(Question.Type.MULTIPLE.text)) {
             nodeResponse = new CheckBox();
             this.responseViewModel.responseValueProperty().bind(((CheckBox) nodeResponse).selectedProperty());
+            ((CheckBox) nodeResponse).setSelected(this.responseViewModel.getResponse().getNb_votes() < 0);
         } //Libre
-
 
         if (nodeResponse != null) {
             nodeResponse.textProperty().bind(this.responseViewModel.lblResponse_labelProperty());

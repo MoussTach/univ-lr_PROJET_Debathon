@@ -15,8 +15,8 @@ public class Main {
         AppCommunication comm = new AppCommunication();
         comm.start();
 
-        comm.requestEndDebate(1);
-        //comm.requestHome(); //TEST TO GET ALL ROOMS INFOS
+        comm.requestHome(); //TEST TO GET ALL ROOMS INFOS
+        comm.requestEndDebate(2);
 
         //comm.requestRoom(1); //TEST TO GET ROOM INFO WITH ID : 1
 

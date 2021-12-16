@@ -100,7 +100,9 @@ public class DebateViewModel extends ViewModel_SceneCycle {
 
         this.debate = debate;
 
+        InscriptionStatViewModel inscriptionStatViewModel = new InscriptionStatViewModel(this.debate);
         popOver_statMail = new PopOver(FluentViewLoader.fxmlView(InscriptionStatView.class)
+                .viewModel(inscriptionStatViewModel)
                 .load().getView());
         popOver_statMail.setDetachable(false);
         popOver_statMail.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
@@ -225,7 +227,7 @@ public class DebateViewModel extends ViewModel_SceneCycle {
                 this.debate.getListQuestion().forEach(question ->
                         Platform.runLater(() -> {
                             if (question != null) {
-                                QuestionViewModel questionViewModel = new QuestionViewModel(question);
+                                QuestionViewModel questionViewModel = new QuestionViewModel(this.debate, question);
                                 final ViewTuple<QuestionView, QuestionViewModel> questionViewTuple = FluentViewLoader.fxmlView(QuestionView.class)
                                         .viewModel(questionViewModel)
                                         .load();
@@ -239,7 +241,7 @@ public class DebateViewModel extends ViewModel_SceneCycle {
                             change.getAddedSubList().forEach(item ->
                                     Platform.runLater(() -> {
                                         if (item != null) {
-                                            QuestionViewModel questionViewModel = new QuestionViewModel(item);
+                                            QuestionViewModel questionViewModel = new QuestionViewModel(this.debate, item);
                                             final ViewTuple<QuestionView, QuestionViewModel> questionViewTuple = FluentViewLoader.fxmlView(QuestionView.class)
                                                     .viewModel(questionViewModel)
                                                     .load();

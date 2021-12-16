@@ -14,6 +14,7 @@ import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.sidewindow.comments.CommentsWindowsViewModel;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
+import fr.univlr.debathon.job.db_project.jobclass.Room;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
@@ -32,6 +33,7 @@ public class QuestionViewModel extends ViewModel_SceneCycle {
 
     private static final CustomLogger LOGGER = CustomLogger.create(QuestionViewModel.class.getName());
 
+    private final Room debate;
     private final Question question;
 
     //Text
@@ -48,11 +50,12 @@ public class QuestionViewModel extends ViewModel_SceneCycle {
     private ResponseScope responseScope;
 
 
-    public QuestionViewModel(Question question) {
+    public QuestionViewModel(Room debate, Question question) {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[public][constructor] Creation of the QuestionViewModel() object.");
         }
 
+        this.debate = debate;
         this.question = question;
 
         bindQuestion();
@@ -148,7 +151,7 @@ public class QuestionViewModel extends ViewModel_SceneCycle {
         }
 
         try {
-            CommentsWindowsViewModel commentsWindowsViewModel = new CommentsWindowsViewModel(this.question);
+            CommentsWindowsViewModel commentsWindowsViewModel = new CommentsWindowsViewModel(this.debate, this.question);
             final ViewTuple<CommentsWindowsView, CommentsWindowsViewModel> commentsViewTuple = FluentViewLoader.fxmlView(CommentsWindowsView.class)
                     .viewModel(commentsWindowsViewModel)
                     .load();

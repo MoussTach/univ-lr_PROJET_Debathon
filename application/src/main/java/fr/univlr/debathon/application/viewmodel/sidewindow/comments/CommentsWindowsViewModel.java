@@ -21,6 +21,7 @@ public class CommentsWindowsViewModel extends ViewModel_SceneCycle {
 
     private static final CustomLogger LOGGER = CustomLogger.create(CommentsWindowsViewModel.class.getName());
 
+    private final Room debate;
     private final Question question;
 
     //Text
@@ -34,16 +35,24 @@ public class CommentsWindowsViewModel extends ViewModel_SceneCycle {
     /**
      * Default constructor
      *
+     * @param debate {@link Room} - the debate associated to this comments window.
      * @param question {@link Question} - the question associated to this comments window.
      *
      * @author Gaetan Brenckle
      */
-    public CommentsWindowsViewModel(Question question) {
+    public CommentsWindowsViewModel(Room debate, Question question) {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[public][constructor] Creation of the CommentsWindowsViewModel() object.");
         }
 
+        this.debate = debate;
         this.question = question;
+
+        //TODO print
+        if (this.question != null) {
+            this.question.getListComment().forEach(System.out::println);
+        }
+
         this.bindCommentary();
     }
 
@@ -53,12 +62,12 @@ public class CommentsWindowsViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[public][method] Usage of the CommentsWindowsViewModel.bindCommentary()");
         }
 
-        if (this.question != null) {
-            if (this.question.getRoom() != null) {
-                this.lblDebate_label.set(this.question.getRoom().getLabel());
-            }
-            this.lblQuestion_label.set(this.question.getLabel());
+        if (this.debate != null) {
+            this.lblDebate_label.set(this.debate.getLabel());
+        }
 
+        if (this.question != null) {
+            this.lblQuestion_label.set(this.question.getLabel());
         }
     }
 

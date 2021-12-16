@@ -40,7 +40,7 @@
             <Separator prefWidth="200.0" />
             <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0">
               <items>
-                  <Button fx:id="btnValid" mnemonicParsing="false" prefWidth="75.0" style="-fx-background-radius: 10;">
+                  <Button fx:id="btnValid" mnemonicParsing="false" onAction="#act_btnValid" prefWidth="75.0" style="-fx-background-radius: 10;">
                       <graphic>
                           <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                               <Image url="@../../../../../../../img/confirm_64.png" />

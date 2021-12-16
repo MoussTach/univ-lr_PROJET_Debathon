@@ -269,11 +269,11 @@ public class AppCommunication extends Thread implements Runnable {
         int j = 0;
         boolean ok_room = false;
         boolean ok_question = false;
-        while (!ok_room || i < Debathon.getInstance().getDebates().size()) {
+        while (!ok_room && i < Debathon.getInstance().getDebates().size()) {
 
             if (Debathon.getInstance().getDebates().get(i).getId() == id_room) {
 
-                while (!ok_question || j < Debathon.getInstance().getDebates().get(i).getListQuestion().size()) {
+                while (!ok_question && j < Debathon.getInstance().getDebates().get(i).getListQuestion().size()) {
                     if (Debathon.getInstance().getDebates().get(i).getListQuestion().get(j).getId() == id_question) {
 
                         Debathon.getInstance().getDebates().get(i).getListQuestion().remove(j);

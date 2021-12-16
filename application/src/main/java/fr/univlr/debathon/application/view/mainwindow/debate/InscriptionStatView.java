@@ -1,6 +1,7 @@
 package fr.univlr.debathon.application.view.mainwindow.debate;
 
 import de.saxsys.mvvmfx.InjectViewModel;
+import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
 import fr.univlr.debathon.application.view.mainwindow.debate.question.QuestionView;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.InscriptionStatViewModel;
@@ -11,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -40,12 +42,18 @@ public class InscriptionStatView extends FxmlView_SceneCycle<InscriptionStatView
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.setViewModel(inscriptionStatViewModel);
 
+        ControlsFxVisualizer visualizer = new ControlsFxVisualizer();
+        //StyleSheet added directly on fxml
+        visualizer.setDecoration(new StyleClassValidationDecoration());
+        visualizer.initVisualization(this.inscriptionStatViewModel.rule_Mail(), tfMail, true);
+
         //Text
         this.lblSendMail.textProperty().bind(this.inscriptionStatViewModel.lblSendMail_labelProperty());
         this.lblIrreversible.textProperty().bind(this.inscriptionStatViewModel.lblIrreversible_labelProperty());
 
         //Value
-        this.inscriptionStatViewModel.tfMail_valueProperty().bind(this.tfMail.textProperty());
+        this.inscriptionStatViewModel.tfMail_valueProperty().bindBidirectional(this.tfMail.textProperty());
+        this.btnValid.disableProperty().bind(this.inscriptionStatViewModel.getValidator_Mail().getValidationStatus().validProperty().not());
     }
 
 
@@ -60,6 +68,7 @@ public class InscriptionStatView extends FxmlView_SceneCycle<InscriptionStatView
         this.lblIrreversible.textProperty().unbind();
 
         //Value
-        this.inscriptionStatViewModel.tfMail_valueProperty().unbind();
+        this.inscriptionStatViewModel.tfMail_valueProperty().unbindBidirectional(this.tfMail.textProperty());
+        this.btnValid.disableProperty().unbind();
     }
 }

@@ -349,33 +349,33 @@ public class CreateQuestionViewModel extends ViewModel_SceneCycle {
 
 
     /**
-     * Current validation for the rule rule_title.
+     * Current validation for the rule rule_Question.
      *
      * @author Gaetan Brenckle
      *
-     * @return {@link ValidationStatus} - validation for the rule rule_title.
+     * @return {@link ValidationStatus} - validation for the rule rule_Question.
      */
     public ValidationStatus rule_Question() {
         return rule_Question.getValidationStatus();
     }
 
     /**
-     * Current validation for the rule rule_Key.
+     * Current validation for the rule rule_QuestionType.
      *
      * @author Gaetan Brenckle
      *
-     * @return {@link ValidationStatus} - validation for the rule rule_Key.
+     * @return {@link ValidationStatus} - validation for the rule rule_QuestionType.
      */
     public ValidationStatus rule_QuestionType() {
         return rule_QuestionType.getValidationStatus();
     }
 
     /**
-     * CompositeValidator of the variable validator_CreateDebate.
+     * CompositeValidator of the variable validator_CreateQuestion.
      *
      * @author Gaetan Brenckle
      *
-     * @return {@link CompositeValidator} - CompositeValidator of the variable validator_CreateDebate.
+     * @return {@link CompositeValidator} - CompositeValidator of the variable validator_CreateQuestion.
      */
     public CompositeValidator getValidator_CreateQuestion() {
         return validator_CreateQuestion;

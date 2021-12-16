@@ -1,6 +1,8 @@
+
 package fr.univlr.debathon.server.pdf;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -24,16 +26,20 @@ public class PDFGenerator {
     }
 
     //Methode pour creer un PDF pour un debat avec la liste des questions
-    public Document getPDF(List<PDFquestion> questions,int id_debat){
+    public Document getPDF(List<PDFquestion> questions,int id_debat,String name){
         //Creation document pdf
         Document pdf = new Document(PageSize.A4);
         //Creation list de chart avec les questions
         List<JFreeChart> charts = ChartGenerator.getInstance().genAllPieCharts(questions);
 
         try {
-            String pdf_name = "recapitulatif_debat_"+id_debat+".pdf";
+            String pdf_name = String.format("recap_pdf/%d-%s.pdf",id_debat,name);
+
+            File f = new File(pdf_name);
+            f.getParentFile().mkdirs();
+            FileOutputStream fos = new FileOutputStream(f);
             //Writer pour le pdf
-            PdfWriter writer = PdfWriter.getInstance(pdf,new FileOutputStream(pdf_name));
+            PdfWriter writer = PdfWriter.getInstance(pdf,fos);
             //Ouverture du pdf
             pdf.open();
             //Creation pdf event pour border
@@ -42,7 +48,7 @@ public class PDFGenerator {
             writer.setPageEvent(border);
             pdf.addTitle("Récapitulatif");
             //Creation paragraphe titre
-            Paragraph p = new Paragraph("Récapitulatif debat "+id_debat);
+            Paragraph p = new Paragraph(String.format("%d - %s",id_debat,name));
             p.setAlignment(Element.ALIGN_CENTER);
             pdf.add(p);
 
@@ -52,7 +58,7 @@ public class PDFGenerator {
                 BufferedImage buffer = chart.createBufferedImage((int) (pdf.getPageSize().getWidth()/2),(int) (pdf.getPageSize().getHeight()/5));
                 Image image = Image.getInstance(writer,buffer,1.0f);
                 //redimensionnemnt image et changement position
-                image.scaleToFit(PageSize.A4.getWidth()/1.33f, image.getScaledWidth()/1.33f);
+                image.scaleToFit(PageSize.A4.getWidth()/1.5f, image.getScaledWidth()/1.5f);
                 float x = (PageSize.A4.getWidth() - image.getScaledWidth()) / 2;
                 image.setAbsolutePosition(x, image.getAbsoluteY());
                 //Ajout map
@@ -82,58 +88,82 @@ public class PDFGenerator {
 
                 //Ajout du titre
                 pdf.add(titre);
+                //Verification si au moins un comm est like ou dislike
+                if(q.getMost_nb_likes()>0 || q.getMost_nb_dislikes()>0){
+                    //Verification si un commentaire est like
+                    if(q.getMost_nb_likes()>0){
+                        //CREATION PARAGRAPHE POUR COMMENTAIRE LE PLUS LIKE
+                        //Creation paragraphe - Centrage - Ajout spacing
+                        Paragraph p_like = new Paragraph(String.format("Commentaire ayant reçu le plus de Likes (%d)",q.getMost_nb_likes()));
+                        p_like.setAlignment(Element.ALIGN_CENTER);
+                        p_like.setSpacingAfter(8);
+                        //Recup commentaire le plus like et remplacement " par '
+                        String like_txt = q.getMost_like_comment();
+                        if(like_txt != null){
+                            like_txt = q.getMost_like_comment().replace('\"','\'');
+                        }
+                        Paragraph p_like_txt = new Paragraph(like_txt);
+                        p_like_txt.setAlignment(Element.ALIGN_CENTER);
+                        pdf.add(p_like);
+                        //Depart bordure
+                        border.setActive(true);
+                        //Ajout commentaire
+                        pdf.add(p_like_txt);
+                        //Fin bordure
+                        border.setActive(false);
+                    }
+                    else{
+                        Paragraph no_like = new Paragraph("Aucun commentaire liké",new
+                                Font(Font.FontFamily.HELVETICA, 12, Font.ITALIC));
+                        pdf.add(no_like);
+                    }
 
-                //CREATION PARAGRAPHE POUR COMMENTAIRE LE PLUS LIKE
-                //Creation paragraphe - Centrage - Ajout spacing
-                Paragraph p_like = new Paragraph("Commentaire ayant reçu le plus de Likes ( "+q.getMost_nb_likes()+" )" );
-                p_like.setAlignment(Element.ALIGN_CENTER);
-                p_like.setSpacingAfter(8);
-                //Recup commentaire le plus like et remplacement " par '
-                String like_txt = q.getMost_like_comment();
-                if(like_txt != null){
-                    like_txt = q.getMost_like_comment().replace('\"','\'');
+                    //Creation espace vide
+                    Paragraph emptySpace = new Paragraph("");
+                    emptySpace.setSpacingBefore(5);
+                    emptySpace.setSpacingAfter(5);
+                    pdf.add(emptySpace);
+
+                    if(q.getMost_nb_dislikes()>0){
+                        //CREATION PARAGRAPHE POUR COMMENTAIRE LE PLUS DISLIKE
+                        //Creation paragraphe - Centrage - Ajout spacing
+                        Paragraph p_dislike = new Paragraph("Commentaire ayant reçu le plus de Dislikes ( "+q.getMost_nb_dislikes()+" )" );
+                        p_dislike.setAlignment(Element.ALIGN_CENTER);
+                        p_dislike.setSpacingAfter(8);
+                        //Recup commentaire le plus dislike et remplacement " par '
+                        String dislike_txt = q.getMost_dislike_comment();
+                        if(dislike_txt != null){
+                            dislike_txt = q.getMost_dislike_comment().replace('\"','\'');
+                        }
+                        Paragraph p_dislike_txt = new Paragraph(dislike_txt);
+                        p_dislike_txt.setAlignment(Element.ALIGN_CENTER);
+                        pdf.add(p_dislike);
+                        //Depart bordure
+                        border.setActive(true);
+                        //Ajout commentaire
+                        pdf.add(p_dislike_txt);
+                        //Fin bordure
+                        border.setActive(false);
+                    }
+                    else{
+                        Paragraph no_dislike = new Paragraph("Aucun commentaire disliké",new
+                                Font(Font.FontFamily.HELVETICA, 12, Font.ITALIC));
+                        pdf.add(no_dislike);
+                    }
+
+                    //Creation espace vide
+                    emptySpace = new Paragraph("");
+                    emptySpace.setSpacingBefore(5);
+                    emptySpace.setSpacingAfter(5);
+                    pdf.add(emptySpace);
                 }
-                Paragraph p_like_txt = new Paragraph(like_txt);
-                p_like_txt.setAlignment(Element.ALIGN_CENTER);
-                pdf.add(p_like);
-                //Depart bordure
-                border.setActive(true);
-                //Ajout commentaire
-                pdf.add(p_like_txt);
-                //Fin bordure
-                border.setActive(false);
-
-                //Creation espace vide
-                Paragraph emptySpace = new Paragraph("");
-                emptySpace.setSpacingBefore(5);
-                emptySpace.setSpacingAfter(5);
-                pdf.add(emptySpace);
-
-                //CREATION PARAGRAPHE POUR COMMENTAIRE LE PLUS DISLIKE
-                //Creation paragraphe - Centrage - Ajout spacing
-                Paragraph p_dislike = new Paragraph("Commentaire ayant reçu le plus de Dislikes ( "+q.getMost_nb_dislikes()+" )" );
-                p_dislike.setAlignment(Element.ALIGN_CENTER);
-                p_dislike.setSpacingAfter(8);
-                //Recup commentaire le plus dislike et remplacement " par '
-                String dislike_txt = q.getMost_dislike_comment();
-                if(dislike_txt != null){
-                    dislike_txt = q.getMost_dislike_comment().replace('\"','\'');
+                else{
+                    Paragraph no_dislike = new Paragraph("Aucun commentaire liké et disliké",new
+                            Font(Font.FontFamily.HELVETICA, 12, Font.ITALIC));
+                    pdf.add(no_dislike);
                 }
-                Paragraph p_dislike_txt = new Paragraph(dislike_txt);
-                p_dislike_txt.setAlignment(Element.ALIGN_CENTER);
-                pdf.add(p_dislike);
-                //Depart bordure
-                border.setActive(true);
-                //Ajout commentaire
-                pdf.add(p_dislike_txt);
-                //Fin bordure
-                border.setActive(false);
 
-                //Creation espace vide
-                emptySpace = new Paragraph("");
-                emptySpace.setSpacingBefore(5);
-                emptySpace.setSpacingAfter(5);
-                pdf.add(emptySpace);
+
             }
 
 

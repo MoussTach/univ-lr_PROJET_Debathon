@@ -21,6 +21,7 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
 
@@ -30,6 +31,13 @@ import java.util.ResourceBundle;
 public class CreateQuestionView extends FxmlView_SceneCycle<CreateQuestionViewModel> implements Initializable {
 
     private static final CustomLogger LOGGER = CustomLogger.create(CreateQuestionView.class.getName());
+
+    @FXML private BorderPane borderPane_key;
+    @FXML private Label lblKey;
+    @FXML private TextField tfKey;
+    @FXML private Button btnValidKey;
+
+    //-------------------
 
     @FXML private TitledPane titledCreate;
 
@@ -51,7 +59,15 @@ public class CreateQuestionView extends FxmlView_SceneCycle<CreateQuestionViewMo
     @InjectViewModel
     private CreateQuestionViewModel createQuestionViewModel;
 
+    private ChangeListener<Boolean> listener_canCreateQuestion = null;
     private ChangeListener<Question.Type> listenerQuestion = null;
+
+    @FXML
+    public void act_btnValidKey() {
+        LOGGER.input(String.format("Press the button %s", btnValidKey.getId()));
+
+        this.createQuestionViewModel.actvm_btnValidKey();
+    }
 
 
     @FXML
@@ -114,6 +130,27 @@ public class CreateQuestionView extends FxmlView_SceneCycle<CreateQuestionViewMo
         visualizer.setDecoration(new StyleClassValidationDecoration());
         visualizer.initVisualization(this.createQuestionViewModel.rule_Question(), taQuestion, true);
         visualizer.initVisualization(this.createQuestionViewModel.rule_QuestionType(), cbQuestionType, true);
+
+        //Text
+        this.lblKey.textProperty().bind(this.createQuestionViewModel.lblKey_labelProperty());
+
+        //Value
+        this.createQuestionViewModel.tfKey_valueProperty().bind(this.tfKey.textProperty());
+
+        //--------
+        this.borderPane_key.setVisible(!this.createQuestionViewModel.canCreateQuestionProperty().get());
+        this.borderPane_key.setManaged(!this.createQuestionViewModel.canCreateQuestionProperty().get());
+
+        this.titledCreate.setManaged(this.createQuestionViewModel.canCreateQuestionProperty().get());
+        this.titledCreate.setManaged(this.createQuestionViewModel.canCreateQuestionProperty().get());
+        this.listener_canCreateQuestion = (observableValue, oldValue, newValue) -> {
+            this.borderPane_key.setVisible(!newValue);
+            this.borderPane_key.setManaged(!newValue);
+
+            this.titledCreate.setManaged(newValue);
+            this.titledCreate.setManaged(newValue);
+        };
+        this.createQuestionViewModel.canCreateQuestionProperty().addListener(this.listener_canCreateQuestion);
 
         //Text
         this.titledCreate.textProperty().bind(this.createQuestionViewModel.titledCreate_labelProperty());

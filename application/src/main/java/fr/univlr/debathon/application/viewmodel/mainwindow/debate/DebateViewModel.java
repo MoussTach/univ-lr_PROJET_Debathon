@@ -9,7 +9,6 @@ import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.communication.Debathon;
-import fr.univlr.debathon.application.view.mainwindow.SelectWindowView;
 import fr.univlr.debathon.application.view.mainwindow.debate.CreateQuestionView;
 import fr.univlr.debathon.application.view.mainwindow.debate.InscriptionStatView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
@@ -66,6 +65,7 @@ public class DebateViewModel extends ViewModel_SceneCycle {
         }
     }, true);
 
+    private ChangeListener<String> changeListener_key = null;
     private ChangeListener<Category> changeListener_category = null;
     private ListChangeListener<Tag> listChangeListener_tag = null;
     private ListChangeListener<Question> listChangeListener_question = null;
@@ -228,7 +228,6 @@ public class DebateViewModel extends ViewModel_SceneCycle {
         }
 
         if (this.debate != null) {
-
             this.lblTitle_label.unbind();
             this.description_htmlText.unbind();
 

@@ -1,15 +1,21 @@
 package fr.univlr.debathon.server.pdf;
 
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 
+import javax.swing.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ChartGenerator {
+public class ChartGenerator extends JFrame {
     public static ChartGenerator instance;
 
     public ChartGenerator() {
@@ -45,6 +51,16 @@ public class ChartGenerator {
                 true,             // include legend
                 true,
                 false);
+        //Format Label
+        PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator(
+                "{0} : ({1})",
+                new DecimalFormat("0"),
+                new DecimalFormat("0%"));
+
+        ((PiePlot) chartPie.getPlot()).setLabelGenerator(labelGenerator);
+        // Create Panel
+        ChartPanel panel = new ChartPanel(chartPie);
+        setContentPane(panel);
         return chartPie;
     }
 

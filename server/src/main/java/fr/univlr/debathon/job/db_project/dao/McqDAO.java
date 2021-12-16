@@ -43,7 +43,7 @@ public class McqDAO implements DAO<Mcq> {
             
             while (rs.next()) {
             	
-               qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("id_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
+               qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
             }
 
 			pstmt.close();
@@ -217,7 +217,7 @@ public class McqDAO implements DAO<Mcq> {
             
             while (rs.next()) {
             	
-               mcq = new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("id_votes"), rs.getInt("id_question"), rs.getInt("id_room"));
+               mcq = new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), rs.getInt("id_question"), rs.getInt("id_room"));
             }
 			pstmt.close();
         } catch (SQLException e) {

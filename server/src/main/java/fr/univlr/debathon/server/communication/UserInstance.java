@@ -237,6 +237,8 @@ public class UserInstance extends Thread implements Runnable {
 
         int id = questionDAO.insertAndGetId(question);
         Question q = questionDAO.select(id);
+        System.out.println(">>>>> id :");
+        System.out.println("\t" + id);
 
         for (Mcq mcq : question.getListMcq()) {
             mcq.setId_question(q.getId());

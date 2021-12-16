@@ -8,6 +8,8 @@ import fr.univlr.debathon.job.db_project.jobclass.Tag;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -28,6 +30,8 @@ public class Debathon {
     private final ListProperty<Room> debates = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     private Room current_debate = null;
+
+    private final StringProperty key = new SimpleStringProperty();
 
 
 
@@ -151,5 +155,17 @@ public class Debathon {
 
     public AppCommunication getAppCommunication () {
         return this.appCommunication;
+    }
+
+    public String getKey() {
+        return key.get();
+    }
+
+    public StringProperty keyProperty() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key.set(key);
     }
 }

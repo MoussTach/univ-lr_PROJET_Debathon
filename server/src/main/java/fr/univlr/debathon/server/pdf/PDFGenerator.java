@@ -41,7 +41,7 @@ public class PDFGenerator {
 
     public void requestPDF(int id_debat){
         List<PDFquestion> questions = PDFdata.getRequest1(id_debat);
-        String path = getPDF(questions,id_debat);
+        String path = getPDF(questions, id_debat);
         sendMail(path);
     }
 
@@ -208,7 +208,7 @@ public class PDFGenerator {
 
 
                 }
-                return pdfDest;
+                return pdfDest_file;
             } catch (IOException e) {
                 if (LOGGER.isErrorEnabled()) {
                     LOGGER.error(String.format("Error : %s", e.getMessage()), e);

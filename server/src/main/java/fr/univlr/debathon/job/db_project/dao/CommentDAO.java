@@ -368,4 +368,50 @@ public class CommentDAO implements DAO<Comment> {
 	}
 
 
+
+
+	public boolean updateLike(int id_comment) throws SQLException {
+
+		String sql = "UPDATE Comment SET nb_like=nb_like+1 WHERE idComment = ?";
+
+
+		try {
+			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+
+			pstmt.setInt(1, id_comment);
+
+			pstmt.executeUpdate();
+			pstmt.close();
+		} catch (Exception e) {
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean updateDislike(int id_comment) throws SQLException {
+
+		String sql = "UPDATE Comment SET nb_dislike=nb_dislike+1 WHERE idComment = ?";
+
+
+		try {
+			PreparedStatement pstmt = this.connection.prepareStatement(sql);
+
+			pstmt.setInt(1, id_comment);
+
+			pstmt.executeUpdate();
+			pstmt.close();
+		} catch (Exception e) {
+			if (LOGGER.isErrorEnabled()) {
+				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+			}
+			return false;
+		}
+
+		return true;
+	}
+
 }

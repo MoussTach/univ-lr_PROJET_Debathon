@@ -86,6 +86,9 @@ public class AppCommunication extends Thread implements Runnable {
             case "ENDDEBATE":
                 methodsENDDEBATE (dataJson);
                 break;
+            case "DELETEQUESTION":
+                methodsDELETEQUESTION (dataJson);
+                break;
         }
     }
 
@@ -256,7 +259,36 @@ public class AppCommunication extends Thread implements Runnable {
         }
     }
 
+    public void methodsDELETEQUESTION(JsonNode dataJson) {
 
+        int id_question = dataJson.get("id_question").asInt();
+        int id_room = dataJson.get("id_room").asInt();
+
+
+        int i = 0;
+        int j = 0;
+        boolean ok_room = false;
+        boolean ok_question = false;
+        while (!ok_room || i < Debathon.getInstance().getDebates().size()) {
+
+            if (Debathon.getInstance().getDebates().get(i).getId() == id_room) {
+
+                while (!ok_question || j < Debathon.getInstance().getDebates().get(i).getListQuestion().size()) {
+                    if (Debathon.getInstance().getDebates().get(i).getListQuestion().get(j).getId() == id_question) {
+
+                        Debathon.getInstance().getDebates().get(i).getListQuestion().remove(j);
+
+                        ok_question = true;
+                    }
+                }
+
+                ok_room = true;
+            }
+
+            i++;
+        }
+
+    }
 
 
 
@@ -293,7 +325,7 @@ public class AppCommunication extends Thread implements Runnable {
     public void requestEndDebate (int id_debate)  {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode root = mapper.createObjectNode();
-        all_rooms.clear();
+        all_rooms.clear(); //TODO a regarder
         root.put("methods", "END");
         root.put("request", "DEBATE");
         root.put("id_debate", id_debate);
@@ -304,6 +336,25 @@ public class AppCommunication extends Thread implements Runnable {
             e.printStackTrace();
         }
     }
+
+
+    public void requestDeleteQuestion (int id_question) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+        root.put("methods", "DELETE");
+        root.put("request", "QUESTION");
+        root.put("id_question", id_question);
+
+        try {
+            this.sendData(mapper, root);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
 
     //Fonction avec id en parametre pour recuperer info d'une room
@@ -434,8 +485,8 @@ public class AppCommunication extends Thread implements Runnable {
         ObjectNode root = mapper.createObjectNode();
 
         root.put("methods", "UPDATE");
-        root.put("request", "MCQ");
-        root.put("type", "VOTE");
+        root.put("request", "COMMENT");
+        root.put("type", "LIKE");
         root.put("id", id_mcq);
         root.put("positif", positif); // true for add a like and false for add a dislike
 

@@ -90,6 +90,9 @@ public class UserInstance extends Thread implements Runnable {
             case "END":
                 methodsEND (dataJson, data);
                 break;
+            case "DELETE":
+                methodsDELETE (dataJson, data);
+                break;
         }
 
     }
@@ -99,6 +102,17 @@ public class UserInstance extends Thread implements Runnable {
         switch ((String) dataJson.get("request")) {
             case "DEBATE":
                 this.caseEndDebate (dataJson);
+                break;
+
+        }
+
+    }
+
+    private void methodsDELETE(Map dataJson, String data) throws JsonProcessingException, SQLException {
+
+        switch ((String) dataJson.get("request")) {
+            case "QUESTION":
+                this.caseDeleteQuestion (dataJson);
                 break;
 
         }
@@ -124,12 +138,12 @@ public class UserInstance extends Thread implements Runnable {
                 // this.caseHOME(data);
                 break;
             case "COMMENT": //Cas ROOM souhaite
-                // this.caseROOM (data);
+                this.caseUpdateLike (dataJson, data);
                 break;
             case "MCQ": //Cas ROOM souhaite
                 switch ((String) dataJson.get("type")) {
                     case "VOTE":
-                        this.caseUpdateLikeMCQ (dataJson, data);
+                        this.caseUpdateVoteMCQ(dataJson, data);
                         break;
                 }
 
@@ -181,6 +195,31 @@ public class UserInstance extends Thread implements Runnable {
         ObjectNode root = objectMapper.createObjectNode();
         root.put("methods", "ENDDEBATE");
         root.put("id_debate", id_debate);
+
+        for (UserInstance ui : Server.USERINSTANCELIST) {
+            if (ui != null)
+                ui.sendData(root);
+        }
+
+    }
+
+    private void caseDeleteQuestion (Map data) throws JsonProcessingException, SQLException {
+
+        int id_question = (int) data.get("id_question");
+        QuestionDAO questionDAO = new QuestionDAO(Server.CONNECTION);
+        McqDAO mcqDAO = new McqDAO(Server.CONNECTION);
+
+        Question question = questionDAO.select(id_question);
+        questionDAO.delete(question);
+        List<Mcq> list = mcqDAO.selectMcqByIdQuestion(id_question);
+
+        for (Mcq mcq : list)
+            mcqDAO.delete(mcq);
+
+        ObjectNode root = objectMapper.createObjectNode();
+        root.put("methods", "DELETEQUESTION");
+        root.put("id_question", id_question);
+        root.put("id_room", question.getRoom().getId());
 
         for (UserInstance ui : Server.USERINSTANCELIST) {
             if (ui != null)
@@ -344,7 +383,7 @@ public class UserInstance extends Thread implements Runnable {
     // CASE UPDATE
 
 
-    private void caseUpdateLikeMCQ (Map dataMap, String data) throws JsonProcessingException, SQLException {
+    private void caseUpdateVoteMCQ(Map dataMap, String data) throws JsonProcessingException, SQLException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
@@ -353,6 +392,23 @@ public class UserInstance extends Thread implements Runnable {
 
         McqDAO mcqDAO = new McqDAO(Server.CONNECTION);
         mcqDAO.updateNewLike(id);
+
+    }
+
+    private void caseUpdateLike (Map dataMap, String data) throws JsonProcessingException, SQLException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode dataJson = objectMapper.readTree(data);
+
+        int id = dataJson.get("id").asInt();
+        boolean positif = dataJson.get("positif").asBoolean();
+
+        CommentDAO commentDAO = new CommentDAO(Server.CONNECTION);
+        if (positif) {
+            commentDAO.updateLike(id);
+        } else {
+            commentDAO.updateDislike(id);
+        }
 
     }
 

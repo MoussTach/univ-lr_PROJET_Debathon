@@ -5,7 +5,6 @@ import de.saxsys.mvvmfx.ViewTuple;
 import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.mainwindow.MainWindowView;
 import fr.univlr.debathon.application.viewmodel.mainwindow.MainWindowViewModel;
-import fr.univlr.debathon.dataconnection.bdd.DbProperties_postgres;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
@@ -80,24 +79,6 @@ public class Launch extends Application {
     }
 
     /**
-     * Create db connection, on a method to te called and processed after the preload is showed.
-     *
-     * @author Gaetan Brenckle
-     *
-     * @throws IOException - {@link IOException} exception throw when the file is not readable
-     */
-    private void createDbConnection() throws IOException {
-
-        final Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/properties/default.properties"));
-        String name_destination_folder = properties.getProperty("name_data_folder");
-        String path_destination_folder = String.format("%s/.%s/%s", System.getProperty("user.home"), properties.getProperty("name"), name_destination_folder).replace("\\\\","/");
-
-        String path_DBProperties = String.format("%s/%s", path_destination_folder, "db.properties");
-        Main.DB_CONNECTION = new DbProperties_postgres(path_DBProperties);
-    }
-
-    /**
      * Main method.
      * Load every useful information before launch the main windows of the program.
      * Use a preload when the information are collected.
@@ -110,7 +91,6 @@ public class Launch extends Application {
 
         try {
             createDefaultFile();
-            createDbConnection();
 
         } catch (Exception e) {
             if (LOGGER.isFatalEnabled()) {

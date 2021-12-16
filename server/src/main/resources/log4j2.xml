@@ -3,8 +3,9 @@
 
     <Properties>
         <property name="APP_NAME">Debathon</property>
+        <property name="ARTIFACT_NAME">Debathon_server</property>
 
-        <property name="APP_LOG_DIR">${sys:user.home}/.${APP_NAME}/log</property>
+        <property name="APP_LOG_DIR">${sys:user.home}/.${APP_NAME}/log/${ARTIFACT_NAME}</property>
         <property name="APP_LOG_ERROR_DIR">${APP_LOG_DIR}/error</property>
         <property name="APP_LOG_FATAL_DIR">${APP_LOG_DIR}/fatal</property>
         <property name="APP_LOG_DEBUG_DIR">${APP_LOG_DIR}/debug</property>

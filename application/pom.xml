@@ -9,7 +9,7 @@
         <groupId>fr.univlr.debathon</groupId>
         <artifactId>Debathon</artifactId>
         <version>1.0.0</version>
-        <relativePath/>
+        <relativePath>../</relativePath>
     </parent>
 
     <groupId>fr.univlr.debathon.application</groupId>

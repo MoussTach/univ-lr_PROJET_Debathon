@@ -295,7 +295,9 @@ public class UserInstance extends Thread implements Runnable {
         ObjectNode root = objectMapper.createObjectNode();
         root.put("methods", "KEY_HOME");
         root.put("key", Server.CREATERIGHTS_KEY);
-
+        ArrayNode c = root.putArray("user");
+        c.addPOJO(Server.getUser());
+        
         this.sendData(root);
 
     }

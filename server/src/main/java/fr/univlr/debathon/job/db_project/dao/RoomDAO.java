@@ -103,7 +103,11 @@ public class RoomDAO implements DAO<Room> {
 			pstmt.setString(1, room.getLabel());
 			pstmt.setString(2, room.getDescription());
 			pstmt.setString(3, room.getKey());
-			pstmt.setInt(4, room.getCategory().getId());
+			if (room.getCategory() != null) {
+				pstmt.setInt(4, room.getCategory().getId());
+			} else {
+				pstmt.setInt(4, -1);
+			}
 
 			ResultSet rs = pstmt.executeQuery();
 

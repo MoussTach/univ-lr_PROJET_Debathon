@@ -237,7 +237,7 @@ public class AppCommunication extends Thread implements Runnable {
 
     public void methodsGETKEY(JsonNode dataJson) {
         String key = String.valueOf(dataJson.get("key"));
-        Debathon.getInstance().setKey(key);
+        Debathon.getInstance().setKey(key.replace("\"", ""));
     }
 
     public void methodsENDDEBATE(JsonNode dataJson) {

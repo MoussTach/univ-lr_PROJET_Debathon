@@ -9,12 +9,14 @@ import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.communication.Debathon;
+import fr.univlr.debathon.application.view.mainwindow.KeyWindowView;
 import fr.univlr.debathon.application.view.mainwindow.debate.CreateQuestionView;
 import fr.univlr.debathon.application.view.mainwindow.debate.InscriptionStatView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
 import fr.univlr.debathon.application.view.mainwindow.debate.question.QuestionView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
+import fr.univlr.debathon.application.viewmodel.mainwindow.KeyWindowViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.MainViewScope;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.CategoryViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
@@ -23,6 +25,7 @@ import fr.univlr.debathon.job.db_project.jobclass.Category;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
 import fr.univlr.debathon.job.db_project.jobclass.Tag;
+import fr.univlr.debathon.language.LanguageBundle;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -31,15 +34,23 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 
+import java.util.Optional;
+import java.util.ResourceBundle;
+
 public class DebateViewModel extends ViewModel_SceneCycle {
 
+    private final ObjectProperty<ResourceBundle> resBundle_ = LanguageBundle.getInstance().bindResourceBundle("properties.language.mainwindow.debate.lg_debate");
     private static final CustomLogger LOGGER = CustomLogger.create(DebateViewModel.class.getName());
 
     private final Room debate;
+    private final StringProperty key_value = new SimpleStringProperty();
 
     private final ObjectProperty<BorderPane> borderPane = new SimpleObjectProperty<>(null);
 
@@ -89,13 +100,6 @@ public class DebateViewModel extends ViewModel_SceneCycle {
 
         this.debate = debate;
 
-        CreateQuestionViewModel createQuestionViewModel = new CreateQuestionViewModel(this.debate);
-        popOver_createQuestion = new PopOver(FluentViewLoader.fxmlView(CreateQuestionView.class)
-                .viewModel(createQuestionViewModel)
-                .load().getView());
-        popOver_createQuestion.setDetachable(false);
-        popOver_createQuestion.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
-
         popOver_statMail = new PopOver(FluentViewLoader.fxmlView(InscriptionStatView.class)
                 .load().getView());
         popOver_statMail.setDetachable(false);
@@ -123,6 +127,42 @@ public class DebateViewModel extends ViewModel_SceneCycle {
         }
 
         if (this.debate != null) {
+            this.key_value.bind(this.debate.keyProperty());
+            if (this.debate.getKey() == null || this.debate.getKey().isEmpty()) {
+                CreateQuestionViewModel createQuestionViewModel = new CreateQuestionViewModel(this.debate);
+                popOver_createQuestion = new PopOver(FluentViewLoader.fxmlView(CreateQuestionView.class)
+                        .viewModel(createQuestionViewModel)
+                        .load().getView());
+
+            } else {
+                KeyWindowViewModel keyWindowViewModel = new KeyWindowViewModel();
+                keyWindowViewModel.keyProperty().bindBidirectional(this.debate.keyProperty());
+                popOver_createQuestion = new PopOver(FluentViewLoader.fxmlView(KeyWindowView.class)
+                        .viewModel(keyWindowViewModel)
+                        .load().getView());
+            }
+            popOver_createQuestion.setDetachable(false);
+            popOver_createQuestion.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
+
+            this.changeListener_key = (observableValue, oldValue, newValue) -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    CreateQuestionViewModel createQuestionViewModel = new CreateQuestionViewModel(this.debate);
+                    popOver_createQuestion = new PopOver(FluentViewLoader.fxmlView(CreateQuestionView.class)
+                            .viewModel(createQuestionViewModel)
+                            .load().getView());
+
+                } else {
+                    KeyWindowViewModel keyWindowViewModel = new KeyWindowViewModel();
+                    keyWindowViewModel.keyProperty().bindBidirectional(Debathon.getInstance().keyProperty());
+                    popOver_createQuestion = new PopOver(FluentViewLoader.fxmlView(KeyWindowView.class)
+                            .viewModel(keyWindowViewModel)
+                            .load().getView());
+                }
+                popOver_createQuestion.setDetachable(false);
+                popOver_createQuestion.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
+            };
+            this.debate.keyProperty().addListener(this.changeListener_key);
+
             this.lblTitle_label.bind(this.debate.labelProperty());
             this.description_htmlText.bind(this.debate.descriptionProperty());
 
@@ -228,8 +268,14 @@ public class DebateViewModel extends ViewModel_SceneCycle {
         }
 
         if (this.debate != null) {
+            this.key_value.unbind();
             this.lblTitle_label.unbind();
             this.description_htmlText.unbind();
+
+            if (this.changeListener_key != null) {
+                this.debate.keyProperty().removeListener(this.changeListener_key);
+                this.changeListener_key = null;
+            }
 
             if (this.changeListener_category != null) {
                 this.debate.categoryProperty().removeListener(this.changeListener_category);
@@ -245,6 +291,30 @@ public class DebateViewModel extends ViewModel_SceneCycle {
                 this.debate.listQuestionsProperty().removeListener(this.listChangeListener_question);
                 this.listChangeListener_question = null;
             }
+        }
+    }
+
+    /**
+     * Call the communication to delete this debate
+     *
+     * @author Gaetan Brenckle
+     */
+    public void actvm_DeleteDebate() {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the HomePageViewModel.actvm_DeleteDebate()");
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initOwner(Launch.PRIMARYSTAGE);
+        alert.initModality(Modality.APPLICATION_MODAL);
+
+        alert.setHeaderText(this.resBundle_.get().getString("debate_delete_text"));
+
+        alert.getDialogPane().getButtonTypes().setAll(ButtonType.NO, ButtonType.YES);
+        Optional<ButtonType> optional = alert.showAndWait();
+
+        if (optional.isPresent() && optional.get() == ButtonType.YES) {
+            Debathon.getInstance().getAppCommunication().requestEndDebate(this.debate.getId());
         }
     }
 
@@ -295,6 +365,17 @@ public class DebateViewModel extends ViewModel_SceneCycle {
      */
     public ObjectProperty<BorderPane> borderPaneProperty() {
         return borderPane;
+    }
+
+    /**
+     * Property of the variable key_value.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link StringProperty} - return the property of the variable key_value.
+     */
+    public StringProperty key_valueProperty() {
+        return key_value;
     }
 
     /**

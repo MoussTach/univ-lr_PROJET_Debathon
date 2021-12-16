@@ -91,6 +91,7 @@ public class Launch extends Application {
 
         try {
             createDefaultFile();
+            Debathon.getInstance().getAppCommunication().requestKey();
 
         } catch (Exception e) {
             if (LOGGER.isFatalEnabled()) {

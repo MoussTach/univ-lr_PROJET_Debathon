@@ -16,6 +16,22 @@
                <padding>
                   <Insets right="30.0" />
                </padding>
+               <left>
+                  <HBox alignment="CENTER" spacing="5.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button fx:id="btnDeleteDebate" mnemonicParsing="false" onAction="#act_btnDeleteDebate" style="-fx-background-radius: 10;">
+                           <graphic>
+                              <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                 <Image url="@../../../../../../../img/delete_64.png" />
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </HBox>
+               </left>
                <right>
                   <HBox alignment="CENTER" spacing="5.0" BorderPane.alignment="CENTER">
                      <children>

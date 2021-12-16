@@ -19,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import org.controlsfx.control.textfield.CustomTextField;
 
 import java.net.URL;
@@ -30,8 +31,10 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
 
     @FXML private BorderPane borderPane;
     @FXML private TitledPane tPaneParameters;
+    @FXML private Button btnShowKey;
 
     //Header organizer
+    @FXML private StackPane stackCreateDebate;
     @FXML private Label lblOrganizer;
     @FXML private Button btnCreateNewDebate;
 
@@ -44,6 +47,7 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
     @FXML private ScrollPane scrollPane;
     @FXML private FlowPane flowDebate;
 
+    private ChangeListener<String> changeListener_key;
     private ChangeListener<ViewTuple<CategoryView, CategoryViewModel> > changeListener_category;
     private ListChangeListener<ViewTuple<TagView, TagViewModel> > listChangeListener_tag;
     private ListChangeListener<Node> listChangeListener_DebateThumbnail;
@@ -51,6 +55,12 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
     @InjectViewModel
     private HomePageViewModel homePageViewModel;
 
+    @FXML
+    private void act_showKey() {
+        LOGGER.input(String.format("Press the button %s", btnShowKey.getId()));
+
+        this.homePageViewModel.actvm_showKeyWindow(btnShowKey);
+    }
 
     @FXML
     private void act_btnCreateNewDebate() {
@@ -82,6 +92,21 @@ public class HomePageView extends FxmlView_SceneCycle<HomePageViewModel> impleme
         btnAddItem.textProperty().bind(this.homePageViewModel.btnAddTag_labelProperty());
 
         //Value
+        this.stackCreateDebate.setVisible(false);
+        this.stackCreateDebate.setManaged(false);
+
+        this.btnShowKey.setVisible(true);
+        this.btnShowKey.setManaged(true);
+        this.changeListener_key = (observableValue, oldValue, newValue) -> {
+            boolean value = newValue == null || newValue.isEmpty();
+            this.stackCreateDebate.setVisible(value);
+            this.stackCreateDebate.setManaged(value);
+
+            this.btnShowKey.setVisible(!value);
+            this.btnShowKey.setManaged(!value);
+        };
+        this.homePageViewModel.key_valueProperty().addListener(this.changeListener_key);
+
         this.changeListener_category = (observableValue, oldValue, newValue) -> {
             if (oldValue != null)
                 flowCategory.getChildren().remove(oldValue.getView());

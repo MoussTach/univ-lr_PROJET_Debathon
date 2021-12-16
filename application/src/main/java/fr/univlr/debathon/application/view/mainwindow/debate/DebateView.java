@@ -34,6 +34,7 @@ public class DebateView extends FxmlView_SceneCycle<DebateViewModel> implements 
 
     @FXML private BorderPane borderPane;
 
+    @FXML private Button btnDeleteDebate;
     @FXML private Label lblTitle;
     @FXML private Button btnShowCreateQuestion;
     @FXML private Button btnShowStatMail;
@@ -47,11 +48,19 @@ public class DebateView extends FxmlView_SceneCycle<DebateViewModel> implements 
     @InjectViewModel
     private DebateViewModel debateViewModel;
 
+    private ChangeListener<String> changeListener_key;
     private ChangeListener<String> changeListener_htmlDesc;
     private ChangeListener<ViewTuple<CategoryView, CategoryViewModel>> changeListener_category;
     private ListChangeListener<ViewTuple<TagView, TagViewModel>> listChangeListener_tag;
 
     private ListChangeListener<ViewTuple<QuestionView, QuestionViewModel>> listChangeListener_question;
+
+    @FXML
+    public void act_btnDeleteDebate() {
+        LOGGER.input(String.format("Press the button %s", btnDeleteDebate.getId()));
+
+        this.debateViewModel.actvm_DeleteDebate();
+    }
 
 
     @FXML
@@ -79,6 +88,16 @@ public class DebateView extends FxmlView_SceneCycle<DebateViewModel> implements 
         this.lblTitle.textProperty().bind(this.debateViewModel.lblTitle_labelProperty());
 
         //Value
+        boolean valueInit = this.debateViewModel.key_valueProperty().get() == null || this.debateViewModel.key_valueProperty().isEmpty().get();
+        this.btnDeleteDebate.setVisible(valueInit);
+        this.btnDeleteDebate.setManaged(valueInit);
+        this.changeListener_key = (observableValue, oldValue, newValue) -> {
+            boolean value = newValue == null || newValue.isEmpty();
+            this.btnDeleteDebate.setVisible(value);
+            this.btnDeleteDebate.setManaged(value);
+        };
+        this.debateViewModel.key_valueProperty().addListener(this.changeListener_key);
+
         if (!this.debateViewModel.category_valueProperty().isNull().get())
             this.flowCategory.getChildren().add(this.debateViewModel.category_valueProperty().get().getView());
         this.changeListener_category = (observableValue, oldValue, newValue) -> {
@@ -139,6 +158,11 @@ public class DebateView extends FxmlView_SceneCycle<DebateViewModel> implements 
 
     @Override
     public void onViewRemoved_Cycle() {
+        if (this.changeListener_key != null) {
+            this.debateViewModel.key_valueProperty().removeListener(this.changeListener_key);
+            this.changeListener_key = null;
+        }
+
         if (this.changeListener_category != null) {
             this.debateViewModel.category_valueProperty().removeListener(this.changeListener_category);
             this.changeListener_category = null;

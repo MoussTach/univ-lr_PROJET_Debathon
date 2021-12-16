@@ -68,6 +68,7 @@ public class CreateDebateViewModel extends ViewModel_SceneCycle {
     private final StringProperty tfKey_value = new SimpleStringProperty();
 
     private final ObservableRuleBasedValidator rule_title = new ObservableRuleBasedValidator();
+    private final ObservableRuleBasedValidator rule_category = new ObservableRuleBasedValidator();
     private final ObservableRuleBasedValidator rule_Key = new ObservableRuleBasedValidator();
     private final CompositeValidator validator_CreateDebate = new CompositeValidator();
 
@@ -95,8 +96,9 @@ public class CreateDebateViewModel extends ViewModel_SceneCycle {
         }
 
         rule_title.addRule(createRule_title());
+        rule_category.addRule(createRule_category());
         rule_Key.addRule(createRule_key());
-        validator_CreateDebate.addValidators(rule_title, rule_Key);
+        validator_CreateDebate.addValidators(rule_title, rule_category, rule_Key);
 
         //ResourceBundle Listener
         this.listener_ChangedValue_bundleLanguage_ = this::listener_bundleLanguage;
@@ -199,6 +201,21 @@ public class CreateDebateViewModel extends ViewModel_SceneCycle {
     }
 
     /**
+     * Rule for the category.
+     *
+     * @return {@link ObjectBinding} - the rule
+     */
+    private ObjectBinding<ValidationMessage> createRule_category() {
+
+        return Bindings.createObjectBinding(() -> {
+            if (this.category_selected_value.get() == null) {
+                return ValidationMessage.error(this.resBundle_.get().getString("rule_null"));
+            }
+            return null;
+        }, this.category_selected_value);
+    }
+
+    /**
      * Rule for the key.
      *
      * @return {@link ObjectBinding} - the rule
@@ -239,15 +256,20 @@ public class CreateDebateViewModel extends ViewModel_SceneCycle {
 
         try {
             final List<Tag> listTag = new ArrayList<>();
-            this.listTag_selected_value.forEach(tag -> {
-                listTag.add(tag.getViewModel().getTag());
-            });
+            this.listTag_selected_value.forEach(tag ->
+                    listTag.add(tag.getViewModel().getTag()));
+
+
+            Category category = null;
+            if (this.category_selected_value.get() != null) {
+                category = this.category_selected_value.get().getViewModel().getCategory();
+            }
 
             final Room newRoom = new Room(
                     this.tfTitle_value.get(),
                     this.htmlEditorDescription_value.get(),
                     this.tfKey_value.get(),
-                    this.category_selected_value.get().getViewModel().getCategory(),
+                    category,
                     listTag
             );
 

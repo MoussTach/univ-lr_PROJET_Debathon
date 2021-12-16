@@ -13,6 +13,7 @@ import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.mainwindow.CreateDebateView;
+import fr.univlr.debathon.application.view.mainwindow.KeyWindowView;
 import fr.univlr.debathon.application.view.mainwindow.SelectWindowView;
 import fr.univlr.debathon.application.view.mainwindow.debate.DebateThumbnailView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
@@ -55,6 +56,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     private static final CustomLogger LOGGER = CustomLogger.create(HomePageViewModel.class.getName());
 
     private final ObjectProperty<BorderPane> borderPane = new SimpleObjectProperty<>(null);
+    private final StringProperty key_value = new SimpleStringProperty();
 
     //Text
     private final StringProperty tPaneParameters_label = new SimpleStringProperty(this.resBundle_.get().getString("tPaneParameters"));
@@ -100,7 +102,6 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         }
     }, true);
 
-
     private ChangeListener<Category> changeListener_Category;
     private ListChangeListener<Tag> listChangeListener_Tag;
 
@@ -117,6 +118,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     private SelectTagScope selectTagScope;
 
     private PopOver popOver_createDebate;
+    private PopOver popOver_keyWindow;
     private PopOver popOver_selectItems;
 
 
@@ -141,6 +143,14 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
     }
 
     public void initialize() {
+        KeyWindowViewModel keyWindowViewModel = new KeyWindowViewModel();
+        keyWindowViewModel.keyProperty().bindBidirectional(Debathon.getInstance().keyProperty());
+        popOver_keyWindow = new PopOver(FluentViewLoader.fxmlView(KeyWindowView.class)
+                .viewModel(keyWindowViewModel)
+                .load().getView());
+        popOver_keyWindow.setDetachable(false);
+        popOver_keyWindow.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
+
         popOver_createDebate = new PopOver(FluentViewLoader.fxmlView(CreateDebateView.class)
                 .load().getView());
         popOver_createDebate.setDetachable(false);
@@ -171,6 +181,7 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[public][method] Usage of the HomePageViewModel.bindDebate()");
         }
+        this.key_value.bind(Debathon.getInstance().keyProperty());
 
         Debathon.getInstance().getDebates().forEach(room ->
                 Platform.runLater(() -> {
@@ -223,7 +234,6 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("[private][method] Usage of the HomePageViewModel.bindSelectedItems()");
         }
-
         this.changeListener_Category = (observableValue, oldValue, newValue) -> {
             if (newValue != null) {
                 CategoryViewModel categoryViewModel = new CategoryViewModel(newValue);
@@ -300,6 +310,8 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[private][method] Usage of the HomePageViewModel.unbindDebate()");
         }
 
+        this.key_value.unbind();
+
         if (this.listChangeListener_Debate != null) {
             Debathon.getInstance().debatesProperty().removeListener(this.listChangeListener_Debate);
             this.listChangeListener_Debate = null;
@@ -347,6 +359,23 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         }, this.tfSearch_value, this.category_selected_value, this.listTag_selected_value, this.listDebate_value);
     }
 
+    /**
+     * Show a popover to set the key to grant rights.
+     *
+     * @author Gaetan Brenckle
+     * @param node - {@link Node} - node used to show the popover
+     */
+    public void actvm_showKeyWindow(Node node) {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("[public][method] Usage of the HomePageViewModel.actvm_showKeyWindow()");
+        }
+
+        if (popOver_keyWindow.isShowing()) {
+            popOver_keyWindow.hide();
+        } else {
+            popOver_keyWindow.show(node);
+        }
+    }
 
     /**
      * Show a popover to create debate.
@@ -385,6 +414,17 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
         }
     }
 
+
+    /**
+     * Property of the variable key_value.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link StringProperty} - return the property of the variable key_value.
+     */
+    public StringProperty key_valueProperty() {
+        return key_value;
+    }
 
     /**
      * Getter for the list filtered of debate available

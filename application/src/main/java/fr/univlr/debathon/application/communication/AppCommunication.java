@@ -273,6 +273,22 @@ public class AppCommunication extends Thread implements Runnable {
     }
 
 
+    public void requestEndDebate (int id_debate)  {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+        all_rooms.clear();
+        root.put("methods", "END");
+        root.put("request", "DEBATE");
+        root.put("id_debate", id_debate);
+
+        try {
+            this.sendData(mapper, root);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     //Fonction avec id en parametre pour recuperer info d'une room
     public void requestRoom(int id) throws  JsonProcessingException{
         System.out.println("TEST GET ROOM INFOS IN DB WITH ID = 1");
@@ -404,7 +420,7 @@ public class AppCommunication extends Thread implements Runnable {
         root.put("request", "MCQ");
         root.put("type", "VOTE");
         root.put("id", id_mcq);
-        root.put("positif", positif);
+        root.put("positif", positif); // true for add a like and false for add a dislike
 
         this.sendData(mapper, root);
 
@@ -457,6 +473,11 @@ public class AppCommunication extends Thread implements Runnable {
         System.out.println(c.getComment());
         System.out.println("------");
     }
+
+
+
+
+
 
     private boolean end = false;
 

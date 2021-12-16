@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonDeserializer;
 import fr.univlr.debathon.job.db_project.dao.*;
 import fr.univlr.debathon.job.db_project.jobclass.*;
+import fr.univlr.debathon.server.pdf.PDFGenerator;
 import fr.univlr.debathon.server.pdf.PDFdata;
 import org.hildan.fxgson.FxGson;
 
@@ -86,6 +87,20 @@ public class UserInstance extends Thread implements Runnable {
             case "MAIL":
                 methodsMAIL (dataJson, data);
                 break;
+            case "END":
+                methodsEND (dataJson, data);
+                break;
+        }
+
+    }
+
+    private void methodsEND(Map dataJson, String data) throws JsonProcessingException {
+
+        switch ((String) dataJson.get("request")) {
+            case "DEBATE":
+                this.caseEndDebate (dataJson);
+                break;
+
         }
 
     }
@@ -150,6 +165,15 @@ public class UserInstance extends Thread implements Runnable {
                 this.caseGetKEYHOME(data);
                 break;
         }
+    }
+
+
+    // CASE END
+
+    private void caseEndDebate(Map data) throws JsonProcessingException {
+
+        int id_debate = (int) data.get("id_debate");
+        PDFGenerator.getInstance().requestPDF(id_debate);
     }
 
 

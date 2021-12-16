@@ -7,14 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonDeserializer;
-import fr.univlr.debathon.job.db_project.dao.CommentDAO;
-import fr.univlr.debathon.job.db_project.dao.McqDAO;
-import fr.univlr.debathon.job.db_project.dao.QuestionDAO;
-import fr.univlr.debathon.job.db_project.dao.RoomDAO;
-import fr.univlr.debathon.job.db_project.jobclass.Comment;
-import fr.univlr.debathon.job.db_project.jobclass.Mcq;
-import fr.univlr.debathon.job.db_project.jobclass.Question;
-import fr.univlr.debathon.job.db_project.jobclass.Room;
+import fr.univlr.debathon.job.db_project.dao.*;
+import fr.univlr.debathon.job.db_project.jobclass.*;
 import fr.univlr.debathon.server.pdf.PDFdata;
 import org.hildan.fxgson.FxGson;
 
@@ -139,9 +133,6 @@ public class UserInstance extends Thread implements Runnable {
             case "COMMENT": //Cas ROOM souhaite
                 this.caseInsertCOMMENT(dataJson, data);
                 break;
-            case "MCQ": //Cas ROOM souhaite
-                this.caseInsertMCQ(dataJson, data);
-                break;
         }
     }
 
@@ -213,8 +204,18 @@ public class UserInstance extends Thread implements Runnable {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
         RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
+        TagDAO tagDAO = new TagDAO(Server.CONNECTION);
 
         Room room = this.getUnserialisation(dataJson.get("new_room").get(0).toString(), Room.class);
+
+
+        for (Tag tag : room.getListTag())
+        {
+            if (tag.getId() == -1) {
+                int id = tagDAO.insertAndReturnId(tag);
+                tag.setId(id);
+            }
+        }
 
         Room roomRes = roomDAO.insertAndGetId(room);
         System.out.println("Nouveau salon d'id : " + roomRes.getId());
@@ -230,10 +231,24 @@ public class UserInstance extends Thread implements Runnable {
         JsonNode dataJson = objectMapper.readTree(data);
 
         QuestionDAO questionDAO = new QuestionDAO(Server.CONNECTION);
+        McqDAO mcqDAO = new McqDAO(Server.CONNECTION);
 
         Question question = this.getUnserialisation(dataJson.get("new_question").get(0).toString(), Question.class);
 
         int id = questionDAO.insertAndGetId(question);
+        Question q = questionDAO.select(id);
+        System.out.println(">>>>> id :");
+        System.out.println("\t" + id);
+
+        for (Mcq mcq : question.getListMcq()) {
+            mcq.setId_question(q.getId());
+            Mcq r = mcqDAO.insertAndGetId(mcq);
+            q.addMcq(r);
+        }
+
+        if (q != null) {
+            this.sendNewQuestion(q);
+        }
 
         System.out.println("Nouvelle question d'id : " + id);
         
@@ -249,22 +264,13 @@ public class UserInstance extends Thread implements Runnable {
 
         int id = commentDAO.insertAndGetId(comment);
 
+        Comment c = commentDAO.select(id);
+
+        if (c != null) {
+            this.sendNewComment(c);
+        }
+
         System.out.println("Nouveau commentaire d'id : " + id);
-
-    }
-
-
-    private void caseInsertMCQ(Map dataMap, String data) throws JsonProcessingException, SQLException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode dataJson = objectMapper.readTree(data);
-
-        McqDAO mcqDAO = new McqDAO(Server.CONNECTION);
-
-        Mcq mcq = this.getUnserialisation(dataJson.get("new_mcq").get(0).toString(), Mcq.class);
-
-        int id = mcqDAO.insertAndGetId(mcq);
-
-        System.out.println("Nouveau mcq d'id : " + id);
 
     }
 
@@ -295,8 +301,6 @@ public class UserInstance extends Thread implements Runnable {
         String email = dataJson.get("email").asText();
 
         PDFdata.insertNewEmail(id, email);
-
-        System.out.println("ceci est un test" + id + "   " + email);
 
     }
 
@@ -352,16 +356,16 @@ public class UserInstance extends Thread implements Runnable {
 
     public void sendNewRoom (Room room) throws JsonProcessingException {
         for (UserInstance ui : Server.USERINSTANCELIST) {
-            if (ui != null && ui.getWhereIam() == -1)
+            if (ui != null && ui.getWhereIam() == -1) {
                 System.out.println("------> " + ui.getName());
                 ui.sendData(this.getObjetNode("NEWROOM", "new_room", room));
+            }
         }
     }
     private void testSendNewRoom () throws SQLException, JsonProcessingException {
         RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
         this.sendNewRoom(roomDAO.select(1));
     }
-
 
 
 

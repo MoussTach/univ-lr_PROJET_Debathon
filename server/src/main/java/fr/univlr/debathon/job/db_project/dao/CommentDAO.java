@@ -223,7 +223,7 @@ public class CommentDAO implements DAO<Comment> {
 
 	public int insertAndGetId(Comment comment) throws SQLException {
 
-		String sql = "INSERT INTO Comment (comment, id_parent, id_question, id_room, id_user) values (?,?,?,?,?)";
+		String sql = "INSERT INTO Comment (comment, id_parent, id_question, id_room, id_user) values (?,?,?,?,?) returning idComment";
 
 		try {
 			PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -243,9 +243,11 @@ public class CommentDAO implements DAO<Comment> {
 			pstmt.setInt(4, comment.getRoom().getId());
 			pstmt.setInt(5, comment.getUser().getId());
 
-			pstmt.executeUpdate();
-			pstmt.close();
-			return this.selectByCommentAndUser(comment.getComment(), comment.getUser().getId());
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				return rs.getInt("idComment");
+			}
 
 		} catch (Exception e) {
 			if (LOGGER.isErrorEnabled()) {
@@ -253,7 +255,7 @@ public class CommentDAO implements DAO<Comment> {
 			}
 			return -1;
 		}
-
+		return -1;
 	}
 
 	@Override
@@ -363,35 +365,6 @@ public class CommentDAO implements DAO<Comment> {
 		}
 		
 		return comment;
-	}
-
-	public int selectByCommentAndUser(String c, int id_user) throws SQLException {
-
-		String sql = "SELECT * from Comment WHERE comment = ? and id_user = ?";
-
-		try {
-			PreparedStatement pstmt = this.connection.prepareStatement(sql);
-
-			pstmt.setString(1, c);
-			pstmt.setInt(2, id_user);
-
-
-			ResultSet rs = pstmt.executeQuery();
-
-
-			if (rs.next()) {
-
-				return rs.getInt("idComment");
-			}
-			pstmt.close();
-		} catch (Exception e) {
-			if (LOGGER.isErrorEnabled()) {
-				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
-			}
-			return -1;
-		}
-
-		return -1;
 	}
 
 

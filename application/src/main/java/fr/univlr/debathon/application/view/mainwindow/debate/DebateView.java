@@ -22,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
 import java.net.URL;
@@ -34,6 +35,7 @@ public class DebateView extends FxmlView_SceneCycle<DebateViewModel> implements 
     @FXML private BorderPane borderPane;
 
     @FXML private Label lblTitle;
+    @FXML private Button btnShowCreateQuestion;
     @FXML private Button btnShowStatMail;
 
     @FXML private FlowPane flowCategory;
@@ -51,6 +53,14 @@ public class DebateView extends FxmlView_SceneCycle<DebateViewModel> implements 
 
     private ListChangeListener<ViewTuple<QuestionView, QuestionViewModel>> listChangeListener_question;
 
+
+    @FXML
+    public void act_btnShowCreateQuestion() {
+        LOGGER.input(String.format("Press the button %s", btnShowCreateQuestion.getId()));
+
+        this.debateViewModel.actvm_showCreateQuestion(btnShowCreateQuestion);
+    }
+
     @FXML
     public void act_btnShowStatMail() {
         LOGGER.input(String.format("Press the button %s", btnShowStatMail.getId()));
@@ -63,12 +73,12 @@ public class DebateView extends FxmlView_SceneCycle<DebateViewModel> implements 
         this.setViewModel(debateViewModel);
 
         this.debateViewModel.borderPaneProperty().set(borderPane);
+        WebEngine webEngine = this.webDebate.getEngine();
 
         //Text
         this.lblTitle.textProperty().bind(this.debateViewModel.lblTitle_labelProperty());
 
         //Value
-
         if (!this.debateViewModel.category_valueProperty().isNull().get())
             this.flowCategory.getChildren().add(this.debateViewModel.category_valueProperty().get().getView());
         this.changeListener_category = (observableValue, oldValue, newValue) -> {
@@ -91,13 +101,22 @@ public class DebateView extends FxmlView_SceneCycle<DebateViewModel> implements 
         };
         this.debateViewModel.listTag_valueProperty().addListener(this.listChangeListener_tag);
 
-        if (!this.debateViewModel.description_htmlTextProperty().isNull().get())
-            webDebate.getEngine().loadContent(this.debateViewModel.description_htmlTextProperty().get());
+        if (!this.debateViewModel.description_htmlTextProperty().isNull().get()) {
+            String htmlText = this.debateViewModel.description_htmlTextProperty().get();
+            if(htmlText.contains("contenteditable=\"true\"")){
+                htmlText = htmlText.replace("contenteditable=\"true\"", "contenteditable=\"false\"");
+            }
+            webEngine.loadContent(htmlText);
+        }
         this.changeListener_htmlDesc = (observableValue, oldValue, newValue) -> {
-            if (newValue != null)
-                webDebate.getEngine().loadContent(newValue);
-            else if (oldValue != null)
-                webDebate.getEngine().loadContent("");
+            if (newValue != null) {
+                if(newValue.contains("contenteditable=\"true\"")){
+                    newValue = newValue.replace("contenteditable=\"true\"", "contenteditable=\"false\"");
+                }
+                webEngine.loadContent(newValue);
+            } else if (oldValue != null) {
+                webEngine.loadContent("");
+            }
         };
 
         this.debateViewModel.listQuestion_valueProperty().forEach(item -> vboxQuestion.getChildren().add(item.getView()));

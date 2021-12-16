@@ -90,6 +90,35 @@ public class TagDAO implements DAO<Tag> {
         
     }
 
+    public int insertAndReturnId(Tag tag) throws SQLException {
+        String sql = "INSERT INTO Tag (label, color) VALUES(?,?) returning idTag";
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, tag.getLabel());
+            pstmt.setString(2, tag.getColor());
+
+
+            ResultSet rs  = pstmt.executeQuery();
+
+            int id = -1;
+            if (rs.next()) {
+                id =  (rs.getInt("idTag"));
+            }
+
+            pstmt.close();
+
+            return id;
+        } catch (SQLException e) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
+        }
+
+        return -1;
+
+    }
+
     /**
      * UPDATE the class.
      *
@@ -244,6 +273,30 @@ public class TagDAO implements DAO<Tag> {
         }
 
         return tag;
+    }
+
+
+    public boolean insertNewRelation (int id_room, int id_tag) {
+        String sql = "INSERT INTO Relation_room_tag (id_room, id_tag) VALUES (?,?)";
+
+        try {
+            PreparedStatement pstmt  = connection.prepareStatement(sql);
+
+            pstmt.setInt(1, id_room);
+            pstmt.setInt(2, id_tag);
+
+            pstmt.executeUpdate();
+
+            pstmt.close();
+        } catch (SQLException e) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
+            return false;
+        }
+
+        return true;
+
     }
 
 }

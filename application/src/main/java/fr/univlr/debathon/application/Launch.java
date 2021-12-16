@@ -127,6 +127,7 @@ public class Launch extends Application {
     @Override
     public void stop(){
         APPLICATION_STOP.set(true);
+        Debathon.getInstance().getAppCommunication().end();
     }
 
     /**

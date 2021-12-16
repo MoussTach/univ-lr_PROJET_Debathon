@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 public class AppCommunication extends Thread implements Runnable {
 
@@ -37,7 +38,6 @@ public class AppCommunication extends Thread implements Runnable {
         userSocket = new Socket("localhost",9878);
         out = new PrintWriter(userSocket.getOutputStream());
         in = new BufferedReader(new InputStreamReader(userSocket.getInputStream()));
-
     }
 
     private <T> T getUnserialisation(String objects, Class<T> classT) {
@@ -161,6 +161,10 @@ public class AppCommunication extends Thread implements Runnable {
             Debathon.getInstance().getCurrent_debate().listQuestionsProperty().addAll(questionList);
         }
 
+        // TODO room in comment
+        for (Question question : questionList)
+            System.out.println(question + "@@@@@@@@@@@@@@@@@@@@@@@@@");
+
         if (dataJson.get("mcq") != null) {
             for (int i = 0; i < dataJson.get("mcq").get(0).size(); i++) {
 
@@ -199,14 +203,32 @@ public class AppCommunication extends Thread implements Runnable {
     public void methodsNEWROOM (JsonNode dataJson) throws IOException {
         Room room = this.getUnserialisation(dataJson.get("new_room").get(0).toString(), Room.class);
 
-        Debathon.getInstance().getDebates().add(room);
-        System.out.println(room);
+        List<Tag> shadowListTag = new ArrayList<>(room.getListTag());
+        for (Tag currentTag : room.getListTag()) {
+            boolean exist = false;
 
+            for (Tag tag : Debathon.getInstance().getTags()) {
+                if (tag.getLabel().equals(currentTag.getLabel())) {
+
+                    if (!tag.equals(currentTag)) {
+                        shadowListTag.remove(currentTag);
+                        shadowListTag.add(tag);
+                    }
+
+                    exist = true;
+                }
+            }
+            if (!exist) {
+                Debathon.getInstance().getTags().add(currentTag);
+            }
+        }
+
+        Debathon.getInstance().getDebates().add(room);
     }
 
     public void methodsNEWMCQ(JsonNode dataJson) throws IOException {
         Mcq mcq = this.getUnserialisation(dataJson.get("new_mcq").get(0).toString(), Mcq.class);
-        System.out.println(mcq);
+
         Debathon.getInstance().getMcq().add(mcq);
     }
 
@@ -247,7 +269,6 @@ public class AppCommunication extends Thread implements Runnable {
         //id pour preciser l'id de la room
         root.put("id",id);
         this.sendData(mapper, root);
-
     }
 
     public void requestInsertNewRoom (Room room) throws JsonProcessingException {
@@ -264,6 +285,7 @@ public class AppCommunication extends Thread implements Runnable {
         this.sendData(mapper, root);
 
     }
+
     public void testRequestInsertNewRoom () throws JsonProcessingException {
         String key = AlphaNumericStringGenerator.getRandomString(6);
         Category category = new Category(1, "Catégorie", "#000");
@@ -292,7 +314,7 @@ public class AppCommunication extends Thread implements Runnable {
         Room room = new Room();
         room.setId(2);
         Question question = new Question("Comment ça va ?", "Il est 3h du mat et ca te casse les couilles",
-                "unique", room, user);
+                Question.Type.UNIQUE.text, room, user);
         this.requestInsertNewQuestion(question);
     }
 
@@ -307,6 +329,7 @@ public class AppCommunication extends Thread implements Runnable {
         c.addPOJO(comment);
         this.sendData(mapper, root);
     }
+
     public void testRequestInsertNewComment () throws JsonProcessingException {
         Room room = new Room();
         room.setId(2);
@@ -329,6 +352,7 @@ public class AppCommunication extends Thread implements Runnable {
         c.addPOJO(mcq);
         this.sendData(mapper, root);
     }
+
     public void testRequestInsertNewMcq () throws JsonProcessingException {
 
         Room room = new Room();
@@ -336,7 +360,7 @@ public class AppCommunication extends Thread implements Runnable {
         Question question = new Question();
         question.setId(6);
 
-        Mcq mcq = new Mcq("Mcq texte", question, room);
+        Mcq mcq = new Mcq("Mcq texte", question.getId(), room);
 
         this.requestInsertNewMcq(mcq);
 
@@ -417,8 +441,16 @@ public class AppCommunication extends Thread implements Runnable {
         System.out.println("------");
     }
 
+    private boolean end = false;
 
-
+    public void end () {
+        end = true;
+        try {
+            userSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     @Override
@@ -431,7 +463,7 @@ public class AppCommunication extends Thread implements Runnable {
 
             String dataReceveid = "";
 
-            while(data!=null){
+            while(!end && data!=null){
                 dataReceveid += data;
 
                 if (data.equals("}")) {
@@ -439,11 +471,15 @@ public class AppCommunication extends Thread implements Runnable {
                     dataReceveid = "";
                 }
 
-                data = in.readLine();
+                try {
+                    data = in.readLine();
+                } catch (Exception e) {
+                    LOGGER.info("Application stop.");
+                }
             }
-            System.out.println("Server out of service");
-            //out.close();
-            //userSocket.close();
+            in.close();
+            out.close();
+            userSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -13,18 +13,31 @@
          <children>
             <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
             <BorderPane>
-               <right>
-                  <Button fx:id="btnShowStatMail" mnemonicParsing="false" onAction="#act_btnShowStatMail" style="-fx-background-radius: 10;" BorderPane.alignment="CENTER">
-                     <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <Image url="@../../../../../../../img/documentWrite_64.png" />
-                        </ImageView>
-                     </graphic>
-                  </Button>
-               </right>
                <padding>
                   <Insets right="30.0" />
                </padding>
+               <right>
+                  <HBox alignment="CENTER" spacing="5.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button fx:id="btnShowCreateQuestion" mnemonicParsing="false" onAction="#act_btnShowCreateQuestion" style="-fx-background-radius: 10;">
+                           <graphic>
+                              <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                 <Image url="@../../../../../../../img/add_64.png" />
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="btnShowStatMail" layoutX="10.0" layoutY="19.0" mnemonicParsing="false" onAction="#act_btnShowStatMail" style="-fx-background-radius: 10;">
+                           <graphic>
+                              <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../../../img/documentWrite_64.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                  </HBox>
+               </right>
             </BorderPane>
             <Label fx:id="lblTitle" text="lblTitle" StackPane.alignment="CENTER">
                <padding>

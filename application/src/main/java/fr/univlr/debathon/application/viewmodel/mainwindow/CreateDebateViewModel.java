@@ -1,5 +1,6 @@
 package fr.univlr.debathon.application.viewmodel.mainwindow;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ScopeProvider;
@@ -9,6 +10,7 @@ import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
 import fr.univlr.debathon.application.Launch;
+import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.mainwindow.SelectWindowView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
@@ -18,6 +20,7 @@ import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.SelectCa
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.SelectTagScope;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import fr.univlr.debathon.job.db_project.jobclass.Category;
+import fr.univlr.debathon.job.db_project.jobclass.Room;
 import fr.univlr.debathon.job.db_project.jobclass.Tag;
 import fr.univlr.debathon.language.LanguageBundle;
 import fr.univlr.debathon.log.generate.CustomLogger;
@@ -35,6 +38,8 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -178,22 +183,6 @@ public class CreateDebateViewModel extends ViewModel_SceneCycle {
         this.selectTagScope.selectedTagsProperty().addListener(this.listChangeListener_Tag);
     }
 
-    private void unbindCreate() {
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("[private][method] Usage of the CreateDebateViewModel.unbindCreate()");
-        }
-
-        if (this.changeListener_Category != null) {
-            this.selectCategoryScope.selectedCategoryProperty().removeListener(this.changeListener_Category);
-            this.changeListener_Category = null;
-        }
-
-        if (this.listChangeListener_Tag != null) {
-            this.selectTagScope.selectedTagsProperty().removeListener(this.listChangeListener_Tag);
-            this.listChangeListener_Tag = null;
-        }
-    }
-
     /**
      * Rule for the title.
      *
@@ -248,7 +237,33 @@ public class CreateDebateViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[public][method] Usage of the CreateDebateViewModel.actvm_ValidCreateDebate()");
         }
 
-        //TODO valid Create
+        try {
+            final List<Tag> listTag = new ArrayList<>();
+            this.listTag_selected_value.forEach(tag -> {
+                listTag.add(tag.getViewModel().getTag());
+            });
+
+            final Room newRoom = new Room(
+                    this.tfTitle_value.get(),
+                    this.htmlEditorDescription_value.get(),
+                    this.tfKey_value.get(),
+                    this.category_selected_value.get().getViewModel().getCategory(),
+                    listTag
+            );
+
+            Debathon.getInstance().getAppCommunication().requestInsertNewRoom(newRoom);
+        } catch (JsonProcessingException e) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("Error when the user want to create a debate", e);
+            }
+
+            Notifications.create()
+                    .position(Pos.BOTTOM_RIGHT)
+                    .title(this.resBundle_.get().getString("createDebate_title_error"))
+                    .text(this.resBundle_.get().getString("createDebate_text_error"))
+                    .showInformation();
+            return;
+        }
 
         //Reset fields
         this.tfTitle_value.set("");

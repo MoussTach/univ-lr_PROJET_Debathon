@@ -1,5 +1,6 @@
 package fr.univlr.debathon.server.pdf;
 
+import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.server.communication.Server;
 
 import java.sql.PreparedStatement;
@@ -23,13 +24,13 @@ public class PDFdata {
 
             if (rs.next()) {
                 fquestion.setLabelQuestion(rs.getString("label"));
-                String choice = rs.getString("type");
+                Question.Type choice = Question.Type.valueOf(rs.getString("type").toUpperCase());
 
                 switch (choice) {
-                    case "unique":
+                    case UNIQUE:
                         fquestion.setUniqueChoice(true);
                         break;
-                    case "multiple":
+                    case MULTIPLE:
                         fquestion.setUniqueChoice(false);
                         break;
                     default:
@@ -88,6 +89,8 @@ public class PDFdata {
 
             for (PDFquestion p : list) {
                 fillQuestion(p);
+                fillQuestionMostLike(p, debate_id);
+                fillQuestionMostDislike(p, debate_id);
             }
 
 
@@ -98,6 +101,60 @@ public class PDFdata {
         return list;
 
     }
+
+
+
+    public static void fillQuestionMostLike (PDFquestion fquestion, int id_debate) {
+        String sql = "SELECT C.comment, C.nb_likes FROM Comment C WHERE C.id_room = ? AND C.id_question = ? GROUP BY C.id_question HAVING MAX(C.nb_likes)";
+
+
+        try {
+            PreparedStatement pstmt = PDFGenerator.c.prepareStatement(sql);
+
+            pstmt.setInt(1, id_debate);
+            pstmt.setInt(2, fquestion.getIdQuestion());
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                fquestion.setMost_like_comment(rs.getString("comment"));
+                fquestion.setMost_nb_likes(rs.getInt("nb_likes"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+    public static void fillQuestionMostDislike (PDFquestion fquestion, int id_debate) {
+        String sql = "SELECT C.comment, C.nb_dislikes FROM Comment C WHERE C.id_room = ? AND C.id_question = ? GROUP BY C.id_question HAVING MAX(C.nb_likes)";
+
+
+        try {
+            PreparedStatement pstmt = PDFGenerator.c.prepareStatement(sql);
+
+            pstmt.setInt(1, id_debate);
+            pstmt.setInt(2, fquestion.getIdQuestion());
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                fquestion.setMost_dislike_comment(rs.getString("comment"));
+                fquestion.setMost_nb_dislikes(rs.getInt("nb_dislikes"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+
 
 
     public static List<String> getEmail (int id_debate) {

@@ -145,13 +145,16 @@ public class UserInstance extends Thread implements Runnable {
             case "ROOM": //Cas ROOM souhaite
                 this.caseGetROOM(data);
                 break;
+            case "KEY_HOME": //Cas ROOM souhaite
+                this.caseGetKEYHOME(data);
+                break;
         }
     }
 
 
     // CASE GET
 
-    private void caseGetHOME(Map data) throws SQLException, JsonProcessingException {
+    private void caseGetHOME(Map data)  {
         this.whereIam = -1;
         try {
             RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
@@ -193,6 +196,16 @@ public class UserInstance extends Thread implements Runnable {
         System.out.println(rootRoom);
 
         this.sendData(rootRoom);
+    }
+
+    private void caseGetKEYHOME(Map data) throws JsonProcessingException {
+
+        ObjectNode root = objectMapper.createObjectNode();
+        root.put("methods", "KEY_HOME");
+        root.put("key", Server.CREATERIGHTS_KEY);
+
+        this.sendData(root);
+
     }
 
 

@@ -80,6 +80,9 @@ public class AppCommunication extends Thread implements Runnable {
             case "NEWMCQ":
                 methodsNEWMCQ (dataJson);
                 break;
+            case "KEY_HOME":
+                methodsGETKEY (dataJson);
+                break;
         }
     }
 
@@ -233,6 +236,10 @@ public class AppCommunication extends Thread implements Runnable {
     }
 
 
+    public void methodsGETKEY(JsonNode dataJson) {
+        String key = String.valueOf(dataJson.get("key"));
+
+    }
 
 
 
@@ -243,6 +250,20 @@ public class AppCommunication extends Thread implements Runnable {
 
 
 
+    public void requestKey () {
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+        all_rooms.clear();
+        root.put("methods", "GET");
+        root.put("request", "KEY_HOME");
+
+        try {
+            this.sendData(mapper, root);
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Demande de clé non envoyé.");
+        }
+    }
 
     public void requestHome () throws JsonProcessingException {
         System.out.println("TEST ALL ROOMS IN DB");

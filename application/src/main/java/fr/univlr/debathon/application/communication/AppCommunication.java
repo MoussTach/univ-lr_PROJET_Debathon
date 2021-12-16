@@ -241,12 +241,11 @@ public class AppCommunication extends Thread implements Runnable {
     }
 
     public void methodsENDDEBATE(JsonNode dataJson) {
-
         int id_debate = dataJson.get("id_debate").asInt();
-        System.out.println("CIIIII");
+
         int i = 0;
         boolean ok = false;
-        while (!ok || i < Debathon.getInstance().getDebates().size()) {
+        while (!ok && i < Debathon.getInstance().getDebates().size()) {
 
             if (Debathon.getInstance().getDebates().get(i).getId() == id_debate) {
                 Debathon.getInstance().getDebates().remove(i);
@@ -255,7 +254,6 @@ public class AppCommunication extends Thread implements Runnable {
 
             i++;
         }
-
     }
 
 

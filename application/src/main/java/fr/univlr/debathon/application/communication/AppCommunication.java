@@ -242,7 +242,7 @@ public class AppCommunication extends Thread implements Runnable {
         String key = String.valueOf(dataJson.get("key"));
         User user = this.getUnserialisation(dataJson.get("user").get(0).toString(), User.class);
         Debathon.getInstance().setKey(key.replace("\"", ""));
-        Debathon.getInstance(); // TODO ajoutez le .setUser
+        Debathon.getInstance().userProperty().set(user);
     }
 
     public void methodsENDDEBATE(JsonNode dataJson) {

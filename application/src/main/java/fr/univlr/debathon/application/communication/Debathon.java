@@ -12,7 +12,7 @@ public class Debathon {
 
     private static Debathon debathon = null;
     private final StringProperty key = new SimpleStringProperty();
-    private final ObjectProperty<User> user = new SimpleObjectProperty(new User(6, "cheval gris"));
+    private final ObjectProperty<User> user = new SimpleObjectProperty();
 
     private AppCommunication appCommunication = null;
 

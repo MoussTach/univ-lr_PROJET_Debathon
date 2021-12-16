@@ -44,8 +44,6 @@ public class KeyWindowViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[public][method] Usage of the CreateQuestionViewModel.actvm_btnValidKey()");
         }
 
-        //TODO print
-        System.out.println(this.key.get());
         if (this.tfKey_value.get().equals(this.key.get())) {
             this.key.set("");
 

@@ -31,7 +31,7 @@ public class DebateThumbnailViewModel extends ViewModel_SceneCycle {
     //Value
     private final StringProperty lblTitle_label = new SimpleStringProperty("/");
     private final ObjectProperty<ViewTuple<CategoryView, CategoryViewModel>> category_value = new SimpleObjectProperty<>();
-    private final ListProperty<ViewTuple<TagView, TagViewModel>> listTag_selected_value = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<ViewTuple<TagView, TagViewModel>> listTag_selected_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
     private final StringProperty lblNbPeople_value = new SimpleStringProperty("/");
 
@@ -164,7 +164,6 @@ public class DebateThumbnailViewModel extends ViewModel_SceneCycle {
 
         DebateViewModel debateViewModel = new DebateViewModel(this.debate);
         final ViewTuple<DebateView, DebateViewModel> debateViewTuple = FluentViewLoader.fxmlView(DebateView.class)
-                .providedScopes(mainViewScope)
                 .viewModel(debateViewModel)
                 .load();
 

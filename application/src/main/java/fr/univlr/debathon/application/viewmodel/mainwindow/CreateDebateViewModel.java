@@ -63,7 +63,7 @@ public class CreateDebateViewModel extends ViewModel_SceneCycle {
     //Value
     private final StringProperty tfTitle_value = new SimpleStringProperty();
     private final ObjectProperty<ViewTuple<CategoryView, CategoryViewModel>> category_selected_value = new SimpleObjectProperty<>();
-    private final ListProperty<ViewTuple<TagView, TagViewModel> > listTag_selected_value = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<ViewTuple<TagView, TagViewModel> > listTag_selected_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
     private final StringProperty htmlEditorDescription_value = new SimpleStringProperty();
     private final StringProperty tfKey_value = new SimpleStringProperty();
 

@@ -30,8 +30,8 @@ public class Question {
 
     private final ObjectProperty<Room> room = new SimpleObjectProperty<>();
 
-    private final ListProperty<Comment> listComment = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final ListProperty<Mcq> listMcq = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<Comment> listComment = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
+    private final ListProperty<Mcq> listMcq = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
     private final ObjectProperty<User> user = new SimpleObjectProperty<>();
 
     public Question(){

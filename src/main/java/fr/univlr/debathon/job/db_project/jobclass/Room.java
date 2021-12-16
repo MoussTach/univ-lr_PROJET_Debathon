@@ -24,10 +24,10 @@ public class Room {
 
     private final ObjectProperty<Category> category = new SimpleObjectProperty<>();
 
-    private final ListProperty<Tag> listTag = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final ListProperty<User> listUtilisateurs = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<Tag> listTag = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
+    private final ListProperty<User> listUtilisateurs = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
-    private ListProperty<Question> listQuestions = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private ListProperty<Question> listQuestions = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
     public Room(){
 

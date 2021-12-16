@@ -1,41 +1,29 @@
 package fr.univlr.debathon.application.communication;
 
-import fr.univlr.debathon.application.viewmodel.mainwindow.HomePageViewModel;
-import fr.univlr.debathon.job.db_project.jobclass.Category;
-import fr.univlr.debathon.job.db_project.jobclass.Mcq;
-import fr.univlr.debathon.job.db_project.jobclass.Room;
-import fr.univlr.debathon.job.db_project.jobclass.Tag;
+import fr.univlr.debathon.job.db_project.jobclass.*;
 import fr.univlr.debathon.log.generate.CustomLogger;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.io.IOException;
 
 public class Debathon {
 
     private static final CustomLogger LOGGER = CustomLogger.create(Debathon.class.getName());
 
     private static Debathon debathon = null;
+    private final StringProperty key = new SimpleStringProperty();
+    private final ObjectProperty<User> user = new SimpleObjectProperty(new User(6, "cheval gris"));
 
-    private final ListProperty<Category> categories = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final ListProperty<Tag> tags = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private AppCommunication appCommunication = null;
 
+    private final ListProperty<Category> categories = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.synchronizedObservableList(FXCollections.observableArrayList())));
+    private final ListProperty<Tag> tags = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.synchronizedObservableList(FXCollections.observableArrayList())));
 
-    private final ListProperty<Mcq> mcq = new SimpleListProperty<>(FXCollections.observableArrayList());
-
-    private final ListProperty<Room> debates = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<Mcq> mcq = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
+    private final ListProperty<Room> debates = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
     private Room current_debate = null;
 
-    private final StringProperty key = new SimpleStringProperty();
-
-
-
-    private AppCommunication appCommunication = null;
 
     private Debathon() {
         try {
@@ -63,6 +51,38 @@ public class Debathon {
         return debathon;
     }
 
+    /**
+     * Getter for the variable key.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link String} - return the variable key.
+     */
+    public String getKey() {
+        return key.get();
+    }
+
+    /**
+     * Getter for the variable user.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link User} - return the variable user.
+     */
+    public User getUser() {
+        return user.get();
+    }
+
+    /**
+     * Getter for the variable appCommunication.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link AppCommunication} - return the variable appCommunication.
+     */
+    public AppCommunication getAppCommunication () {
+        return this.appCommunication;
+    }
 
     /**
      * Getter for the variable categories.
@@ -87,6 +107,17 @@ public class Debathon {
     }
 
     /**
+     * Getter for the variable mcq.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link ObservableList} - return the variable mcq.
+     */
+    public ObservableList<Mcq> getMcq() {
+        return mcq.get();
+    }
+
+    /**
      * Getter for the variable debates.
      *
      * @author Gaetan Brenckle
@@ -97,6 +128,67 @@ public class Debathon {
         return debates.get();
     }
 
+    /**
+     * Getter for the variable current_debate.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link Room} - return the variable current_debate.
+     */
+    public Room getCurrent_debate() {
+        return current_debate;
+    }
+
+
+    /**
+     * Setter for the variable key.
+     *
+     * @param key - {@link String} - key of the communication.
+     */
+    public void setKey(String key) {
+        this.key.set(key);
+    }
+
+    /**
+     * Setter for the variable mcq.
+     *
+     * @param mcq - {@link ObservableList} - mcq of the communication.
+     */
+    public void setMcq(ObservableList<Mcq> mcq) {
+        this.mcq.set(mcq);
+    }
+
+    /**
+     * Setter for the variable current_debate.
+     *
+     * @param room - {@link Room} - current_debate of the communication.
+     */
+    public void setCurrent_debate (Room room) {
+        this.current_debate = room;
+    }
+
+
+    /**
+     * Property of the variable key.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link StringProperty} - return the property of the variable key.
+     */
+    public StringProperty keyProperty() {
+        return key;
+    }
+
+    /**
+     * Property of the variable user.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link ObjectProperty} - return the property of the variable user.
+     */
+    public ObjectProperty<User> userProperty() {
+        return user;
+    }
 
     /**
      * Property of the variable categories.
@@ -121,6 +213,17 @@ public class Debathon {
     }
 
     /**
+     * Property of the variable mcq.
+     *
+     * @author Gaetan Brenckle
+     *
+     * @return {@link ListProperty} - return the property of the variable mcq.
+     */
+    public ListProperty<Mcq> mcqProperty() {
+        return mcq;
+    }
+
+    /**
      * Property of the variable debates.
      *
      * @author Gaetan Brenckle
@@ -129,43 +232,5 @@ public class Debathon {
      */
     public ListProperty<Room> debatesProperty() {
         return debates;
-    }
-
-
-    public Room getCurrent_debate() {
-        return current_debate;
-    }
-
-    public void setCurrent_debate (Room room) {
-        this.current_debate = room;
-    }
-
-
-    public ObservableList<Mcq> getMcq() {
-        return mcq.get();
-    }
-
-    public ListProperty<Mcq> mcqProperty() {
-        return mcq;
-    }
-
-    public void setMcq(ObservableList<Mcq> mcq) {
-        this.mcq.set(mcq);
-    }
-
-    public AppCommunication getAppCommunication () {
-        return this.appCommunication;
-    }
-
-    public String getKey() {
-        return key.get();
-    }
-
-    public StringProperty keyProperty() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key.set(key);
     }
 }

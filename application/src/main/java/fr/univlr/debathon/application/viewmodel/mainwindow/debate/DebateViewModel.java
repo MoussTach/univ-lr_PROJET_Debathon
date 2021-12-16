@@ -60,29 +60,14 @@ public class DebateViewModel extends ViewModel_SceneCycle {
 
     //Value
     private final ObjectProperty<ViewTuple<CategoryView, CategoryViewModel> > category_value = new SimpleObjectProperty<>();
-    private final ListProperty<ViewTuple<TagView, TagViewModel> > listTag_value = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<ViewTuple<TagView, TagViewModel> > listTag_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
-    private final ListProperty<ViewTuple<QuestionView, QuestionViewModel> > listQuestion_value = new SimpleListProperty<>(FXCollections.observableArrayList());
-
-    private final Command prevCommand = new DelegateCommand(() -> new Action() {
-        @Override
-        protected void action() {
-            //TODO
-            System.out.println("act prev Home");
-            Platform.runLater(() -> {
-                BorderPane mainBorderPane = mainViewScope.basePaneProperty().get();
-                mainBorderPane.setCenter(borderPane.get());
-            });
-        }
-    }, true);
+    private final ListProperty<ViewTuple<QuestionView, QuestionViewModel> > listQuestion_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
     private ChangeListener<String> changeListener_key = null;
     private ChangeListener<Category> changeListener_category = null;
     private ListChangeListener<Tag> listChangeListener_tag = null;
     private ListChangeListener<Question> listChangeListener_question = null;
-
-    @InjectScope
-    private MainViewScope mainViewScope;
 
     private PopOver popOver_statMail;
     private PopOver popOver_createQuestion;
@@ -451,10 +436,6 @@ public class DebateViewModel extends ViewModel_SceneCycle {
 
     @Override
     public void onViewAdded_Cycle() {
-
-        this.mainViewScope.prevCommandProperty().set(this.mainViewScope.currentCommandProperty().get());
-        this.mainViewScope.currentCommandProperty().set(new CompositeCommand());
-        this.mainViewScope.currentCommandProperty().get().register(this.prevCommand);
     }
 
     @Override

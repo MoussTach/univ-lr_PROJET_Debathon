@@ -19,7 +19,7 @@ import javafx.collections.ObservableList;
  */
 public class CompositeCommand_Remastered extends CommandBase {
 
-    private final ObservableList<Command> registeredCommands = FXCollections.observableArrayList();
+    private final ObservableList<Command> registeredCommands = FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
 
     final ReadOnlyDoubleWrapper progress = new ReadOnlyDoubleWrapper();
     final DoubleProperty progress_execution = new SimpleDoubleProperty(0);

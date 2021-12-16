@@ -37,8 +37,8 @@ public class SelectWindowViewModel extends ViewModel_SceneCycle {
     private final StringProperty lblTags_label = new SimpleStringProperty(this.resBundle_.get().getString("lblTags"));
 
     //Value
-    private final ListProperty<ViewTuple<CategorySelectView, CategorySelectViewModel>> listCategories_value = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final ListProperty<ViewTuple<TagSelectView, TagSelectViewModel>> listTags_value = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<ViewTuple<CategorySelectView, CategorySelectViewModel>> listCategories_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
+    private final ListProperty<ViewTuple<TagSelectView, TagSelectViewModel>> listTags_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
     private ChangeListener<ResourceBundle> listener_ChangedValue_bundleLanguage_;
 

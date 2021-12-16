@@ -3,35 +3,29 @@
 <?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.*?>
 
 <BorderPane fx:id="bPaneMainView" minHeight="400.0" minWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.univlr.debathon.application.view.mainwindow.MainWindowView">
     <top>
         <VBox BorderPane.alignment="CENTER">
-            <fx:include source="MenuBarView.fxml"/>
+            <fx:include source="MenuBarView.fxml" />
             <StackPane>
                 <VBox.margin>
-                    <Insets/>
+                    <Insets />
                 </VBox.margin>
                 <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                     <StackPane.margin>
-                        <Insets/>
+                        <Insets />
                     </StackPane.margin>
                 </ToolBar>
                 <BorderPane>
-                    <left>
-                        <Button fx:id="btnPrev" mnemonicParsing="false" onAction="#act_btnPrev" text="&lt;"
-                                BorderPane.alignment="CENTER"/>
-                    </left>
-                    <right>
-                        <Button fx:id="btnHome" mnemonicParsing="false" onAction="#act_btnHome" text="Home"
-                                BorderPane.alignment="CENTER"/>
-                    </right>
                     <StackPane.margin>
-                        <Insets bottom="5.0" left="15.0" right="15.0" top="5.0"/>
+                        <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
                     </StackPane.margin>
+               <left>
+                        <Button fx:id="btnHome" mnemonicParsing="false" onAction="#act_btnHome" text="&lt;" BorderPane.alignment="CENTER" />
+               </left>
                 </BorderPane>
             </StackPane>
         </VBox>
@@ -40,7 +34,7 @@
         <fx:include source="HomePageView.fxml" />
     </center>
     <bottom>
-        <StatusBar fx:id="statusBarMainView" BorderPane.alignment="CENTER"/>
+        <StatusBar fx:id="statusBarMainView" BorderPane.alignment="CENTER" />
     </bottom>
     <stylesheets>
         <URL value="@../../../../../../css/application.css" />

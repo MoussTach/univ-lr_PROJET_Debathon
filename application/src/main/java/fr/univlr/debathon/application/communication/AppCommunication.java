@@ -189,10 +189,10 @@ public class AppCommunication extends Thread implements Runnable {
     public void methodsNEWCOMMENT(JsonNode dataJson) throws IOException {
         Comment comment = this.getUnserialisation(dataJson.get("new_comment").get(0).toString(), Comment.class);
 
-
         for (Question question : Debathon.getInstance().getCurrent_debate().getListQuestion()) {
             if (question.getId() == comment.getQuestion().getId()) {
                 question.addComment(comment);
+                return;
             }
         }
 

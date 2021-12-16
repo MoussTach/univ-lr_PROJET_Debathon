@@ -8,7 +8,7 @@ import javafx.collections.FXCollections;
 
 public class SelectTagScope implements Scope {
 
-    private ListProperty<Tag> selectedTags = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private ListProperty<Tag> selectedTags = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
     /**
      * Property of the variable selectedTags.

@@ -23,7 +23,6 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
     private static final CustomLogger LOGGER = CustomLogger.create(MainWindowViewModel.class.getName());
 
     //Value
-    private final BooleanProperty isPrevCommandExecutable = new SimpleBooleanProperty(false);
     private final BooleanProperty isHomeCommandExecutable = new SimpleBooleanProperty(false);
 
     @InjectScope
@@ -46,22 +45,6 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
 
     public void initialize() {
         this.isHomeCommandExecutable.bind(this.mainViewScope.homeCommandProperty().isNull());
-        this.isPrevCommandExecutable.bind(this.mainViewScope.prevCommandProperty().isNull());
-    }
-
-    /**
-     * action when the button to go to the previous view.
-     *
-     * @author Gaetan Brenckle
-     */
-    public void actvm_btnPrev() {
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("[private][method] usage of MainWindowViewModel.actvm_btnPrev().");
-        }
-
-        CompositeCommand command = this.mainViewScope.prevCommandProperty().get();
-        if (command != null && command.isExecutable())
-            command.execute();
     }
 
     /**
@@ -110,18 +93,6 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
         labelProperty.bind(mainScope.progress_labelProperty());
     }
 
-
-    /**
-     * Property of the variable isPrevCommandExecutable.
-     *
-     * @author Gaetan Brenckle
-     *
-     * @return {@link BooleanProperty} - return the property of the variable isPrevCommandExecutable.
-     */
-    public BooleanProperty isPrevCommandExecutableProperty() {
-        return isPrevCommandExecutable;
-    }
-
     /**
      * Property of the variable isHomeCommandExecutable.
      *
@@ -142,6 +113,5 @@ public class MainWindowViewModel extends ViewModel_SceneCycle {
     @Override
     public void onViewRemoved_Cycle() {
         this.isHomeCommandExecutable.unbind();
-        this.isPrevCommandExecutable.unbind();
     }
 }

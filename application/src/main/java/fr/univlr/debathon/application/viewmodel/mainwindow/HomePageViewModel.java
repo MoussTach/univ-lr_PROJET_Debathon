@@ -70,31 +70,18 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
     //Value
     private final ObjectProperty<ViewTuple<CategoryView, CategoryViewModel> > category_selected_value = new SimpleObjectProperty<>();
-    private final ListProperty<ViewTuple<TagView, TagViewModel> > listTag_selected_value = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<ViewTuple<TagView, TagViewModel> > listTag_selected_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
     private final StringProperty tfSearch_value = new SimpleStringProperty();
 
-    private final ListProperty<ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> > listDebate_value = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final ListProperty<Node> listDebate_node_value = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> > listDebate_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
+    private final ListProperty<Node> listDebate_node_value = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
     private final FilteredList<Node> filteredData  = new FilteredList<>(listDebate_node_value, p -> true);
 
     private final ObservableRuleBasedValidator rule_changeFilter = new ObservableRuleBasedValidator();
 
-    private final Command prevCommand = new DelegateCommand(() -> new Action() {
-        @Override
-        protected void action() {
-            //TODO
-            System.out.println("act prev Home");
-            Platform.runLater(() -> {
-                BorderPane mainBorderPane = mainViewScope.basePaneProperty().get();
-                mainBorderPane.setCenter(borderPane.get());
-            });
-        }
-    }, true);
     private final Command homeCommand = new DelegateCommand(() -> new Action() {
         @Override
         protected void action() {
-            //TODO
-            System.out.println("act home Home");
             Platform.runLater(() -> {
                 BorderPane mainBorderPane = mainViewScope.basePaneProperty().get();
                 mainBorderPane.setCenter(borderPane.get());
@@ -182,20 +169,6 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
             LOGGER.trace("[public][method] Usage of the HomePageViewModel.bindDebate()");
         }
         this.key_value.bind(Debathon.getInstance().keyProperty());
-
-        Debathon.getInstance().getDebates().forEach(room ->
-                Platform.runLater(() -> {
-                    if (room != null) {
-                        DebateThumbnailViewModel debateThumbnailViewModel = new DebateThumbnailViewModel(room);
-                        final ViewTuple<DebateThumbnailView, DebateThumbnailViewModel> debateThumbViewTuple = FluentViewLoader.fxmlView(DebateThumbnailView.class)
-                                .providedScopes(mainViewScope)
-                                .viewModel(debateThumbnailViewModel)
-                                .load();
-
-                        listDebate_value.add(debateThumbViewTuple);
-                        listDebate_node_value.add(debateThumbViewTuple.getView());
-                    }
-                }));
 
         this.listChangeListener_Debate = change -> {
             while (change.next()) {
@@ -581,9 +554,6 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
 
     @Override
     public void onViewAdded_Cycle() {
-        this.mainViewScope.prevCommandProperty().set(this.mainViewScope.currentCommandProperty().get());
-        this.mainViewScope.currentCommandProperty().set(new CompositeCommand());
-        this.mainViewScope.currentCommandProperty().get().register(this.prevCommand);
         this.mainViewScope.homeCommandProperty().get().register(this.homeCommand);
     }
 

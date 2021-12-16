@@ -15,8 +15,6 @@ public class MainViewScope implements Scope {
 
     private final ObjectProperty<BorderPane> basePane = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<CompositeCommand> prevCommand = new SimpleObjectProperty<>(null);
-    private final ObjectProperty<CompositeCommand> currentCommand = new SimpleObjectProperty<>(null);
     private final ObjectProperty<CompositeCommand> homeCommand = new SimpleObjectProperty<>(new CompositeCommand());
 
 
@@ -29,30 +27,6 @@ public class MainViewScope implements Scope {
      */
     public ObjectProperty<BorderPane> basePaneProperty() {
         return basePane;
-    }
-
-    /**
-     * Property of the variable prevCommand.
-     * Use to set the execution the current view.
-     *
-     * @author Gaetan Brenckle
-     *
-     * @return {@link ObjectProperty} - return the property of the variable prevCommand.
-     */
-    public ObjectProperty<CompositeCommand> prevCommandProperty() {
-        return prevCommand;
-    }
-
-    /**
-     * Property of the variable currentCommand.
-     * Use to set the execution the current view.
-     *
-     * @author Gaetan Brenckle
-     *
-     * @return {@link ObjectProperty} - return the property of the variable currentCommand.
-     */
-    public ObjectProperty<CompositeCommand> currentCommandProperty() {
-        return currentCommand;
     }
 
     /**

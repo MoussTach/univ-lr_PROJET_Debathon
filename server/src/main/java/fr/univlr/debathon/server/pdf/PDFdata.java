@@ -16,7 +16,7 @@ public class PDFdata {
 
 
         try {
-            PreparedStatement pstmt = PDFGenerator.c.prepareStatement(sql);
+            PreparedStatement pstmt = Server.CONNECTION.prepareStatement(sql);
 
             pstmt.setInt(1, fquestion.getIdQuestion());
 
@@ -57,7 +57,7 @@ public class PDFdata {
                                                                 "ORDER BY M.id_question, M.nb_votes DESC";
 
         try {
-            PreparedStatement pstmt  = PDFGenerator.c.prepareStatement(sql);
+            PreparedStatement pstmt  = Server.CONNECTION.prepareStatement(sql);
 
             pstmt.setInt(1, debate_id);
             pstmt.setInt(2, debate_id);
@@ -109,7 +109,7 @@ public class PDFdata {
 
 
         try {
-            PreparedStatement pstmt = PDFGenerator.c.prepareStatement(sql);
+            PreparedStatement pstmt = Server.CONNECTION.prepareStatement(sql);
 
             pstmt.setInt(1, id_debate);
             pstmt.setInt(2, fquestion.getIdQuestion());
@@ -134,7 +134,7 @@ public class PDFdata {
 
 
         try {
-            PreparedStatement pstmt = PDFGenerator.c.prepareStatement(sql);
+            PreparedStatement pstmt = Server.CONNECTION.prepareStatement(sql);
 
             pstmt.setInt(1, id_debate);
             pstmt.setInt(2, fquestion.getIdQuestion());
@@ -166,7 +166,7 @@ public class PDFdata {
 
 
         try {
-            PreparedStatement pstmt = PDFGenerator.c.prepareStatement(sql);
+            PreparedStatement pstmt = Server.CONNECTION.prepareStatement(sql);
 
             pstmt.setInt(1, id_debate);
 

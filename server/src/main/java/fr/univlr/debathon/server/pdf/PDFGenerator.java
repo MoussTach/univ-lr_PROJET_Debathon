@@ -9,15 +9,27 @@ import java.sql.Connection;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import fr.univlr.debathon.log.generate.CustomLogger;
+import fr.univlr.debathon.server.Main;
+import fr.univlr.debathon.server.mailmanager.MailData;
+import fr.univlr.debathon.server.mailmanager.MailManager;
+import fr.univlr.debathon.server.viewmodel.mainwindow.MainWindowViewModel;
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.activation.FileDataSource;
+import jakarta.mail.BodyPart;
+import jakarta.mail.internet.MimeBodyPart;
 import org.jfree.chart.JFreeChart;
 
 import java.time.LocalDateTime;
+import java.util.*;
 import java.util.List;
-import java.util.Properties;
 
 public class PDFGenerator {
-    public static Connection c;
+    private static final CustomLogger LOGGER = CustomLogger.create(PDFGenerator.class.getName());
+
     public static PDFGenerator instance;
+
     public PDFGenerator(){}
 
     public static PDFGenerator getInstance(){
@@ -27,13 +39,14 @@ public class PDFGenerator {
         return instance;
     }
 
-    public Document requestPDF(int id_debat){
+    public void requestPDF(int id_debat){
         List<PDFquestion> questions = PDFdata.getRequest1(id_debat);
-        return getPDF(questions,id_debat);
+        String path = getPDF(questions,id_debat);
+        sendMail(path);
     }
 
     //Methode pour creer un PDF pour un debat avec la liste des questions
-    public Document getPDF(List<PDFquestion> questions,int id_debat){
+    public String getPDF(List<PDFquestion> questions,int id_debat){
         //Creation document pdf
         Document pdf = new Document(PageSize.A4);
         //Creation list de chart avec les questions
@@ -50,8 +63,6 @@ public class PDFGenerator {
                         properties.getProperty("name"),
                         name_destination_folder
                 );
-                System.out.println(pdfDest);
-                System.out.println(java.time.LocalDate.now());
                 //Check if the folder exists and create one if not
                 File destination_directory = new File(pdfDest);
                 boolean destination_directory_exist = destination_directory.exists();
@@ -118,6 +129,9 @@ public class PDFGenerator {
                     //Ajout du titre
                     pdf.add(titre);
                     //Verification si au moins un comm est like ou dislike
+                    System.out.println(questions.size());
+                    System.out.println(q.getMost_nb_likes());
+                    System.out.println(q.getMost_nb_dislikes());
                     if(q.getMost_nb_likes()>0 || q.getMost_nb_dislikes()>0){
                         //Verification si un commentaire est like
                         if(q.getMost_nb_likes()>0){
@@ -194,20 +208,72 @@ public class PDFGenerator {
 
 
                 }
+                return pdfDest;
             } catch (IOException e) {
-                e.printStackTrace();
+                if (LOGGER.isErrorEnabled()) {
+                    LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+                }
             }
 
 
 
 
         } catch (DocumentException e) {
-            e.printStackTrace();
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error(String.format("Error : %s", e.getMessage()), e);
+            }
         }
-
         pdf.close();
-        return pdf;
+        return "";
     }
+    private void sendMail(String path) {
 
+        MailData mailStatistics = new MailData();
+        mailStatistics.getInfos().setSubject("Statistics");
+        mailStatistics.getInfos().setBody(
+                new StringBuilder()
+                        .append("<html><body>")
+                        .append("Bonjour,<br>")
+                        .append("Veuillez trouver ci-joint les statistiques.<br>")
+                        .append("En vous souhaitant bonne réception.<br><br>")
+                        .append("Pour visualiser le document joint, vous pouvez télécharger gratuitement l'application \"Adobe Reader\" à <a href=\"https://get.adobe.com/fr/reader/\">partir du site Web Adobe</a><br><br>")
+                        .append("Cordialement<br><br>")
+                        .append("L'application Debathon<br>")
+                        .append("</body></html>")
+                        .toString()
+        );
+
+        //Use properties that can connect to send the mail
+        mailStatistics.getInfos().setFrom(MailManager.MAILDATA.get("From_User"));
+
+        mailStatistics.setUsername(MailManager.MAILDATA.get("From_User"));
+        mailStatistics.setPassword(MailManager.MAILDATA.get("From_Password"));
+
+        mailStatistics.setHost(MailManager.MAILDATA.get("AInfos_Host"));
+        mailStatistics.setPort(MailManager.MAILDATA.get("AInfos_Port"));
+
+        mailStatistics.getInfos().bccProperty().addAll(Arrays.asList("gautier.pitek@gmail.com"));
+        try {
+            BodyPart messageBodyPart = new MimeBodyPart();
+            DataSource source = new FileDataSource(path);
+            messageBodyPart.setDataHandler(new DataHandler(source));
+            messageBodyPart.setFileName(path);
+            mailStatistics.setAttachedFiles(Collections.singletonList(messageBodyPart));
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Finished to build mail");
+            }
+
+            Main.MAILMANAGER.sendMails(Collections.singletonList(mailStatistics));
+
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Mail send");
+            }
+
+        } catch (Exception e) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("Fail to create PDF", e);
+            }
+        }
+    }
 
 }

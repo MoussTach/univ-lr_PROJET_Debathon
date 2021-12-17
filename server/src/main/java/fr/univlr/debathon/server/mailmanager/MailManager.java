@@ -67,7 +67,7 @@ public class MailManager extends TaskManager {
 
                 try {
                     //ping google.com
-                    InetAddress ip = InetAddress.getByAddress(new byte[] { (byte)92, (byte)184, (byte)110, (byte)89 });
+                    InetAddress ip = InetAddress.getByAddress(new byte[] { (byte)8, (byte)8, (byte)8, (byte)8 });
 
                     if (LOGGER.isTraceEnabled()) {
                         LOGGER.trace("[Task][ping internet]");

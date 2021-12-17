@@ -69,7 +69,7 @@ public class InscriptionStatViewModel extends ViewModel_SceneCycle {
                     .position(Pos.BOTTOM_RIGHT)
                     .title(this.resBundle_.get().getString("mail_title"))
                     .text(this.resBundle_.get().getString("mail_text"))
-                    .showWarning();
+                    .showInformation();
 
         } catch (JsonProcessingException e) {
             if (LOGGER.isInfoEnabled()) {

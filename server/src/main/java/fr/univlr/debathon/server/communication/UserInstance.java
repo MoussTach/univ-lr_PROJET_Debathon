@@ -589,7 +589,7 @@ public class UserInstance extends Thread implements Runnable {
      */
     public void sendNewRoom (Room room) throws JsonProcessingException {
         for (UserInstance ui : Server.USERINSTANCELIST) {
-            if (ui != null && ui.getWhereIam() == -1) {
+            if (ui != null) {
                 ui.sendData(this.getObjetNode("NEWROOM", "new_room", room));
             }
         }

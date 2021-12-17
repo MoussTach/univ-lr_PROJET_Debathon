@@ -140,9 +140,6 @@ public class PDFGenerator {
                         //Ajout du titre
                         pdf.add(titre);
                         //Verification si au moins un comm est like ou dislike
-                        System.out.println(questions.size());
-                        System.out.println(q.getMost_nb_likes());
-                        System.out.println(q.getMost_nb_dislikes());
                         if(q.getMost_nb_likes()>0 || q.getMost_nb_dislikes()>0){
                             //Verification si un commentaire est like
                             if(q.getMost_nb_likes()>0){
@@ -230,9 +227,6 @@ public class PDFGenerator {
         return "";
     }
     private void sendMail(String path,List<String> user_mails) {
-        for(String user : user_mails){
-            System.out.println(user);
-        }
         MailData mailStatistics = new MailData();
         mailStatistics.getInfos().setSubject("Statistics");
         mailStatistics.getInfos().setBody(

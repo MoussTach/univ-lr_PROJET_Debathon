@@ -1,12 +1,7 @@
 package fr.univlr.debathon.application.viewmodel.mainwindow.debate;
 
 import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewTuple;
-import de.saxsys.mvvmfx.utils.commands.Action;
-import de.saxsys.mvvmfx.utils.commands.Command;
-import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
-import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.mainwindow.KeyWindowView;
@@ -17,7 +12,6 @@ import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
 import fr.univlr.debathon.application.view.mainwindow.debate.question.QuestionView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.KeyWindowViewModel;
-import fr.univlr.debathon.application.viewmodel.mainwindow.MainViewScope;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.CategoryViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.QuestionViewModel;

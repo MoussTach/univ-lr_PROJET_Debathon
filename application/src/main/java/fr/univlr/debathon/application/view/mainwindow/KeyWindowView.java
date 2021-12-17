@@ -2,8 +2,6 @@ package fr.univlr.debathon.application.view.mainwindow;
 
 import de.saxsys.mvvmfx.InjectViewModel;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
-import fr.univlr.debathon.application.view.mainwindow.debate.CreateQuestionView;
-import fr.univlr.debathon.application.viewmodel.mainwindow.HomePageViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.KeyWindowViewModel;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.fxml.FXML;

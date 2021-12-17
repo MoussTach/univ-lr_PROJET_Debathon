@@ -4,7 +4,6 @@ import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewTuple;
 import fr.univlr.debathon.application.communication.Debathon;
-import fr.univlr.debathon.application.view.mainwindow.debate.DebateThumbnailView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.CategorySelectView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagSelectView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
@@ -22,7 +21,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 
 import java.util.Optional;
 import java.util.ResourceBundle;

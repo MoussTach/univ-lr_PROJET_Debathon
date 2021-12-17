@@ -6,7 +6,6 @@ import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagSelec
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 
@@ -30,16 +29,15 @@ public class TagSelectView extends FxmlView_SceneCycle<TagSelectViewModel> imple
         //Text
         tbtnTag.textProperty().bind(this.tagSelectViewModel.tbtnTag_labelProperty());
 
-        this.tagSelectViewModel.colorProperty().addListener((observableValue, oldValue, newValue) -> {
-            bPaneTag.setStyle(
-                    String.format("-fx-background-color:%s;-fx-border-radius:%s;-fx-background-radius:%s;-fx-border-width:%s;-fx-border-color:%s;",
-                            newValue,
-                            "10",
-                            "10",
-                            "2",
-                            "LIGHTGRAY"
-                    ));
-        });
+        this.tagSelectViewModel.colorProperty().addListener((observableValue, oldValue, newValue) ->
+                bPaneTag.setStyle(
+                        String.format("-fx-background-color:%s;-fx-border-radius:%s;-fx-background-radius:%s;-fx-border-width:%s;-fx-border-color:%s;",
+                                newValue,
+                                "10",
+                                "10",
+                                "2",
+                                "LIGHTGRAY"
+                        )));
 
         //Value
         this.listenerValue = (observableValue, oldValue, newValue) -> {

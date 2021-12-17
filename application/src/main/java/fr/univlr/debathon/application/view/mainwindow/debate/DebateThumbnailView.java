@@ -9,9 +9,7 @@ import fr.univlr.debathon.application.viewmodel.mainwindow.debate.DebateThumbnai
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.CategoryViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import fr.univlr.debathon.log.generate.CustomLogger;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

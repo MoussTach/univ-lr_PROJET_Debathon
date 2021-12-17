@@ -1,32 +1,18 @@
 package fr.univlr.debathon.application.viewmodel.mainwindow.debate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import de.saxsys.mvvmfx.FluentViewLoader;
-import de.saxsys.mvvmfx.InjectScope;
-import de.saxsys.mvvmfx.ScopeProvider;
-import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.utils.validation.CompositeValidator;
 import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.communication.Debathon;
-import fr.univlr.debathon.application.view.mainwindow.SelectWindowView;
-import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
-import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.HomePageViewModel;
-import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.CategoryViewModel;
-import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.SelectCategoryScope;
-import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.SelectTagScope;
-import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.job.db_project.jobclass.Room;
-import fr.univlr.debathon.job.db_project.jobclass.User;
 import fr.univlr.debathon.language.LanguageBundle;
 import fr.univlr.debathon.log.generate.CustomLogger;
-import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
@@ -34,15 +20,9 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.util.Callback;
-import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
-import org.controlsfx.control.PopOver;
 
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class CreateQuestionViewModel extends ViewModel_SceneCycle {

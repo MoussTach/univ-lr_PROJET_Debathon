@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonDeserializer;
 import fr.univlr.debathon.job.db_project.dao.*;
 import fr.univlr.debathon.job.db_project.jobclass.*;
+import fr.univlr.debathon.log.generate.CustomLogger;
 import fr.univlr.debathon.server.pdf.PDFGenerator;
 import fr.univlr.debathon.server.pdf.PDFdata;
 import org.hildan.fxgson.FxGson;
@@ -26,27 +27,36 @@ import java.util.Map;
 
 public class UserInstance extends Thread implements Runnable {
 
-    public  final Socket socket;
-    public BufferedReader in;
-    public PrintWriter out;
-    private int whereIam = -1;
+    private static final CustomLogger LOGGER = CustomLogger.create(UserInstance.class.getName());
 
-    private ObjectMapper objectMapper;
+    public  final Socket socket; // socket
+    public BufferedReader in; // buffer ou les données arrivent
+    public PrintWriter out; // buffer depuis lequel les données sont envoyés
+    private int whereIam = -1; // salon dans lequel se trouve l'utilisateur -1 pour l'accueil
+
+    private final ObjectMapper objectMapper; // objet qui permet de de mapper pour les json
 
 
-    public UserInstance(Socket userSocket) throws IOException, SQLException {
+    /**
+     * Constructeur prenant en parametre une connexion
+     * @param userSocket socket
+     * @throws IOException execption
+     */
+    public UserInstance(Socket userSocket) throws IOException {
 
         this.socket = userSocket;
         in = new BufferedReader(new InputStreamReader(userSocket.getInputStream()));
         out = new PrintWriter(userSocket.getOutputStream());
         this.objectMapper = new ObjectMapper();
-
-        //this.testSendNewComment ();
-        //this.testSendNewQuestion();
-        //this.testSendNewRoom();
     }
 
-
+    /**
+     * Cette fonction permet de transformer un objet string json en objet T
+     * @param objects l'objet
+     * @param classT la classe
+     * @param <T> le type de l'objet
+     * @return un objet
+     */
     private <T> T getUnserialisation(String objects, Class<T> classT) {
         return FxGson.coreBuilder().registerTypeAdapter(
                         LocalDate.class,
@@ -57,22 +67,35 @@ public class UserInstance extends Thread implements Runnable {
 
     }
 
-
+    /**
+     *
+     * @return l'id du salon dans lequel est l'utilisateur
+     */
     public int getWhereIam () {
         return this.whereIam;
     }
 
 
+    /**
+     * Envoie les données à l'application
+     * @param root les données
+     * @throws JsonProcessingException exeption
+     */
     public void sendData (ObjectNode root) throws JsonProcessingException {
-
         out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
         out.flush();
     }
 
 
+    /**
+     * Analyse les données reçu pour les rediriger à la bonne fonction
+     * @param data les données à analyser
+     * @throws JsonProcessingException exeption
+     * @throws SQLException exception
+     */
     public void analyseData (String data) throws JsonProcessingException, SQLException {
-        System.out.println(data);
-        Map dataJson = objectMapper.readValue(data, new TypeReference<Map>() {});
+        //LOGGER.info("ANALYSEDATE (" + this.getName() + "): " + data);
+        Map dataJson = objectMapper.readValue(data, new TypeReference<>() {});
 
         switch ((String) dataJson.get("methods")) {
             case "GET":
@@ -88,16 +111,21 @@ public class UserInstance extends Thread implements Runnable {
                 methodsMAIL (dataJson, data);
                 break;
             case "END":
-                methodsEND (dataJson, data);
+                methodsEND (dataJson);
                 break;
             case "DELETE":
-                methodsDELETE (dataJson, data);
+                methodsDELETE (dataJson);
                 break;
         }
 
     }
 
-    private void methodsEND(Map dataJson, String data) throws JsonProcessingException {
+    /**
+     * Sous dirigueur
+     * @param dataJson des données
+     * @throws JsonProcessingException exception
+     */
+    private void methodsEND(Map dataJson) throws JsonProcessingException {
 
         switch ((String) dataJson.get("request")) {
             case "DEBATE":
@@ -108,7 +136,13 @@ public class UserInstance extends Thread implements Runnable {
 
     }
 
-    private void methodsDELETE(Map dataJson, String data) throws JsonProcessingException, SQLException {
+    /**
+     * Sous dirigeur
+      * @param dataJson des données
+     * @throws JsonProcessingException exception
+     * @throws SQLException execption
+     */
+    private void methodsDELETE(Map dataJson) throws JsonProcessingException, SQLException {
 
         switch ((String) dataJson.get("request")) {
             case "QUESTION":
@@ -119,8 +153,13 @@ public class UserInstance extends Thread implements Runnable {
 
     }
 
-
-    private void methodsMAIL(Map dataJson, String data) throws SQLException, JsonProcessingException {
+    /**
+     * Sous dirigeur
+     * @param dataJson {@link Map} - map json
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     */
+    private void methodsMAIL(Map dataJson, String data) throws JsonProcessingException {
 
         switch ((String) dataJson.get("request")) {
             case "NEW":
@@ -131,6 +170,13 @@ public class UserInstance extends Thread implements Runnable {
 
     }
 
+    /**
+     * Sous dirigeur
+     * @param dataJson {@link Map} - map json
+     * @param data  -{@link} - data
+     * @throws SQLException - {@link SQLException}
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     */
     private void methodsUPDATE (Map dataJson, String data) throws SQLException, JsonProcessingException {
 
         switch ((String) dataJson.get("request")) {
@@ -138,12 +184,12 @@ public class UserInstance extends Thread implements Runnable {
                 // this.caseHOME(data);
                 break;
             case "COMMENT": //Cas ROOM souhaite
-                this.caseUpdateLike (dataJson, data);
+                this.caseUpdateLike (data);
                 break;
             case "MCQ": //Cas ROOM souhaite
                 switch ((String) dataJson.get("type")) {
                     case "VOTE":
-                        this.caseUpdateVoteMCQ(dataJson, data);
+                        this.caseUpdateVoteMCQ(data);
                         break;
                 }
 
@@ -152,21 +198,34 @@ public class UserInstance extends Thread implements Runnable {
 
     }
 
+
+    /**
+     * Sous dirigeur
+     * @param dataJson {@link Map} - map json
+     * @param data  -{@link} - data
+     * @throws SQLException - {@link SQLException}
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     */
     public void methodsINSERT (Map dataJson, String data) throws SQLException, JsonProcessingException {
         switch ((String) dataJson.get("request")) {
             case "ROOM": //Cas ROOM souhaite
-                this.caseInsertROOM(dataJson, data);
+                this.caseInsertROOM(data);
                 break;
             case "QUESTION": //Cas ROOM souhaite
-                this.caseInsertQUESTION(dataJson, data);
+                this.caseInsertQUESTION(data);
                 break;
             case "COMMENT": //Cas ROOM souhaite
-                this.caseInsertCOMMENT(dataJson, data);
+                this.caseInsertCOMMENT(data);
                 break;
         }
     }
 
-
+    /**
+     * Sous dirigeur
+     * @param data  -{@link} - data
+     * @throws SQLException - {@link SQLException}
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     */
     public void methodsGET(Map data) throws SQLException, JsonProcessingException {
         switch ((String) data.get("request")) {
             case "HOME":
@@ -176,7 +235,7 @@ public class UserInstance extends Thread implements Runnable {
                 this.caseGetROOM(data);
                 break;
             case "KEY_HOME": //Cas ROOM souhaite
-                this.caseGetKEYHOME(data);
+                this.caseGetKEYHOME();
                 break;
         }
     }
@@ -184,14 +243,20 @@ public class UserInstance extends Thread implements Runnable {
 
     // CASE END
 
+    /**
+     * Fonction utiliser pour fermer un débat puis générer l pdf et l'envoie du mail
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     */
     private void caseEndDebate(Map data) throws JsonProcessingException {
 
-        int id_debate = (int) data.get("id_debate");
-        RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
-        roomDAO.endDebate(id_debate);
-        PDFGenerator.getInstance().requestPDF(id_debate);
+        int id_debate = (int) data.get("id_debate"); // recupère l'id du debat
+        RoomDAO roomDAO = new RoomDAO(Server.CONNECTION); // creation de l'objet dao
+        roomDAO.endDebate(id_debate); // update en base de données
+        PDFGenerator.getInstance().requestPDF(id_debate); // appel pour la création du pdf et l'envoie du mail
 
 
+        // Préparation du message envoyé aux apps pour dire que le débat est fini
         ObjectNode root = objectMapper.createObjectNode();
         root.put("methods", "ENDDEBATE");
         root.put("id_debate", id_debate);
@@ -203,6 +268,12 @@ public class UserInstance extends Thread implements Runnable {
 
     }
 
+    /**
+     * Supprime une question
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     * @throws SQLException - {@link SQLException}
+     */
     private void caseDeleteQuestion (Map data) throws JsonProcessingException, SQLException {
 
         int id_question = (int) data.get("id_question");
@@ -216,6 +287,7 @@ public class UserInstance extends Thread implements Runnable {
         for (Mcq mcq : list)
             mcqDAO.delete(mcq);
 
+        // Préparer le message envoyé aux apps pour enlever la question
         ObjectNode root = objectMapper.createObjectNode();
         root.put("methods", "DELETEQUESTION");
         root.put("id_question", id_question);
@@ -231,6 +303,10 @@ public class UserInstance extends Thread implements Runnable {
 
     // CASE GET
 
+    /**
+     * Retourne tous les salons ouvert
+     * @param data  -{@link} - data
+     */
     private void caseGetHOME(Map data)  {
         this.whereIam = -1;
         try {
@@ -259,6 +335,12 @@ public class UserInstance extends Thread implements Runnable {
         }
     }
 
+    /**
+     * Envoie les informations d'un salon
+     * @param data  -{@link} - data
+     * @throws SQLException - {@link SQLException}
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     */
     private void caseGetROOM(Map data) throws SQLException, JsonProcessingException {
         this.whereIam = (int) data.get("id");
 
@@ -270,15 +352,11 @@ public class UserInstance extends Thread implements Runnable {
         ArrayNode mcq = rootRoom.putArray("mcq");
 
         RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
-        CommentDAO commentDAO = new CommentDAO(Server.CONNECTION);
 
         //Selection de la room avec son id
         Room roomSelected = roomDAO.select((int) data.get("id"));
 
-        for (Question question : roomSelected.getListQuestion()) {
-            List<Comment> list = commentDAO.selectCommentByIdQuestion(question.getId());
-            question.getListComment().addAll(list);
-        }
+
 
         room.addPOJO(roomSelected);
 
@@ -290,7 +368,11 @@ public class UserInstance extends Thread implements Runnable {
         this.sendData(rootRoom);
     }
 
-    private void caseGetKEYHOME(Map data) throws JsonProcessingException {
+    /**
+     * Appelé au démarage de l'app pour recevoir le code et le user
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     */
+    private void caseGetKEYHOME() throws JsonProcessingException {
 
         ObjectNode root = objectMapper.createObjectNode();
         root.put("methods", "KEY_HOME");
@@ -306,7 +388,13 @@ public class UserInstance extends Thread implements Runnable {
 
     // CASE INSERT
 
-    private void caseInsertROOM(Map dataMap, String data) throws JsonProcessingException, SQLException {
+    /**
+     * Fonction pour ajouter un nouveau salon et l'envoyé aux apps
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     * @throws SQLException - {@link SQLException}
+     */
+    private void caseInsertROOM(String data) throws JsonProcessingException, SQLException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
@@ -325,7 +413,6 @@ public class UserInstance extends Thread implements Runnable {
         }
 
         Room roomRes = roomDAO.insertAndGetId(room);
-        System.out.println("Nouveau salon d'id : " + roomRes.getId());
 
         if (roomRes != null) {
             this.sendNewRoom(roomRes);
@@ -333,7 +420,13 @@ public class UserInstance extends Thread implements Runnable {
 
     }
 
-    private void caseInsertQUESTION(Map dataMap, String data) throws JsonProcessingException, SQLException {
+    /**
+     * Fonction pour ajouter une nouvelle question et l'envoyé aux apps
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     * @throws SQLException - {@link SQLException}
+     */
+    private void caseInsertQUESTION(String data) throws JsonProcessingException, SQLException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
 
@@ -344,8 +437,6 @@ public class UserInstance extends Thread implements Runnable {
 
         int id = questionDAO.insertAndGetId(question);
         Question q = questionDAO.select(id);
-        System.out.println(">>>>> id :");
-        System.out.println("\t" + id);
 
         for (Mcq mcq : question.getListMcq()) {
             mcq.setId_question(q.getId());
@@ -357,18 +448,21 @@ public class UserInstance extends Thread implements Runnable {
             this.sendNewQuestion(q);
         }
 
-        System.out.println("Nouvelle question d'id : " + id);
-        
     }
 
-    private void caseInsertCOMMENT(Map dataMap, String data) throws JsonProcessingException, SQLException {
+    /**
+     * Fonction pour ajouter un nouveau commentaire et l'envoyé aux apps
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     * @throws SQLException - {@link SQLException}
+     */
+    private void caseInsertCOMMENT(String data) throws JsonProcessingException, SQLException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
 
         CommentDAO commentDAO = new CommentDAO(Server.CONNECTION);
 
         Comment comment = this.getUnserialisation(dataJson.get("new_comment").get(0).toString(), Comment.class);
-
         int id = commentDAO.insertAndGetId(comment);
 
         Comment c = commentDAO.select(id);
@@ -377,15 +471,18 @@ public class UserInstance extends Thread implements Runnable {
             this.sendNewComment(c);
         }
 
-        System.out.println("Nouveau commentaire d'id : " + id);
-
     }
 
 
     // CASE UPDATE
 
-
-    private void caseUpdateVoteMCQ(Map dataMap, String data) throws JsonProcessingException, SQLException {
+    /**
+     * Ajoute le vote au choix MCQ
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     * @throws SQLException - {@link SQLException}
+     */
+    private void caseUpdateVoteMCQ(String data) throws JsonProcessingException, SQLException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
@@ -397,7 +494,13 @@ public class UserInstance extends Thread implements Runnable {
 
     }
 
-    private void caseUpdateLike (Map dataMap, String data) throws JsonProcessingException, SQLException {
+    /**
+     * Ajoute un like ou dislike sur un commentaire
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     * @throws SQLException - {@link SQLException}
+     */
+    private void caseUpdateLike (String data) throws JsonProcessingException, SQLException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
@@ -406,7 +509,7 @@ public class UserInstance extends Thread implements Runnable {
         boolean positif = dataJson.get("positif").asBoolean();
 
         CommentDAO commentDAO = new CommentDAO(Server.CONNECTION);
-        if (positif) {
+        if (positif) { // positif veut dire like et négatif dislike
             commentDAO.updateLike(id);
         } else {
             commentDAO.updateDislike(id);
@@ -417,6 +520,11 @@ public class UserInstance extends Thread implements Runnable {
 
     // CASE MAIL
 
+    /**
+     * Enregistrer en base de données le mail d'un utilisateur souhaitant etre notifier du compte rendu
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     */
     private void caseNEW_MAIL (String data) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode dataJson = objectMapper.readTree(data);
@@ -429,18 +537,13 @@ public class UserInstance extends Thread implements Runnable {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * Permet de créer des ObjetNode pour l'envoie de donnée Json
+     * @param methods - {@link String}
+     * @param propretyName - {@link String}
+     * @param object - {@link T}
+     * @return <T> - {@link T}
+     */
     private <T> ObjectNode getObjetNode (String methods, String propretyName, T object) {
         ObjectNode root = objectMapper.createObjectNode();
 
@@ -453,6 +556,11 @@ public class UserInstance extends Thread implements Runnable {
     }
 
 
+    /**
+     * Envoie le nouveau commentaire
+     * @param comment - {@link Comment}
+     * @throws JsonProcessingException
+     */
     public void sendNewComment (Comment comment) throws JsonProcessingException {
         for (UserInstance ui : Server.USERINSTANCELIST) {
             if (ui != null && ui.getWhereIam() == comment.getRoom().getId()) {
@@ -460,12 +568,12 @@ public class UserInstance extends Thread implements Runnable {
             }
         }
     }
-    private void testSendNewComment() throws SQLException, JsonProcessingException {
-        CommentDAO commentDAO = new CommentDAO(Server.CONNECTION);
-        this.sendNewComment(commentDAO.select(1));
-    }
 
-
+    /**
+     * Envoie la nouvelle quesrtion
+     * @param question - {@link Question}
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     */
     public void sendNewQuestion (Question question) throws JsonProcessingException {
         for (UserInstance ui : Server.USERINSTANCELIST) {
             if (ui != null && ui.getWhereIam() == question.getRoom().getId()) {
@@ -473,60 +581,44 @@ public class UserInstance extends Thread implements Runnable {
             }
         }
     }
-    private void testSendNewQuestion () throws SQLException, JsonProcessingException {
-        QuestionDAO questionDAO = new QuestionDAO(Server.CONNECTION);
-        this.sendNewQuestion(questionDAO.select(1));
-    }
 
+    /**
+     * Envoie le nouveau salon
+     * @param room - {@link Room}
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     */
     public void sendNewRoom (Room room) throws JsonProcessingException {
         for (UserInstance ui : Server.USERINSTANCELIST) {
-            if (ui != null && ui.getWhereIam() == -1) {
-                System.out.println("------> " + ui.getName());
+            if (ui != null) {
                 ui.sendData(this.getObjetNode("NEWROOM", "new_room", room));
             }
         }
     }
-    private void testSendNewRoom () throws SQLException, JsonProcessingException {
-        RoomDAO roomDAO = new RoomDAO(Server.CONNECTION);
-        this.sendNewRoom(roomDAO.select(1));
-    }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+      Demarage du Thread toujours en écoute de l'instance
+     */
     @Override
     public void run() {
 
         try {
-            String data = in.readLine();
+            String data = in.readLine(); // initialisation
 
-            StringBuilder dataReceveid = new StringBuilder();
+            StringBuilder dataReceveid = new StringBuilder(); //initialisation
 
-            while(data!=null){
-                dataReceveid.append(data);
+            while(data!=null){ // tjours en écoute
+                dataReceveid.append(data); // ajoute la donnée au String
 
-                if (data.equals("}")) {
-                    analyseData(dataReceveid.toString());
-                    dataReceveid = new StringBuilder();
+                if (data.equals("}")) { // si c'est la fin du json
+                    analyseData(dataReceveid.toString()); // envoie les données a l'analysateur
+                    dataReceveid = new StringBuilder(); // reinitialisation
                 }
 
-                data = in.readLine();
+                data = in.readLine(); // attend de recevoir des données
             }
-            System.out.println("Server out of service");
-            Server.USERINSTANCELIST.remove(this);
-            // out.close();
+            Server.USERINSTANCELIST.remove(this); // s'enleve de la liste des utilisateurs actif
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }

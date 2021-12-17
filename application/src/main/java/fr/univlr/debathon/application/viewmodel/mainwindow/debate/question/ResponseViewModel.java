@@ -4,7 +4,6 @@ import de.saxsys.mvvmfx.InjectScope;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.log.generate.CustomLogger;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;

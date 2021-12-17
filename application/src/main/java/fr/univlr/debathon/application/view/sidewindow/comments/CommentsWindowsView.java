@@ -1,21 +1,17 @@
 package fr.univlr.debathon.application.view.sidewindow.comments;
 
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.ViewTuple;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
-import fr.univlr.debathon.application.viewmodel.sidewindow.comments.CommentsViewModel;
 import fr.univlr.debathon.application.viewmodel.sidewindow.comments.CommentsWindowsViewModel;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;

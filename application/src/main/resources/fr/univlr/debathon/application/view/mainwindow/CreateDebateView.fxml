@@ -67,20 +67,18 @@
                         </VBox.margin>
                     </HTMLEditor>
                 </VBox>
-            <VBox layoutX="10.0" layoutY="11.0" maxWidth="1.7976931348623157E308" spacing="5.0">
-               <children>
-                  <Label fx:id="lblKey" maxWidth="1.7976931348623157E308" text="lblKey">
-                     <font>
-                        <Font name="Calibri" size="13.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="tfKey" maxWidth="1.7976931348623157E308">
-                     <VBox.margin>
-                        <Insets left="10.0" />
-                     </VBox.margin>
-                  </TextField>
-               </children>
-            </VBox>
+                <VBox layoutX="10.0" layoutY="11.0" maxWidth="1.7976931348623157E308" spacing="5.0">
+                    <Label fx:id="lblKey" maxWidth="1.7976931348623157E308" text="lblKey">
+                        <font>
+                            <Font name="Calibri" size="13.0"/>
+                        </font>
+                    </Label>
+                    <TextField fx:id="tfKey" maxWidth="1.7976931348623157E308">
+                        <VBox.margin>
+                            <Insets left="10.0"/>
+                        </VBox.margin>
+                    </TextField>
+                </VBox>
             </VBox>
         </center>
     </BorderPane>

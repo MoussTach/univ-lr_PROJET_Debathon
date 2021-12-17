@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class CategoryDAO implements DAO<Category> {
 
-    private Connection connection = null;
+    private Connection connection;
 
     private static final CustomLogger LOGGER = CustomLogger.create(CommentDAO.class.getName());
 

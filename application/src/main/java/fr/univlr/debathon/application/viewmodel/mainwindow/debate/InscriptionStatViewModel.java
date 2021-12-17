@@ -17,10 +17,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Pos;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.controlsfx.control.Notifications;
 
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
 
 public class InscriptionStatViewModel extends ViewModel_SceneCycle {
     private static final CustomLogger LOGGER = CustomLogger.create(InscriptionStatViewModel.class.getName());
@@ -63,6 +64,12 @@ public class InscriptionStatViewModel extends ViewModel_SceneCycle {
 
         try {
             Debathon.getInstance().getAppCommunication().sendEmail(this.debate.getId(), this.tfMail_value.get());
+
+            Notifications.create()
+                    .position(Pos.BOTTOM_RIGHT)
+                    .title(this.resBundle_.get().getString("mail_title"))
+                    .text(this.resBundle_.get().getString("mail_text"))
+                    .showInformation();
 
         } catch (JsonProcessingException e) {
             if (LOGGER.isInfoEnabled()) {

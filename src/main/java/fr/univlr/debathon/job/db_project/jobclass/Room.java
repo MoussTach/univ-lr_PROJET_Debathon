@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Room {
@@ -19,15 +18,15 @@ public class Room {
 
     private final BooleanProperty is_open = new SimpleBooleanProperty(false);
 
-    private ObjectProperty<LocalDate> date_start = new SimpleObjectProperty<>();
-    private ObjectProperty<LocalDate> date_end = new SimpleObjectProperty<>();
+    private final ObjectProperty<LocalDate> date_start = new SimpleObjectProperty<>();
+    private final ObjectProperty<LocalDate> date_end = new SimpleObjectProperty<>();
 
     private final ObjectProperty<Category> category = new SimpleObjectProperty<>();
 
     private final ListProperty<Tag> listTag = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
     private final ListProperty<User> listUtilisateurs = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
-    private ListProperty<Question> listQuestions = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
+    private final ListProperty<Question> listQuestions = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 
     public Room(){
 
@@ -71,6 +70,7 @@ public class Room {
         this.date_end.set(clone.getDate_end());
         this.category.set(clone.getCategory());
         this.listTag.addAll(clone.getListTag());
+        this.listQuestions.addAll(clone.getListQuestion());
     }
 
 

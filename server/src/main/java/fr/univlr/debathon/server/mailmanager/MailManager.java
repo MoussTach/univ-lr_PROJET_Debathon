@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class MailManager extends TaskManager {
 
-    public static Map<String, String> MAILDATA = new HashMap<>() {{
+    public static final Map<String, String> MAILDATA = new HashMap<>() {{
         put("From_User", "debathonCDIJ-norepl@outlook.com");
         put("From_Password", "92wBz&Z??b&1GrtY");
         put("AInfos_Host", "smtp-mail.outlook.com");
@@ -67,7 +67,7 @@ public class MailManager extends TaskManager {
 
                 try {
                     //ping google.com
-                    InetAddress ip = InetAddress.getByAddress(new byte[] { (byte)151, (byte)101, (byte)2, (byte)219 });
+                    InetAddress ip = InetAddress.getByAddress(new byte[] { (byte)8, (byte)8, (byte)8, (byte)8 });
 
                     if (LOGGER.isTraceEnabled()) {
                         LOGGER.trace("[Task][ping internet]");

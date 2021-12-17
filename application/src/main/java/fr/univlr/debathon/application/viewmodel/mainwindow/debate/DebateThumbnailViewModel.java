@@ -17,7 +17,6 @@ import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.scene.layout.BorderPane;

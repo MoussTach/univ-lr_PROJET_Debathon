@@ -6,7 +6,6 @@ import de.saxsys.mvvmfx.ScopeProvider;
 import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.utils.commands.Action;
 import de.saxsys.mvvmfx.utils.commands.Command;
-import de.saxsys.mvvmfx.utils.commands.CompositeCommand;
 import de.saxsys.mvvmfx.utils.commands.DelegateCommand;
 import de.saxsys.mvvmfx.utils.validation.ObservableRuleBasedValidator;
 import de.saxsys.mvvmfx.utils.validation.ValidationMessage;
@@ -564,8 +563,8 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
             this.listener_ChangedValue_bundleLanguage_ = null;
         }
 
-        unbindDebate();
-        unbindSelectedItems();
+        //unbindDebate();
+        //unbindSelectedItems();
 
         LanguageBundle.getInstance().unbindResourceBundle(this.resBundle_);
     }

@@ -1,27 +1,17 @@
 package fr.univlr.debathon.application.view.mainwindow.debate;
 
 import de.saxsys.mvvmfx.InjectViewModel;
-import de.saxsys.mvvmfx.ViewTuple;
 import de.saxsys.mvvmfx.utils.validation.visualization.ControlsFxVisualizer;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
-import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
-import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
-import fr.univlr.debathon.application.viewmodel.mainwindow.CreateDebateViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.CreateQuestionViewModel;
-import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.CategoryViewModel;
-import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import fr.univlr.debathon.custom.remastered.controls.tabview.CustomEditingCell_String;
-import fr.univlr.debathon.custom.remastered.controls.tabview.CustomTableView;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import fr.univlr.debathon.job.db_project.jobclass.Question;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.controlsfx.validation.decoration.StyleClassValidationDecoration;
 

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.job.db_project.jobclass.Comment;
-import fr.univlr.debathon.job.db_project.jobclass.Room;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

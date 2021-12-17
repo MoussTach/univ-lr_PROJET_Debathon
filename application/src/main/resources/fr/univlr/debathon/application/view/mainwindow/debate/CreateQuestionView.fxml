@@ -36,75 +36,74 @@
                     </TextArea>
                 </VBox>
                 <VBox layoutX="10.0" layoutY="11.0" maxWidth="1.7976931348623157E308" spacing="5.0">
-                    <children>
-                        <Label fx:id="lblQuestionType" maxWidth="1.7976931348623157E308" text="lblQuestionType">
-                            <font>
-                                <Font name="Calibri" size="13.0" />
-                            </font>
-                        </Label>
-                        <ComboBox fx:id="cbQuestionType" maxWidth="1.7976931348623157E308" prefHeight="30.0">
-                            <VBox.margin>
-                                <Insets left="10.0" />
-                            </VBox.margin>
-                        </ComboBox>
-                    </children>
+                    <Label fx:id="lblQuestionType" maxWidth="1.7976931348623157E308" text="lblQuestionType">
+                        <font>
+                            <Font name="Calibri" size="13.0"/>
+                        </font>
+                    </Label>
+                    <ComboBox fx:id="cbQuestionType" maxWidth="1.7976931348623157E308" prefHeight="30.0">
+                        <VBox.margin>
+                            <Insets left="10.0"/>
+                        </VBox.margin>
+                    </ComboBox>
                 </VBox>
-                <VBox fx:id="vboxReponses" layoutX="10.0" layoutY="128.0" maxWidth="1.7976931348623157E308" spacing="5.0">
-                    <children>
-                        <Label fx:id="lblReponses" maxWidth="1.7976931348623157E308" text="lblReponses">
+                <VBox fx:id="vboxReponses" layoutX="10.0" layoutY="128.0" maxWidth="1.7976931348623157E308"
+                      spacing="5.0">
+                    <Label fx:id="lblReponses" maxWidth="1.7976931348623157E308" text="lblReponses">
+                        <font>
+                            <Font name="Calibri" size="13.0"/>
+                        </font>
+                    </Label>
+                    <StackPane>
+                        <VBox.margin>
+                            <Insets left="10.0"/>
+                        </VBox.margin>
+                        <TitledPane animated="false" collapsible="false">
                             <font>
-                                <Font name="Calibri" size="13.0" />
+                                <Font size="16.0"/>
                             </font>
-                        </Label>
-                        <StackPane>
-                            <children>
-                                <TitledPane animated="false" collapsible="false">
-                                    <font>
-                                        <Font size="16.0" />
-                                    </font>
-                                </TitledPane>
-                                <TableView fx:id="tableResponses" editable="true" maxHeight="175.0">
-                                    <placeholder>
-                                        <Label />
-                                    </placeholder>
-                                    <columns>
-                                        <TableColumn fx:id="tabResponse" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="-1.0" sortable="false" />
-                                    </columns>
-                                    <columnResizePolicy>
-                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                    </columnResizePolicy>
-                                </TableView>
-                                <BorderPane maxHeight="28.0" StackPane.alignment="TOP_LEFT">
-                                    <right>
-                                        <HBox alignment="CENTER_RIGHT" onDragDetected="#act_btnResponsesDelete" spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
-                                            <children>
-                                                <Button fx:id="btnResponsesAdd" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#act_btnResponsesAdd">
-                                                    <graphic>
-                                                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                                            <Image url="@../../../../../../../img/add_64.png" />
-                                                        </ImageView>
-                                                    </graphic>
-                                                </Button>
-                                                <Button fx:id="btnResponsesDelete" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#act_btnResponsesDelete">
-                                                    <graphic>
-                                                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                                            <Image url="@../../../../../../../img/delete_64.png" />
-                                                        </ImageView>
-                                                    </graphic>
-                                                </Button>
-                                            </children>
-                                            <BorderPane.margin>
-                                                <Insets right="10.0" />
-                                            </BorderPane.margin>
-                                        </HBox>
-                                    </right>
-                                </BorderPane>
-                            </children>
-                            <VBox.margin>
-                                <Insets left="10.0" />
-                            </VBox.margin>
-                        </StackPane>
-                    </children>
+                        </TitledPane>
+                        <TableView fx:id="tableResponses" editable="true" maxHeight="175.0">
+                            <placeholder>
+                                <Label/>
+                            </placeholder>
+                            <columns>
+                                <TableColumn fx:id="tabResponse" maxWidth="1.7976931348623157E308" minWidth="-1.0"
+                                             prefWidth="-1.0" sortable="false"/>
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                            </columnResizePolicy>
+                        </TableView>
+                        <BorderPane maxHeight="28.0" StackPane.alignment="TOP_LEFT">
+                            <right>
+                                <HBox alignment="CENTER_RIGHT" onDragDetected="#act_btnResponsesDelete"
+                                      spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
+                                    <BorderPane.margin>
+                                        <Insets right="10.0"/>
+                                    </BorderPane.margin>
+                                    <Button fx:id="btnResponsesAdd" contentDisplay="GRAPHIC_ONLY"
+                                            mnemonicParsing="false" onAction="#act_btnResponsesAdd">
+                                        <graphic>
+                                            <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true"
+                                                       preserveRatio="true">
+                                                <Image url="@../../../../../../../img/add_64.png"/>
+                                            </ImageView>
+                                        </graphic>
+                                    </Button>
+                                    <Button fx:id="btnResponsesDelete" contentDisplay="GRAPHIC_ONLY"
+                                            mnemonicParsing="false" onAction="#act_btnResponsesDelete">
+                                        <graphic>
+                                            <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true"
+                                                       preserveRatio="true">
+                                                <Image url="@../../../../../../../img/delete_64.png"/>
+                                            </ImageView>
+                                        </graphic>
+                                    </Button>
+                                </HBox>
+                            </right>
+                        </BorderPane>
+                    </StackPane>
                 </VBox>
             </VBox>
         </center>

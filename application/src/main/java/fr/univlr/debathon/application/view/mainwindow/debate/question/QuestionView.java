@@ -2,7 +2,6 @@ package fr.univlr.debathon.application.view.mainwindow.debate.question;
 
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
-import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.QuestionViewModel;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.ResponseViewModel;

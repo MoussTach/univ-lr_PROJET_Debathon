@@ -6,7 +6,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.concurrent.Task;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

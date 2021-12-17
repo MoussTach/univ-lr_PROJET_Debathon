@@ -66,7 +66,7 @@ public class ChartGenerator extends JFrame {
 
     //generation et recuperation list de chart
     public List<JFreeChart> genAllPieCharts(List<PDFquestion> questions){
-        List<JFreeChart> charts = new ArrayList<JFreeChart>();
+        List<JFreeChart> charts = new ArrayList<>();
         //boucle sur chaque question de la liste
         for (PDFquestion q : questions) {
             //Ajout d'un chart a la list avec generation

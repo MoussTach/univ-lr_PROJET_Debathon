@@ -30,7 +30,7 @@ public class CommentDAO implements DAO<Comment> {
 	}
 
 	@Override
-	public List<Comment> selectAll() throws SQLException {
+	public List<Comment> selectAll() {
 
 		List<Comment> commentList = new ArrayList<>();
 
@@ -50,11 +50,11 @@ public class CommentDAO implements DAO<Comment> {
 
 			while (rs.next()) {
 
-				if ("" + rs.getInt("id_parent") != null) {
+				if (!("" + rs.getInt("id_parent")).equals("")) {
 					comment = this.select(rs.getInt("id_parent"));
 				}
 
-				if ("" + rs.getInt("id_question") != null) {
+				if (!("" + rs.getInt("id_question")).equals("")) {
 					question = questionDAO.select(rs.getInt("id_parent"));
 				}
 
@@ -78,7 +78,7 @@ public class CommentDAO implements DAO<Comment> {
 
 	}
 
-	public List<Comment> selectCommentByIdQuestion(int id) throws SQLException {
+	public List<Comment> selectCommentByIdQuestion(int id) {
 
 		List<Comment> commentList = new ArrayList<>();
 
@@ -100,11 +100,11 @@ public class CommentDAO implements DAO<Comment> {
 
 			while (rs.next()) {
 
-				if ("" + rs.getInt("id_parent") != null) {
+				if (!("" + rs.getInt("id_parent")).equals("")) {
 					comment = this.select(rs.getInt("id_parent"));
 				}
 
-				if ("" + rs.getInt("id_question") != null) {
+				if (!("" + rs.getInt("id_question")).equals("")) {
 					question = questionDAO.select(rs.getInt("id_parent"));
 				}
 
@@ -131,7 +131,7 @@ public class CommentDAO implements DAO<Comment> {
 
 
 
-	public List<Comment> selectCommentByIdQuestion(int id, Room room) throws SQLException {
+	public List<Comment> selectCommentByIdQuestion(int id, Room room) {
 
 		List<Comment> commentList = new ArrayList<>();
 
@@ -144,7 +144,6 @@ public class CommentDAO implements DAO<Comment> {
 			ResultSet rs = pstmt.executeQuery();
 
 			QuestionDAO questionDAO = new QuestionDAO(this.connection);
-			RoomDAO roomDAO = new RoomDAO(this.connection);
 			UserDAO userDAO = new UserDAO(this.connection);
 
 			Comment comment = null;
@@ -153,11 +152,11 @@ public class CommentDAO implements DAO<Comment> {
 
 			while (rs.next()) {
 
-				if ("" + rs.getInt("id_parent") != "") {
+				if (!("" + rs.getInt("id_parent")).equals("")) {
 					comment = this.select(rs.getInt("id_parent"));
 				}
 
-				if ("" + rs.getInt("id_question") != "") {
+				if (!("" + rs.getInt("id_question")).equals("")) {
 					question = questionDAO.select(rs.getInt("id_parent"));
 				}
 
@@ -213,7 +212,7 @@ public class CommentDAO implements DAO<Comment> {
 		return true;
 	}
 
-	public int insertAndGetId(Comment comment) throws SQLException {
+	public int insertAndGetId(Comment comment) {
 
 		String sql = "INSERT INTO Comment (comment, id_parent, id_question, id_room, id_user) values (?,?,?,?,?) returning idComment";
 
@@ -300,7 +299,7 @@ public class CommentDAO implements DAO<Comment> {
 	}
 
 	@Override
-	public List<Comment> selectByMultiCondition(Map<String, String> map) throws SQLException {
+	public List<Comment> selectByMultiCondition(Map<String, String> map) {
 		return null;
 	}
 
@@ -324,20 +323,20 @@ public class CommentDAO implements DAO<Comment> {
 				UserDAO userDAO = new UserDAO(this.connection);
 
 
-				Comment com = null;
-				if ("" + rs.getInt("id_parent") != "") {
+				Comment comParent = null;
+				if (!("" + rs.getInt("id_parent")).equals("")) {
 					comment = this.select(rs.getInt("id_parent"));
 				}
 
 				Question question = null;
-				if ("" + rs.getInt("id_question") != "") {
-					question = questionDAO.select(rs.getInt("id_parent"));
+				if (!("" + rs.getInt("id_question")).equals("")) {
+					question = questionDAO.select(rs.getInt("id_question"));
 				}
 
 				comment = new Comment(
 						rs.getInt("idComment"), rs.getString("comment"),
 						rs.getInt("nb_likes"), rs.getInt("nb_dislikes"),
-						com, question, roomDAO.select(rs.getInt("id_room")),
+						comParent, question, roomDAO.select(rs.getInt("id_room")),
 						userDAO.select(rs.getInt("id_user"))
 				);
 			}
@@ -354,7 +353,7 @@ public class CommentDAO implements DAO<Comment> {
 
 
 
-	public boolean updateLike(int id_comment) throws SQLException {
+	public boolean updateLike(int id_comment) {
 
 		String sql = "UPDATE Comment SET nb_likes=nb_likes+1 WHERE idComment = ?";
 
@@ -374,7 +373,7 @@ public class CommentDAO implements DAO<Comment> {
 		return true;
 	}
 
-	public boolean updateDislike(int id_comment) throws SQLException {
+	public boolean updateDislike(int id_comment) {
 
 		String sql = "UPDATE Comment SET nb_dislikes=nb_dislikes+1 WHERE idComment = ?";
 

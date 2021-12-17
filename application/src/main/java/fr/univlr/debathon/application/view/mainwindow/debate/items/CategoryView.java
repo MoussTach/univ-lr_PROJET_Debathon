@@ -3,7 +3,6 @@ package fr.univlr.debathon.application.view.mainwindow.debate.items;
 import de.saxsys.mvvmfx.InjectViewModel;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.CategoryViewModel;
-import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -28,16 +27,15 @@ public class CategoryView extends FxmlView_SceneCycle<CategoryViewModel> impleme
         //Text
         lblCategory.textProperty().bind(this.categoryViewModel.lblCategory_labelProperty());
 
-        this.categoryViewModel.colorProperty().addListener((observableValue, oldValue, newValue) -> {
-            bPaneCategory.setStyle(
-                    String.format("-fx-background-color:%s;-fx-border-radius:%s;-fx-background-radius:%s;-fx-border-width:%s;-fx-border-color:%s;",
-                            newValue,
-                            "10",
-                            "10",
-                            "2",
-                            "LIGHTGRAY"
-                    ));
-        });
+        this.categoryViewModel.colorProperty().addListener((observableValue, oldValue, newValue) ->
+                bPaneCategory.setStyle(
+                        String.format("-fx-background-color:%s;-fx-border-radius:%s;-fx-background-radius:%s;-fx-border-width:%s;-fx-border-color:%s;",
+                                newValue,
+                                "10",
+                                "10",
+                                "2",
+                                "LIGHTGRAY"
+                        )));
     }
 
 

@@ -77,7 +77,7 @@
                                  <right>
                                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true"
                                                preserveRatio="true">
-                                       <Image url="@../../../../../../../resources/img/loupe_32x32.png"/>
+                                       <Image url="@/img/loupe_32x32.png"/>
                                     </ImageView>
                                  </right>
                               </CustomTextField>
@@ -123,7 +123,7 @@
             </StackPane.margin>
             <graphic>
                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../../../../../../img/add_64.png"/>
+                  <Image url="@/img/add_64.png"/>
                </ImageView>
             </graphic>
          </Button>

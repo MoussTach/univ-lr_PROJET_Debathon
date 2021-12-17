@@ -96,7 +96,7 @@ public class Launch extends Application {
     private void createDbConnection() throws SQLException, ClassNotFoundException {
         try {
             //Since it's a server application, the program should exit if the connection are not reached
-            Task<Void> taskConnect = Server.getInstance().connect("server/db_debathon.db",9878);
+            Task<Void> taskConnect = Server.getInstance().connect("server/database/db_debathon.db",9878);
 
             Main.TASKMANAGER.addArray(new TaskArray(ThreadArray.ExecutionType.SEQUENTIAL).addTask(new Pair(taskConnect, new TaskArray(ThreadArray.ExecutionType.END))));
 

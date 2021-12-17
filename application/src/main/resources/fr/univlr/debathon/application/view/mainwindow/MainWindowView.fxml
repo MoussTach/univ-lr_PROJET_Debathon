@@ -37,6 +37,6 @@
         <StatusBar fx:id="statusBarMainView" BorderPane.alignment="CENTER" />
     </bottom>
     <stylesheets>
-        <URL value="@../../../../../../css/application.css" />
+        <URL value="@/css/application.css" />
     </stylesheets>
 </BorderPane>

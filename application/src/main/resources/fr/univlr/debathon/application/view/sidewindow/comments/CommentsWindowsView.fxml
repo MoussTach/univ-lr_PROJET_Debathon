@@ -50,7 +50,7 @@
                   </HBox.margin>
                   <graphic>
                      <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@../../../../../../../img/confirm_64.png" />
+                        <Image url="@/img/confirm_64.png" />
                      </ImageView>
                   </graphic>
                </Button>

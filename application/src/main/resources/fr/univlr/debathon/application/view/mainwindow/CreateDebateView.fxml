@@ -61,7 +61,7 @@
                             <Font name="Calibri" size="13.0" />
                         </font>
                     </Label>
-                    <HTMLEditor fx:id="htmlEditorDescription" maxHeight="400.0" maxWidth="550.0">
+                    <HTMLEditor fx:id="htmlEditorDescription" maxHeight="200.0" maxWidth="550.0">
                         <VBox.margin>
                             <Insets left="10.0" />
                         </VBox.margin>
@@ -70,12 +70,12 @@
                 <VBox layoutX="10.0" layoutY="11.0" maxWidth="1.7976931348623157E308" spacing="5.0">
                     <Label fx:id="lblKey" maxWidth="1.7976931348623157E308" text="lblKey">
                         <font>
-                            <Font name="Calibri" size="13.0"/>
+                            <Font name="Calibri" size="13.0" />
                         </font>
                     </Label>
                     <TextField fx:id="tfKey" maxWidth="1.7976931348623157E308">
                         <VBox.margin>
-                            <Insets left="10.0"/>
+                            <Insets left="10.0" />
                         </VBox.margin>
                     </TextField>
                 </VBox>

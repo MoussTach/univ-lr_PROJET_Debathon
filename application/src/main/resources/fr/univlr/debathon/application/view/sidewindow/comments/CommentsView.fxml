@@ -49,7 +49,7 @@
                 style="-fx-background-radius: 40; -fx-background-color: LIGHTGREY; -fx-border-color: GREY; -fx-border-radius: 40;">
             <graphic>
                 <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@../../../../../../../img/like_32.png"/>
+                    <Image url="@/img/like_32.png"/>
                 </ImageView>
             </graphic>
             <font>
@@ -60,7 +60,7 @@
                 style="-fx-background-radius: 40; -fx-background-color: LIGHTGREY; -fx-border-color: GREY; -fx-border-radius: 40;">
             <graphic>
                 <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@../../../../../../../img/dislike_32.png"/>
+                    <Image url="@/img/dislike_32.png"/>
                 </ImageView>
             </graphic>
             <font>

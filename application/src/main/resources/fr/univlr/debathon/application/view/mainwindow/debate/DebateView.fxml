@@ -27,7 +27,7 @@
                           style="-fx-background-radius: 10;">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <Image url="@../../../../../../../img/delete_64.png"/>
+                           <Image url="@/img/delete_64.png"/>
                         </ImageView>
                      </graphic>
                   </Button>
@@ -39,7 +39,7 @@
                           style="-fx-background-radius: 10;">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <Image url="@../../../../../../../img/add_64.png"/>
+                           <Image url="@/img/add_64.png"/>
                         </ImageView>
                      </graphic>
                   </Button>
@@ -47,7 +47,7 @@
                           onAction="#act_btnShowStatMail" style="-fx-background-radius: 10;">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <Image url="@../../../../../../../img/documentWrite_64.png"/>
+                           <Image url="@/img/documentWrite_64.png"/>
                         </ImageView>
                      </graphic>
                   </Button>

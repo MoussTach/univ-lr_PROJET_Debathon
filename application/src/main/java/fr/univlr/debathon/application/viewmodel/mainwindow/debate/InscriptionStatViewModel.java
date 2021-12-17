@@ -20,7 +20,6 @@ import javafx.beans.value.ObservableValue;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
 
 public class InscriptionStatViewModel extends ViewModel_SceneCycle {
     private static final CustomLogger LOGGER = CustomLogger.create(InscriptionStatViewModel.class.getName());

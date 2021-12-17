@@ -207,18 +207,11 @@ public class AppCommunication extends Thread implements Runnable {
     public void methodsNEWROOM (JsonNode dataJson) {
         Room room = this.getUnserialisation(dataJson.get("new_room").get(0).toString(), Room.class);
 
-        List<Tag> shadowListTag = new ArrayList<>(room.getListTag());
         for (Tag currentTag : room.getListTag()) {
             boolean exist = false;
 
             for (Tag tag : Debathon.getInstance().getTags()) {
                 if (tag.getLabel().equals(currentTag.getLabel())) {
-
-                    if (!tag.equals(currentTag)) {
-                        shadowListTag.remove(currentTag);
-                        shadowListTag.add(tag);
-                    }
-
                     exist = true;
                 }
             }
@@ -473,14 +466,14 @@ public class AppCommunication extends Thread implements Runnable {
         try {
             data = in.readLine();
 
-            String dataReceveid = "";
+            StringBuilder dataReceveid = new StringBuilder();
 
             while(!end && data!=null){
-                dataReceveid += data;
+                dataReceveid.append(data);
 
                 if (data.equals("}")) {
-                    analyseData(dataReceveid);
-                    dataReceveid = "";
+                    analyseData(dataReceveid.toString());
+                    dataReceveid = new StringBuilder();
                 }
 
                 try {

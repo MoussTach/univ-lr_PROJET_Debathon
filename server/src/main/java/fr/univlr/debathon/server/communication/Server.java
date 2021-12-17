@@ -18,11 +18,11 @@ public class Server {
     private static Server server = null; // instance du serveur
 
     public static final String CREATERIGHTS_KEY = AlphaNumericStringGenerator.getRandomString(10); // clé de sécurité
-    protected static List<UserInstance> USERINSTANCELIST = new ArrayList<>(); // liste des applications connéctées
+    protected static final List<UserInstance> USERINSTANCELIST = new ArrayList<>(); // liste des applications connéctées
 
     public static Connection CONNECTION = null; // connection sql
-    public static List<User> listUser = new ArrayList<>(); // liste des noms utilisateurs dispos
-    public static List<User> listUserUsed = new ArrayList<>(); // liste des noms d'utilisateur utilisés
+    public static final List<User> listUser = new ArrayList<>(); // liste des noms utilisateurs dispos
+    public static final List<User> listUserUsed = new ArrayList<>(); // liste des noms d'utilisateur utilisés
 
     private Server() {
     }
@@ -55,11 +55,11 @@ public class Server {
 
         loadUser(); // chargement des psuedos
 
-        return new Task_Custom<Void>("test the validity of the email destination") {
+        return new Task_Custom<>("test the validity of the email destination") {
             @Override
             protected Void call_Task() throws Exception {
                 try (ServerSocket serverSocket = new ServerSocket(port)) { // test de la conxion
-                    while(true) //boucle infini
+                    while (true) //boucle infini
                     {
                         Socket userSocket = serverSocket.accept(); // recption d'une connexion ou mise en attente tant qu'il n'y en a pas une
 

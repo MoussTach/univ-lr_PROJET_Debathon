@@ -1,13 +1,6 @@
 package fr.univlr.debathon.application.communication;
 
-import fr.univlr.debathon.job.db_project.jobclass.Category;
-import fr.univlr.debathon.job.db_project.jobclass.Mcq;
-import fr.univlr.debathon.job.db_project.jobclass.Room;
-import fr.univlr.debathon.job.db_project.jobclass.Tag;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
 

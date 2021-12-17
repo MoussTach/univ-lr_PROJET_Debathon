@@ -8,7 +8,6 @@ import de.saxsys.mvvmfx.ViewTuple;
 import fr.univlr.debathon.application.Launch;
 import fr.univlr.debathon.application.communication.Debathon;
 import fr.univlr.debathon.application.view.mainwindow.debate.question.ResponseView;
-import fr.univlr.debathon.application.view.sidewindow.comments.CommentsView;
 import fr.univlr.debathon.application.view.sidewindow.comments.CommentsWindowsView;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
 import fr.univlr.debathon.application.viewmodel.sidewindow.comments.CommentsWindowsViewModel;

@@ -323,7 +323,7 @@ public class CommentDAO implements DAO<Comment> {
 				UserDAO userDAO = new UserDAO(this.connection);
 
 
-				Comment com = null;
+				Comment comParent = null;
 				if (!("" + rs.getInt("id_parent")).equals("")) {
 					comment = this.select(rs.getInt("id_parent"));
 				}
@@ -336,7 +336,7 @@ public class CommentDAO implements DAO<Comment> {
 				comment = new Comment(
 						rs.getInt("idComment"), rs.getString("comment"),
 						rs.getInt("nb_likes"), rs.getInt("nb_dislikes"),
-						com, question, roomDAO.select(rs.getInt("id_room")),
+						comParent, question, roomDAO.select(rs.getInt("id_room")),
 						userDAO.select(rs.getInt("id_user"))
 				);
 			}

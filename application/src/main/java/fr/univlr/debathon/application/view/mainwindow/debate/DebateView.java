@@ -3,7 +3,6 @@ package fr.univlr.debathon.application.view.mainwindow.debate;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.ViewTuple;
 import fr.univlr.debathon.application.view.FxmlView_SceneCycle;
-import fr.univlr.debathon.application.view.mainwindow.HomePageView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.CategoryView;
 import fr.univlr.debathon.application.view.mainwindow.debate.items.TagView;
 import fr.univlr.debathon.application.view.mainwindow.debate.question.QuestionView;
@@ -13,7 +12,6 @@ import fr.univlr.debathon.application.viewmodel.mainwindow.debate.items.TagViewM
 import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.QuestionViewModel;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

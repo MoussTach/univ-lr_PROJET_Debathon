@@ -1,8 +1,5 @@
 package fr.univlr.debathon.server.viewmodel;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 /**
  * ViewModel of the view {@link fr.univlr.debathon.server.view.PreloadWindowView}
  *

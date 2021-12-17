@@ -1,7 +1,6 @@
 package fr.univlr.debathon.custom.remastered.controls.text;
 
 import de.saxsys.mvvmfx.utils.validation.ValidationStatus;
-import fr.univlr.debathon.custom.fixer.TooltipDefaultFixer;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Point2D;

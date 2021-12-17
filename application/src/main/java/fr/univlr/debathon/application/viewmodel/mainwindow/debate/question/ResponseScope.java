@@ -4,7 +4,6 @@ import de.saxsys.mvvmfx.Scope;
 import fr.univlr.debathon.job.db_project.jobclass.Mcq;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.ToggleGroup;
 
 public class ResponseScope implements Scope {

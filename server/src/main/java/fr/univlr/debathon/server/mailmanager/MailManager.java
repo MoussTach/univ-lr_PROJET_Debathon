@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class MailManager extends TaskManager {
 
-    public static Map<String, String> MAILDATA = new HashMap<>() {{
+    public static final Map<String, String> MAILDATA = new HashMap<>() {{
         put("From_User", "debathonCDIJ-norepl@outlook.com");
         put("From_Password", "92wBz&Z??b&1GrtY");
         put("AInfos_Host", "smtp-mail.outlook.com");

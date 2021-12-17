@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Connection;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -13,7 +12,6 @@ import fr.univlr.debathon.log.generate.CustomLogger;
 import fr.univlr.debathon.server.Main;
 import fr.univlr.debathon.server.mailmanager.MailData;
 import fr.univlr.debathon.server.mailmanager.MailManager;
-import fr.univlr.debathon.server.viewmodel.mainwindow.MainWindowViewModel;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
 import jakarta.activation.FileDataSource;

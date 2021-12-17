@@ -2,7 +2,6 @@ package fr.univlr.debathon.server.mailmanager;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 public class MailInfos {
 

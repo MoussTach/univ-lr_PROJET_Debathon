@@ -155,9 +155,9 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Sous dirigeur
-     * @param dataJson
-     * @param data
-     * @throws JsonProcessingException
+     * @param dataJson {@link Map} - map json
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
      */
     private void methodsMAIL(Map dataJson, String data) throws JsonProcessingException {
 
@@ -172,10 +172,10 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Sous dirigeur
-     * @param dataJson
-     * @param data
-     * @throws SQLException
-     * @throws JsonProcessingException
+     * @param dataJson {@link Map} - map json
+     * @param data  -{@link} - data
+     * @throws SQLException - {@link SQLException}
+     * @throws JsonProcessingException - {@link JsonProcessingException}
      */
     private void methodsUPDATE (Map dataJson, String data) throws SQLException, JsonProcessingException {
 
@@ -201,10 +201,10 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Sous dirigeur
-     * @param dataJson
-     * @param data
-     * @throws SQLException
-     * @throws JsonProcessingException
+     * @param dataJson {@link Map} - map json
+     * @param data  -{@link} - data
+     * @throws SQLException - {@link SQLException}
+     * @throws JsonProcessingException - {@link JsonProcessingException}
      */
     public void methodsINSERT (Map dataJson, String data) throws SQLException, JsonProcessingException {
         switch ((String) dataJson.get("request")) {
@@ -222,9 +222,9 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Sous dirigeur
-     * @param data
-     * @throws SQLException
-     * @throws JsonProcessingException
+     * @param data  -{@link} - data
+     * @throws SQLException - {@link SQLException}
+     * @throws JsonProcessingException - {@link JsonProcessingException}
      */
     public void methodsGET(Map data) throws SQLException, JsonProcessingException {
         switch ((String) data.get("request")) {
@@ -245,8 +245,8 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Fonction utiliser pour fermer un débat puis générer l pdf et l'envoie du mail
-     * @param data
-     * @throws JsonProcessingException
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
      */
     private void caseEndDebate(Map data) throws JsonProcessingException {
 
@@ -270,9 +270,9 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Supprime une question
-     * @param data
-     * @throws JsonProcessingException
-     * @throws SQLException
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     * @throws SQLException - {@link SQLException}
      */
     private void caseDeleteQuestion (Map data) throws JsonProcessingException, SQLException {
 
@@ -305,7 +305,7 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Retourne tous les salons ouvert
-     * @param data
+     * @param data  -{@link} - data
      */
     private void caseGetHOME(Map data)  {
         this.whereIam = -1;
@@ -337,9 +337,9 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Envoie les informations d'un salon
-     * @param data
-     * @throws SQLException
-     * @throws JsonProcessingException
+     * @param data  -{@link} - data
+     * @throws SQLException - {@link SQLException}
+     * @throws JsonProcessingException - {@link JsonProcessingException}
      */
     private void caseGetROOM(Map data) throws SQLException, JsonProcessingException {
         this.whereIam = (int) data.get("id");
@@ -370,7 +370,7 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Appelé au démarage de l'app pour recevoir le code et le user
-     * @throws JsonProcessingException
+     * @throws JsonProcessingException - {@link JsonProcessingException}
      */
     private void caseGetKEYHOME() throws JsonProcessingException {
 
@@ -390,9 +390,9 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Fonction pour ajouter un nouveau salon et l'envoyé aux apps
-     * @param data
-     * @throws JsonProcessingException
-     * @throws SQLException
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     * @throws SQLException - {@link SQLException}
      */
     private void caseInsertROOM(String data) throws JsonProcessingException, SQLException {
 
@@ -422,9 +422,9 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Fonction pour ajouter une nouvelle question et l'envoyé aux apps
-     * @param data
-     * @throws JsonProcessingException
-     * @throws SQLException
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     * @throws SQLException - {@link SQLException}
      */
     private void caseInsertQUESTION(String data) throws JsonProcessingException, SQLException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -452,9 +452,9 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Fonction pour ajouter un nouveau commentaire et l'envoyé aux apps
-     * @param data
-     * @throws JsonProcessingException
-     * @throws SQLException
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     * @throws SQLException - {@link SQLException}
      */
     private void caseInsertCOMMENT(String data) throws JsonProcessingException, SQLException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -478,9 +478,9 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Ajoute le vote au choix MCQ
-     * @param data
-     * @throws JsonProcessingException
-     * @throws SQLException
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     * @throws SQLException - {@link SQLException}
      */
     private void caseUpdateVoteMCQ(String data) throws JsonProcessingException, SQLException {
 
@@ -496,9 +496,9 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Ajoute un like ou dislike sur un commentaire
-     * @param data
-     * @throws JsonProcessingException
-     * @throws SQLException
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
+     * @throws SQLException - {@link SQLException}
      */
     private void caseUpdateLike (String data) throws JsonProcessingException, SQLException {
 
@@ -522,8 +522,8 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Enregistrer en base de données le mail d'un utilisateur souhaitant etre notifier du compte rendu
-     * @param data
-     * @throws JsonProcessingException
+     * @param data  -{@link} - data
+     * @throws JsonProcessingException - {@link JsonProcessingException}
      */
     private void caseNEW_MAIL (String data) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -539,11 +539,10 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Permet de créer des ObjetNode pour l'envoie de donnée Json
-     * @param methods
-     * @param propretyName
-     * @param object
-     * @param <T>
-     * @return
+     * @param methods - {@link String}
+     * @param propretyName - {@link String}
+     * @param object - {@link T}
+     * @return <T> - {@link T}
      */
     private <T> ObjectNode getObjetNode (String methods, String propretyName, T object) {
         ObjectNode root = objectMapper.createObjectNode();
@@ -559,7 +558,7 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Envoie le nouveau commentaire
-     * @param comment
+     * @param comment - {@link Comment}
      * @throws JsonProcessingException
      */
     public void sendNewComment (Comment comment) throws JsonProcessingException {
@@ -572,8 +571,8 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Envoie la nouvelle quesrtion
-     * @param question
-     * @throws JsonProcessingException
+     * @param question - {@link Question}
+     * @throws JsonProcessingException - {@link JsonProcessingException}
      */
     public void sendNewQuestion (Question question) throws JsonProcessingException {
         for (UserInstance ui : Server.USERINSTANCELIST) {
@@ -585,8 +584,8 @@ public class UserInstance extends Thread implements Runnable {
 
     /**
      * Envoie le nouveau salon
-     * @param room
-     * @throws JsonProcessingException
+     * @param room - {@link Room}
+     * @throws JsonProcessingException - {@link JsonProcessingException}
      */
     public void sendNewRoom (Room room) throws JsonProcessingException {
         for (UserInstance ui : Server.USERINSTANCELIST) {
@@ -598,10 +597,10 @@ public class UserInstance extends Thread implements Runnable {
 
 
 
-    @Override
     /**
-     * Demarage du Thread toujours en écoute de l'instance
+      Demarage du Thread toujours en écoute de l'instance
      */
+    @Override
     public void run() {
 
         try {

@@ -2,9 +2,7 @@ package fr.univlr.debathon.application.viewmodel.mainwindow.debate.items;
 
 import de.saxsys.mvvmfx.InjectScope;
 import fr.univlr.debathon.application.viewmodel.ViewModel_SceneCycle;
-import fr.univlr.debathon.application.viewmodel.mainwindow.debate.question.ResponseScope;
 import fr.univlr.debathon.job.db_project.jobclass.Category;
-import fr.univlr.debathon.job.db_project.jobclass.Tag;
 import fr.univlr.debathon.log.generate.CustomLogger;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;

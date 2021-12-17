@@ -58,19 +58,21 @@ public class Launch extends Application {
         if (destination_directory_exist) {
 
             File[] array_resource_file = destination_directory.listFiles();
-            for (File resource_file : array_resource_file) {
-                if (resource_file != null && resource_file.exists()) {
+            if (array_resource_file != null) {
+                for (File resource_file : array_resource_file) {
+                    if (resource_file != null && resource_file.exists()) {
 
-                    String name_resource_file = resource_file.getName();
-                    String path_destination_file = String.format("%s/%s", path_destination_folder, name_resource_file);
-                    File exist_destination_file = new File(path_destination_file);
+                        String name_resource_file = resource_file.getName();
+                        String path_destination_file = String.format("%s/%s", path_destination_folder, name_resource_file);
+                        File exist_destination_file = new File(path_destination_file);
 
-                    if (!exist_destination_file.exists()) {
+                        if (!exist_destination_file.exists()) {
 
-                        if (resource_file.isDirectory()) {
-                            FileUtils.copyDirectoryToDirectory(resource_file, destination_directory);
-                        } else {
-                            FileUtils.copyFileToDirectory(resource_file, destination_directory);
+                            if (resource_file.isDirectory()) {
+                                FileUtils.copyDirectoryToDirectory(resource_file, destination_directory);
+                            } else {
+                                FileUtils.copyFileToDirectory(resource_file, destination_directory);
+                            }
                         }
                     }
                 }

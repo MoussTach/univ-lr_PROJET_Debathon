@@ -17,6 +17,7 @@ import jakarta.activation.DataSource;
 import jakarta.activation.FileDataSource;
 import jakarta.mail.BodyPart;
 import jakarta.mail.internet.MimeBodyPart;
+import javafx.application.Platform;
 import org.jfree.chart.JFreeChart;
 
 import java.time.LocalDateTime;
@@ -39,12 +40,16 @@ public class PDFGenerator {
 
     public void requestPDF(int id_debat){
         List<PDFquestion> questions = PDFdata.getRequest1(id_debat);
-        String path = getPDF(questions, id_debat);
-        sendMail(path);
+        List<String> mails = PDFdata.getEmail(id_debat);
+        String path = getPDF(questions, id_debat,mails);
+        Platform.runLater(() -> {
+            sendMail(path,mails);
+        });
+
     }
 
     //Methode pour creer un PDF pour un debat avec la liste des questions
-    public String getPDF(List<PDFquestion> questions,int id_debat){
+    public String getPDF(List<PDFquestion> questions,int id_debat,List<String> mails){
         //Creation document pdf
         Document pdf = new Document(PageSize.A4);
         //Creation list de chart avec les questions
@@ -74,7 +79,7 @@ public class PDFGenerator {
                         pdfDest,
                         namePdfFile
                 );
-                FileOutputStream fos = new FileOutputStream(pdfDest_file);
+                FileOutputStream fos = new FileOutputStream(namePdfFile);
                 //Writer pour le pdf
                 PdfWriter writer = PdfWriter.getInstance(pdf,fos);
                 //Ouverture du pdf
@@ -206,6 +211,10 @@ public class PDFGenerator {
 
 
                 }
+                pdf.close();
+                writer.close();
+                fos.close();
+
                 return pdfDest_file;
             } catch (IOException e) {
                 if (LOGGER.isErrorEnabled()) {
@@ -224,8 +233,10 @@ public class PDFGenerator {
         pdf.close();
         return "";
     }
-    private void sendMail(String path) {
-
+    private void sendMail(String path,List<String> user_mails) {
+        for(String user : user_mails){
+            System.out.println(user);
+        }
         MailData mailStatistics = new MailData();
         mailStatistics.getInfos().setSubject("Statistics");
         mailStatistics.getInfos().setBody(
@@ -250,7 +261,7 @@ public class PDFGenerator {
         mailStatistics.setHost(MailManager.MAILDATA.get("AInfos_Host"));
         mailStatistics.setPort(MailManager.MAILDATA.get("AInfos_Port"));
 
-        mailStatistics.getInfos().bccProperty().addAll(Arrays.asList("gautier.pitek@gmail.com"));
+        mailStatistics.getInfos().bccProperty().addAll(user_mails);
         try {
             BodyPart messageBodyPart = new MimeBodyPart();
             DataSource source = new FileDataSource(path);

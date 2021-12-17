@@ -94,7 +94,7 @@ public class UserInstance extends Thread implements Runnable {
      * @throws SQLException exception
      */
     public void analyseData (String data) throws JsonProcessingException, SQLException {
-        LOGGER.info("ANALYSEDATE (" + this.getName() + "): " + data);
+        //LOGGER.info("ANALYSEDATE (" + this.getName() + "): " + data);
         Map dataJson = objectMapper.readValue(data, new TypeReference<>() {});
 
         switch ((String) dataJson.get("methods")) {

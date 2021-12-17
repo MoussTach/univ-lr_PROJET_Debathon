@@ -29,7 +29,7 @@ public class QuestionDAO implements DAO<Question> {
 	}
 
 	@Override
-	public List<Question> selectAll() throws SQLException {
+	public List<Question> selectAll() {
 		
 		List<Question> listQuestion = new ArrayList<>();
 		
@@ -85,7 +85,7 @@ public class QuestionDAO implements DAO<Question> {
 		return true;
 	}
 
-	public int insertAndGetId(Question question) throws SQLException {
+	public int insertAndGetId(Question question)  {
 
 		String sql = "INSERT INTO Question (label, context, type, id_room, id_user) values (?,?,?,?,?) returning idQuestion";
 
@@ -161,7 +161,7 @@ public class QuestionDAO implements DAO<Question> {
 	}
 
 	@Override
-	public List<Question> selectByMultiCondition(Map<String, String> map) throws SQLException {
+	public List<Question> selectByMultiCondition(Map<String, String> map) {
 		return null;
 	}
 
@@ -200,34 +200,7 @@ public class QuestionDAO implements DAO<Question> {
 	}
 
 
-	public int selectByContextAndLabel(String label, String context) throws SQLException {
-		Question question = null;
-
-		String sql = "SELECT * FROM Question WHERE label = ? AND context = ?";
-
-		try (PreparedStatement pstmt = this.connection.prepareStatement(sql)) {
-
-			pstmt.setString(1, label);
-			pstmt.setString(2, context);
-
-			ResultSet rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				return rs.getInt("idQuestion");
-			}
-
-
-		} catch (Exception e) {
-			if (LOGGER.isErrorEnabled()) {
-				LOGGER.error(String.format("Error : %s", e.getMessage()), e);
-			}
-			return -1;
-		}
-
-		return -1;
-	}
-
-	public List<Question> selectByIdSalon(int id) throws SQLException {
+	public List<Question> selectByIdSalon(int id) {
 
 		List<Question> listQuestion = new ArrayList<>();
 		
@@ -261,7 +234,7 @@ public class QuestionDAO implements DAO<Question> {
 		return listQuestion;
 	}
 
-	public List<Question> selectBySalon(Room room) throws SQLException {
+	public List<Question> selectBySalon(Room room)  {
 
 		List<Question> listQuestion = new ArrayList<>();
 

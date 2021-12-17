@@ -28,7 +28,7 @@ public class UserDAO implements DAO<User> {
 	}
 
 	@Override
-	public List<User> selectAll() throws SQLException {
+	public List<User> selectAll() {
 		List<User> userList = new ArrayList<>();
 		
 		String sql = "SELECT idUser, label FROM User";
@@ -124,7 +124,7 @@ public class UserDAO implements DAO<User> {
 	}
 
 	@Override
-	public List<User> selectByMultiCondition(Map<String, String> map) throws SQLException {
+	public List<User> selectByMultiCondition(Map<String, String> map) {
 		return null;
 	}
 

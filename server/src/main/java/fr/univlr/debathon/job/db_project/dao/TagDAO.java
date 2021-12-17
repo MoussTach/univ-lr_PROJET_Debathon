@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class TagDAO implements DAO<Tag> {
 
-    private Connection connection = null;
+    private Connection connection;
 
     private static final CustomLogger LOGGER = CustomLogger.create(TagDAO.class.getName());
 
@@ -37,9 +37,8 @@ public class TagDAO implements DAO<Tag> {
      * SELECT of all occurance of the class.
      *
      * @return - {@link List} - a list that contain all occurance of {@link Tag}, the class associate.
-     * @throws SQLException - throw the exception to force a try catch when used.
      */
-    public List<Tag> selectAll() throws SQLException {
+    public List<Tag> selectAll() {
         List<Tag> tagList = new ArrayList<>();
 
         String sql = "SELECT idTag, label, color FROM Tag";
@@ -90,7 +89,7 @@ public class TagDAO implements DAO<Tag> {
         
     }
 
-    public int insertAndReturnId(Tag tag) throws SQLException {
+    public int insertAndReturnId(Tag tag) {
         String sql = "INSERT INTO Tag (label, color) VALUES(?,?) returning idTag";
 
         try {
@@ -177,9 +176,8 @@ public class TagDAO implements DAO<Tag> {
      *
      * @param map - {@link Map} - index of the associate class. Can handle null.
      * @return - {@link List} - the class that can be found with the index
-     * @throws SQLException - throw the exception to force a try catch when used.
      */
-    public List<Tag> selectByMultiCondition(Map<String, String> map) throws SQLException {
+    public List<Tag> selectByMultiCondition(Map<String, String> map)  {
         return null;
     }
 
@@ -188,9 +186,8 @@ public class TagDAO implements DAO<Tag> {
      *
      * @param id - {@link int} - index of the associate class. Can handle null.
      * @return - {@link List} - the class that can be found with the index
-     * @throws SQLException - throw the exception to force a try catch when used.
      */
-    public List<Tag> selectByIdRoom(int id) throws SQLException {
+    public List<Tag> selectByIdRoom(int id)  {
         
         String sqlIdTag = "SELECT id_tag FROM Relation_room_tag WHERE id_room = ?";
 

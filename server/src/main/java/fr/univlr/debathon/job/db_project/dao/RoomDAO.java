@@ -31,7 +31,7 @@ public class RoomDAO implements DAO<Room> {
 	}
 
 	@Override
-	public List<Room> selectAll() throws SQLException {
+	public List<Room> selectAll()  {
 		
 		List<Room> listRoom = new ArrayList<>();
 		
@@ -93,7 +93,7 @@ public class RoomDAO implements DAO<Room> {
 	}
 
 
-	public Room insertAndGetId(Room room) throws SQLException {
+	public Room insertAndGetId(Room room) {
 
 		String sql = "INSERT INTO Room (label, description, key, id_category) values (?,?,?,?) returning idRoom";
 
@@ -188,7 +188,7 @@ public class RoomDAO implements DAO<Room> {
 	}
 
 	@Override
-	public List<Room> selectByMultiCondition(Map<String, String> map) throws SQLException {
+	public List<Room> selectByMultiCondition(Map<String, String> map) {
 		return null;
 	}
 

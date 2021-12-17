@@ -28,7 +28,7 @@ public class McqDAO implements DAO<Mcq> {
 	}
 
 	@Override
-	public List<Mcq> selectAll() throws SQLException {
+	public List<Mcq> selectAll() {
         List<Mcq> qcmList = new ArrayList<>();
 
         String sql = "SELECT idMcq, label, nb_votes, id_question, id_room FROM Mcq";
@@ -37,10 +37,7 @@ public class McqDAO implements DAO<Mcq> {
             PreparedStatement pstmt  = connection.prepareStatement(sql);
             
             ResultSet rs  = pstmt.executeQuery();
-            
-            QuestionDAO questionDAO = new QuestionDAO(this.connection);
-            RoomDAO roomDAO = new RoomDAO(this.connection);
-            
+
             while (rs.next()) {
             	
                qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
@@ -85,7 +82,7 @@ public class McqDAO implements DAO<Mcq> {
 		
 	}
 
-	public Mcq insertAndGetId(Mcq mcq) throws SQLException {
+	public Mcq insertAndGetId(Mcq mcq) {
 
 		String sql = "INSERT INTO MCQ (label, id_question, id_room) values (?,?,?) returning idMcq";
 
@@ -145,7 +142,7 @@ public class McqDAO implements DAO<Mcq> {
 		
 	}
 
-	public boolean updateNewLike(int id) throws SQLException {
+	public boolean updateNewLike(int id) {
 
 		String sql = "UPDATE MCQ SET nb_votes = nb_votes + 1 WHERE idMcq = ?";
 
@@ -195,7 +192,7 @@ public class McqDAO implements DAO<Mcq> {
 	}
 
 	@Override
-	public List<Mcq> selectByMultiCondition(Map<String, String> map) throws SQLException {
+	public List<Mcq> selectByMultiCondition(Map<String, String> map) {
 		return null;
 	}
 
@@ -211,10 +208,7 @@ public class McqDAO implements DAO<Mcq> {
             pstmt.setInt(1, id);
             
             ResultSet rs  = pstmt.executeQuery();
-            
-            QuestionDAO questionDAO = new QuestionDAO(this.connection);
-            RoomDAO roomDAO = new RoomDAO(this.connection);
-            
+
             while (rs.next()) {
             	
                mcq = new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), rs.getInt("id_question"), rs.getInt("id_room"));
@@ -230,7 +224,6 @@ public class McqDAO implements DAO<Mcq> {
 	}
 
 	public int select(String label, int id_question) throws SQLException {
-		Mcq mcq = null;
 
 		String sql = "SELECT idMcq FROM Mcq WHERE label = ? and id_question = ?";
 
@@ -255,7 +248,7 @@ public class McqDAO implements DAO<Mcq> {
 	}
 
 	
-	public List<Mcq> selectMcqByIdQuestion(int id) throws SQLException {
+	public List<Mcq> selectMcqByIdQuestion(int id)  {
         List<Mcq> qcmList = new ArrayList<>();
 
         String sql = "SELECT idMcq, label, nb_votes, id_question, id_room FROM Mcq WHERE id_question = ?";
@@ -266,10 +259,7 @@ public class McqDAO implements DAO<Mcq> {
             pstmt.setInt(1, id);
             
             ResultSet rs  = pstmt.executeQuery();
-            
-            QuestionDAO questionDAO = new QuestionDAO(this.connection);
-            RoomDAO roomDAO = new RoomDAO(this.connection);
-            
+
             while (rs.next()) {
             	
                qcmList.add(new Mcq(rs.getInt("idMcq"), rs.getString("label"), rs.getInt("nb_votes"), rs.getInt("id_question"), rs.getInt("id_room")));
@@ -285,7 +275,7 @@ public class McqDAO implements DAO<Mcq> {
 	}
 
 
-	public List<Mcq> selectMcqByIdSalon(int id) throws SQLException {
+	public List<Mcq> selectMcqByIdSalon(int id)  {
 		List<Mcq> qcmList = new ArrayList<>();
 
 		String sql = "SELECT idMcq, label, nb_votes, id_question, id_room FROM Mcq WHERE id_room = ?";
@@ -296,9 +286,6 @@ public class McqDAO implements DAO<Mcq> {
 			pstmt.setInt(1, id);
 
 			ResultSet rs  = pstmt.executeQuery();
-
-			QuestionDAO questionDAO = new QuestionDAO(this.connection);
-			RoomDAO roomDAO = new RoomDAO(this.connection);
 
 			while (rs.next()) {
 

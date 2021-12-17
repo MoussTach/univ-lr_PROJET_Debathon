@@ -563,8 +563,8 @@ public class HomePageViewModel extends ViewModel_SceneCycle {
             this.listener_ChangedValue_bundleLanguage_ = null;
         }
 
-        unbindDebate();
-        unbindSelectedItems();
+        //unbindDebate();
+        //unbindSelectedItems();
 
         LanguageBundle.getInstance().unbindResourceBundle(this.resBundle_);
     }

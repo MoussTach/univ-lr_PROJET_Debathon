@@ -220,7 +220,7 @@ public class AppCommunication extends Thread implements Runnable {
             }
         }
 
-        Debathon.getInstance().getDebates().add(room);
+        Debathon.getInstance().debatesProperty().add(room);
     }
 
     public void methodsNEWMCQ(JsonNode dataJson) {
